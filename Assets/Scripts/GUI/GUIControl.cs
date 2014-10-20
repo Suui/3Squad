@@ -2,11 +2,7 @@
 using System.Collections;
 using System;
 
-using Medusa.Level.Components;
-using Medusa.Level;
-using Medusa.Core;
-
-namespace Medusa.View
+namespace Medusa
 {
 
   public delegate void OnClickHandler(Position clicked);

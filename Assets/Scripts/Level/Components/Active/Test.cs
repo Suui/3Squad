@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using Medusa.Core;
 
-namespace Medusa.Level.Components
+namespace Medusa
 {
 
   public class Test : Skill

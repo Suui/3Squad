@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-using Medusa.Core;
-
-using Medusa.Level.Components;
-
-namespace Medusa.Level
+namespace Medusa
 {
 
   public class Token : CellItem

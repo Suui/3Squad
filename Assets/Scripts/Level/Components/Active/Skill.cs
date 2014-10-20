@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 
-using Medusa.Core;
-
-namespace Medusa.Level.Components
+namespace Medusa
 {
 
   public enum SkillState

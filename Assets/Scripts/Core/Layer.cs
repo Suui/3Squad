@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Medusa.Core
+namespace Medusa
 {
 
   public abstract class Layer

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Medusa.Core
+namespace Medusa
 {
 
   public sealed class Position

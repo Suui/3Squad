@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace Medusa.Core
+namespace Medusa
 {
 
   public class CellItem : MonoBehaviour

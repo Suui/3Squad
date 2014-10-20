@@ -2,29 +2,24 @@
 using System;
 using System.Collections;
 
-using Medusa.Core;
-using Medusa.Level.Components;
-
-using Medusa.View;
-
-namespace Medusa.Level
+namespace Medusa
 {
   public enum State
   {
-    Null,
-    Token,
-    Skill,
-    Confirm }
+    NothingSelected,
+    TokenSelected,
+    SkillSelected,
+    ConfirmSkill }
   ;
 
   public class StateManager : MonoBehaviour
   {
 
-    public State currentState = State.Null;
+    public State currentState = State.NothingSelected;
     public Skill selectedSkill;
     public Token selectedToken;
     private Layer<Token> tokens;
-    public GUIControl gui;
+    private GUIControl gui;
     private Board board;
 
     void Awake()
@@ -44,7 +39,7 @@ namespace Medusa.Level
 
     void OnGUI()
     {
-      if (currentState != State.Null)
+      if (currentState != State.NothingSelected)
       {
         gui.RenderInfo(selectedToken.Infos);
         gui.GetInteraction(selectedToken.Skills);
@@ -61,41 +56,41 @@ namespace Medusa.Level
 
       switch (currentState)
       {
-        case State.Null:
+        case State.NothingSelected:
           if (pos != null)
           {
             if (!tokens.Empty(pos))
             {
               selectedToken = tokens [pos];
-              currentState = State.Token;
+              currentState = State.TokenSelected;
             }
           }
           break;
-        case State.Token:
+        case State.TokenSelected:
           if (pos == null || tokens.Empty(pos))
           {
-            currentState = State.Null;
+            currentState = State.NothingSelected;
             selectedToken = null;
           } else
           {
             selectedToken = tokens [pos];
           }
           break;
-        case State.Skill:
+        case State.SkillSelected:
           if (selectedSkill.HandleClick(pos))
           {
-            currentState = State.Confirm;
+            currentState = State.ConfirmSkill;
           } else
           {
-            currentState = State.Token;
+            currentState = State.TokenSelected;
             selectedSkill.CleanUp();
             selectedSkill = null;
           }
           break;
-        case State.Confirm:
+        case State.ConfirmSkill:
           if (!selectedSkill.HandleClick(pos))
           {
-            currentState = State.Token;
+            currentState = State.TokenSelected;
             selectedSkill.CleanUp();
             selectedSkill = null;
           }
@@ -107,12 +102,12 @@ namespace Medusa.Level
     {
       switch (currentState)
       {
-        case State.Token:
+        case State.TokenSelected:
           selectedSkill = skill;
-          currentState = State.Skill;
+          currentState = State.SkillSelected;
           skill.Setup(board);
           break;
-        case State.Skill:
+        case State.SkillSelected:
           if (skill != selectedSkill)
           {
             selectedSkill.CleanUp();
@@ -122,15 +117,15 @@ namespace Medusa.Level
           {
             selectedSkill.CleanUp();
             selectedSkill = null;
-            currentState = State.Token;
+            currentState = State.TokenSelected;
           }
           break;
-        case State.Confirm:
+        case State.ConfirmSkill:
           if (skill == selectedSkill)
           {
             skill.Apply();
             selectedSkill = null;
-            currentState = State.Token;
+            currentState = State.TokenSelected;
           } else
           {
             selectedSkill.CleanUp();

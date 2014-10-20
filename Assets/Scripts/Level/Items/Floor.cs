@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-using Medusa.Core;
-
-namespace Medusa.Level
+namespace Medusa
 {
 
   public class Floor : CellItem

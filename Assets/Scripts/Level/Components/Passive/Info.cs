@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Medusa.Level.Components
+namespace Medusa
 {
 
   public abstract class Info : MonoBehaviour
