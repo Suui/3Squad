@@ -15,14 +15,14 @@ namespace Medusa.Level
     {
       get
       {
-        return gameObject.GetComponents<Info>();
+        return transform.GetComponents<Info>();
       }
     }
     public Skill[] Skills
     {
       get
       {
-        return gameObject.GetComponents<Skill>();
+        return transform.GetComponents<Skill>();
       }
     }
 

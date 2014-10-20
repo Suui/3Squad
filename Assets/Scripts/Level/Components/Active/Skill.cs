@@ -26,7 +26,7 @@ namespace Medusa.Level.Components
     public int cost;
     public string description;
 
-    public abstract void Setup();
+    public abstract void Setup(Board board);
 
     public abstract void CleanUp();
 
