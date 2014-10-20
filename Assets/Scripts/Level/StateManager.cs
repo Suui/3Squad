@@ -93,12 +93,7 @@ namespace Medusa.Level
           }
           break;
         case State.Confirm:
-          if (selectedSkill.HandleClick(pos))
-          {
-            currentState = State.Token;
-            selectedSkill.CleanUp();
-            selectedSkill = null;
-          } else
+          if (!selectedSkill.HandleClick(pos))
           {
             currentState = State.Token;
             selectedSkill.CleanUp();
@@ -123,7 +118,12 @@ namespace Medusa.Level
             selectedSkill.CleanUp();
             skill.Setup(board);
             selectedSkill = skill;
-          } 
+          } else
+          {
+            selectedSkill.CleanUp();
+            selectedSkill = null;
+            currentState = State.Token;
+          }
           break;
         case State.Confirm:
           if (skill == selectedSkill)
