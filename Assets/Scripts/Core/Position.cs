@@ -29,9 +29,9 @@ namespace Medusa.Core
     public static bool operator !=(Position a, Position b)
     {
       if ((object)a == null)
-        return (object)b == null;
+        return (object)b != null;
       if ((object)b == null)
-        return (object)a == null;
+        return (object)a != null;
       return (a.x != b.x) || (a.y != b.y);
     }
 
