@@ -85,7 +85,7 @@ namespace Medusa
 
             #region Create Scene Node
 
-            CurrentBoard = new Board(boardRows, boardColumns, "Terrain", "Tokens", "Effects");
+            CurrentBoard = new Board(boardRows, boardColumns, "Terrain", "Tokens", "Effects", "Overlay");
 
             #endregion
         

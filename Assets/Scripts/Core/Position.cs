@@ -12,6 +12,8 @@ namespace Medusa
 
         private static int ASCII_OFFSET = 97;
 
+        public static int MAX_COLUMNS = 100;
+
         #endregion
 
         #region Basic Properties
@@ -90,6 +92,7 @@ namespace Medusa
             return new Position(Convert.ToInt32(vec.z), Convert.ToInt32(vec.x));
         }
 
+        // TODO Dangeorus
         public static explicit operator Position(String str)
         {
             str = str.ToLower();
@@ -121,7 +124,7 @@ namespace Medusa
 
         public override int GetHashCode()
         {
-            return Column * 100 + Row;
+            return Column * MAX_COLUMNS + Row;
         }
 
         public override string ToString()

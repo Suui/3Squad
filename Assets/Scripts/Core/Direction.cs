@@ -103,7 +103,7 @@ namespace Medusa
 
         public override int GetHashCode()
         {
-            return Columns * 100 + Rows;
+            return Columns * Position.MAX_COLUMNS + Rows;
         }
 
         #endregion

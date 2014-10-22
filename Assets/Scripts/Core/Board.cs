@@ -111,6 +111,10 @@ namespace Medusa
                 OnChange(this, layer, pos, oldGO, newGO);
         }
 
+        #endregion
+
+        #region Utilities
+
         public void ValidatePosition(GameObject go)
         {
             Position pos = FindLayer(go).Find(go);
