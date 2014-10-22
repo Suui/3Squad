@@ -42,7 +42,6 @@ namespace Medusa
         {
             if (boardRows != CurrentBoard.Rows || boardColumns != CurrentBoard.Columns)
                 RecreateBoard();
-
         }
 
         private void RecreateBoard()

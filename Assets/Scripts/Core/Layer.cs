@@ -121,6 +121,23 @@ namespace Medusa
             }
         }
 
+        public bool Contains(GameObject go)
+        {
+            return go.transform.parent = SceneNode.transform;
+        }
+
+        public Position Find(GameObject go)
+        {
+            if (go == null)
+                return null;
+            foreach (Position pos in Position.Range(this))
+            {
+                if (this [pos] == go)
+                    return pos; 
+            }
+            return null;
+        }
+
         #endregion
 
         #region Component Interaction

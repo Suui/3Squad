@@ -10,7 +10,7 @@ namespace Medusa
 
         #region Static Stuff
 
-        private static int ASCII = 65;
+        private static int ASCII_OFFSET = 97;
 
         #endregion
 
@@ -92,7 +92,8 @@ namespace Medusa
 
         public static explicit operator Position(String str)
         {
-            return new Position((int)str [0] - ASCII, Int32.Parse(str.Substring(1)) - 1);
+            str = str.ToLower();
+            return new Position(Int32.Parse(str.Substring(1)) - 1, (int)str [0] - ASCII_OFFSET);
         }
 
         #endregion
@@ -115,7 +116,7 @@ namespace Medusa
 
         public override string ToString()
         {
-            return char.ConvertFromUtf32(Column + ASCII) + (Row + 1);
+            return char.ConvertFromUtf32(Column + ASCII_OFFSET) + (Row + 1);
         }
 
         #endregion
