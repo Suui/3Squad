@@ -5,236 +5,170 @@ using System.Collections.Generic;
 namespace Medusa
 {
 
-  public abstract class Layer
-  {
-    public abstract Type ItemType
+    public class Layer : Dimension
     {
-      get;
-    }
-  }
-
-  public class Layer<T> : Layer where T : CellItem
-  {
-
-    private T[,] container;
    
-    #region Iterators Items/Positions
+        #region Basic Properties
 
-    public IEnumerable<T> Items
-    {
-      get
-      {
-        foreach (T item in container)
+        public int Rows
         {
-          if (item != null)
-          {
-            yield return item;
-          }
+            get { return container.GetLength(0); }
         }
-      }
-    }
 
-    public IEnumerable<Position> Positions
-    {
-      get
-      {
-        for (int x = 0, width = Width; x < width; x++)
+        public int Columns
         {
-          for (int y = 0, height = Height; y < height; y++)
-          {
-            yield return new Position(x, y);
-          }
-        } 
-      }
-    }
+            get { return container.GetLength(1); }
+        }
 
-    #endregion
+        public GameObject SceneNode
+        {
+            get;
+            private set;
+        }
 
-    #region Basic Properties
+        public string Name
+        {
+            get;
+            private set;
+        }
 
-    public int Width
-    {
-      get;
-      private set;
-    }
+        #endregion
 
-    public int Height
-    {
-      get;
-      private set;
-    }
+        #region Private Stuff
 
-    public GameObject SceneNode
-    {
-      get;
-      private set;
-    }
+        private GameObject[,] container;
 
-    #endregion
+        #endregion
 
-    public Layer(int width, int height)
-    {
-      Width = width;
-      Height = height;
-      container = new T[width, height];
-      string[] itemType = ItemType.ToString().Split('.');
-      SceneNode = new GameObject(itemType [itemType.Length - 1] + "Layer");
-    }
+        #region Iterator Objects
+        
+        public IEnumerable<GameObject> Objects
+        {
+            get
+            {
+                foreach (GameObject go in container)
+                {
+                    if (go != null)
+                    {
+                        yield return go;
+                    }
+                }
+            }
+        }
 
-    public override Type ItemType
-    {
-      get { return typeof(T); }
-    }
+        #endregion
 
-    #region Index
+        #region Contructor
+
+        public Layer(int rows, int columns, string name)
+        {
+            container = new GameObject[rows, columns];
+            Name = name;
+            SceneNode = new GameObject(name);
+        }
+
+        #endregion
+
+        #region Index
     
-    public T this [Position pos]
-    {
-      get
-      { 
-        if (Outside(pos))
-          throw new ArgumentOutOfRangeException(pos + " not in layer");
-        return container [pos.x, pos.y]; 
-      }
-      private set
-      {
-        if (Outside(pos))
-          throw new ArgumentOutOfRangeException(pos + " not in layer");
-        container [pos.x, pos.y] = value;
-      }
-    }
+        public GameObject this [Position pos]
+        {
+            get
+            { 
+                if (pos == null)
+                    throw new ArgumentOutOfRangeException("Trying to access null");
+                if (pos.Outside(this))
+                    throw new ArgumentOutOfRangeException(pos + " not in layer");
+                return container [pos.Row, pos.Column]; 
+            }
+            set
+            {
+                if (pos == null)
+                    throw new ArgumentOutOfRangeException("Trying to access null");
+                if (pos.Outside(this))
+                    throw new ArgumentOutOfRangeException(pos + " not in layer");
+                GameObject old = this [pos];
+                if (value == null)
+                {
+                    if (old == null)
+                        throw new ArgumentException("Removing a Nothing");
+                } else
+                {
+                    if (old != null)
+                    {
+                        old.transform.parent = null;
+                    }
+                    value.transform.parent = SceneNode.transform;
+                }
+                container [pos.Row, pos.Column] = value;
+            }
+        }
     
-    #endregion
+        #endregion
 
-    #region Basic Methods
+        #region Basic Methods
 
-    public void Put(GameObject go, Position pos)
-    {
-      if (!Empty(pos))
-        throw new ArgumentException(pos + " already occupied");
-      T item = go.GetComponent<T>();
-      if (item == null) 
-        throw new ArgumentException(go.name + " doesn't contain a Component of Type " + ItemType);
-      this [pos] = item;
-      item.Position = pos;
-      item.Layer = this;
-      go.transform.parent = SceneNode.transform;
-    }
-
-    public GameObject Remove(Position pos)
-    {
-      if (Empty(pos))
-        throw new ArgumentException(pos + " is empty");
-      T item = this [pos];
-      this [pos] = null;
-      item.Layer = null;
-      item.Position = null;
-      return item.gameObject;
-    }
-
-    public void Purge(Position pos)
-    {
-      GameObject.Destroy(Remove(pos));
-    }
-
-    public void Move(Position from, Position to)
-    {
-      Put(Remove(from), to);
-    }
-
-    public bool Empty(Position pos)
-    {
-      return this [pos] == null;
-    }
-
-    public void Clear()
-    {
-      foreach (T item in Items)
-      {
-        Purge(item.Position);
-      }
-    }
-
-    #endregion
-
-    #region Bound Checking
-
-    public bool Inside(Position pos)
-    {
-      return pos.x >= 0
-        && pos.x < Width
-        && pos.y >= 0
-        && pos.y < Height;
-    }
-
-    public bool Outside(Position pos)
-    {
-      return pos.x < 0
-        || pos.x >= Width
-        || pos.y < 0
-        || pos.y >= Height;
-    }
-
-    #endregion
-
-    #region Test Functions
-
-    public IEnumerable<T> Where(Func<T,bool> test)
-    {
-      foreach (T item in Items)
-      {
-        if (test(item))
+        public bool Empty(Position pos)
         {
-          yield return item;
+            return this [pos] == null;
         }
-      }
-    }
 
-    public IEnumerable<Position> Where(Func<Position,bool> test)
-    {
-      for (int x = 0, width = Width; x < width; x++)
-      {
-        for (int y = 0, height = Height; y < height; y++)
+        public void Clear()
         {
-          Position pos = new Position(x, y);
-          if (test(pos))
-          {
-            yield return pos;
-          }
+            foreach (GameObject go in Objects)
+            {
+                GameObject.Destroy(go);
+            }
         }
-      }
+
+        #endregion
+
+        #region Component Interaction
+
+        public bool Has<T>(Position pos) where T : Component
+        {
+            GameObject go = this [pos];
+            if (go == null)
+                return false;
+            T item = go.GetComponent<T>();
+            return (item != null);
+        }
+        
+        public T Get<T>(Position pos) where T : Component
+        {
+            GameObject go = this [pos];
+            if (go == null)
+                return null;
+            T item = go.GetComponent<T>();
+            return item;
+        }
+
+        public T[] All<T>(Position pos) where T :Component
+        {
+            GameObject go = this [pos];
+            if (go == null)
+                return null;
+            T[] items = go.GetComponents<T>();
+            return items;
+        }
+        
+        
+        #endregion       
+       
+        #region Utilities
+
+        public IEnumerable<GameObject> Where(Func<GameObject,bool> test)
+        {
+            foreach (GameObject go in Objects)
+            {
+                if (test(go))
+                {
+                    yield return go;
+                }
+            }
+        }
+
+        #endregion
+
     }
-
-    #endregion
-
-    #region Utilities
-
-    public Position Mirror(Position pos)
-    {
-      return new Position(Width - pos.x - 1, Height - pos.y - 1);
-    }
-
-    public Position[] Ray(Position pos, Direction direction)
-    {
-      List<Position> list = new List<Position>();
-      while (Inside(pos+=direction))
-      {
-        list.Add(pos);
-      }
-      return list.ToArray();
-    }
-
-    public Position[] ForX(int x)
-    {
-      return Ray(new Position(x, -1), Direction.Up);
-    }
-
-    public Position[] ForY(int y)
-    {
-      return Ray(new Position(-1, y), Direction.Right);
-    }
-
-    #endregion
-
-  }
 }

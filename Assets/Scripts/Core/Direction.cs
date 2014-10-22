@@ -3,63 +3,110 @@
 namespace Medusa
 {
 
-  public struct Direction
-  {
-
-    public readonly int x;
-    public readonly int y;
-    public readonly int length;
-
-    public static readonly Direction Left = new Direction(-1, 0);
-    public static readonly Direction Right = Left * -1;
-    public static readonly Direction Up = new Direction(0, 1);
-    public static readonly Direction Down = Up * -1;
-
-    public static readonly Direction[] All = {Up,Right,Down,Left};
-
-    public Direction(int x, int y)
+    public struct Direction
     {
-      this.x = x;
-      this.y = y;
-      this.length = Math.Abs(x) + Math.Abs(y);
-    }
 
-    public static bool operator ==(Direction a, Direction b)
-    {
-      return a.x == b.x && a.x == b.x;
-    }
+        #region Basic Properties
 
-    public static bool operator !=(Direction a, Direction b)
-    {
-      return a.x != b.x || a.y != b.y;
-    }
+        public int Rows
+        {
+            get;
+            private set;
+        }
 
-    public override bool Equals(object obj)
-    {
-      if (obj == null)
-        return false;
-      return this == (Direction)obj;
-    }
+        public int Columns
+        {
+            get;
+            private set;
+        }
 
-    public override int GetHashCode()
-    {
-      return x * 100 + y;
-    }
+        public int Length
+        {
+            get;
+            private set;
+        }
 
-    public static Direction operator +(Direction a, Direction b)
-    {
-      return new Direction(a.x + b.x, a.y + b.y);
-    }
+        #endregion
 
-    public static Direction operator -(Direction a, Direction b)
-    {
-      return new Direction(a.x - b.x, a.y - b.y);
-    }
+        #region Static Stuff
 
-    public static Direction operator *(Direction d, int s)
-    {
-      return new Direction(d.x * s, d.y * s);
-    }
+        public static readonly Direction Left = new Direction(-1, 0);
+        public static readonly Direction Right = -Left;
+        public static readonly Direction Up = new Direction(0, 1);
+        public static readonly Direction Down = -Up;
 
-  }
+        public static readonly Direction[] All = {Up,Right,Down,Left};
+
+        #endregion
+
+        #region Constructor
+
+        public Direction(int rows, int columns)
+        {
+            Rows = rows;
+            Columns = columns;
+            Length = Math.Abs(rows) + Math.Abs(columns);
+        }
+
+        #endregion
+
+        #region Operators
+
+        #region Equality
+
+        public static bool operator ==(Direction a, Direction b)
+        {
+            return a.Rows == b.Rows && a.Columns == b.Columns;
+        }
+
+        public static bool operator !=(Direction a, Direction b)
+        {
+            return a.Rows != b.Rows || a.Columns != b.Columns;
+        }
+
+        #endregion
+
+        #region Arithmetic
+
+        public static Direction operator +(Direction a, Direction b)
+        {
+            return new Direction(a.Rows + b.Rows, a.Columns + b.Columns);
+        }
+        
+        public static Direction operator -(Direction a, Direction b)
+        {
+            return new Direction(a.Rows - b.Rows, a.Columns - b.Columns);
+        }
+
+        public static Direction operator -(Direction dir)
+        {
+            return new Direction(-dir.Rows, -dir.Columns);
+        }
+
+        public static Direction operator *(Direction dir, int scalar)
+        {
+            return new Direction(dir.Rows * scalar, dir.Columns * scalar);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region System.Object Override
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            return this == (Direction)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return Columns * 100 + Rows;
+        }
+
+        #endregion
+
+    }
 }
