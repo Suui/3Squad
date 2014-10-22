@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Medusa
 {
+
+    public delegate void BoardOnChange(Board caller,Layer layer,Position pos,GameObject oldGO,GameObject newGO);
+
     public class Board : Dimension
     {
         #region Basic Properties
@@ -27,6 +30,8 @@ namespace Medusa
         }
 
         #endregion
+
+        public event BoardOnChange OnChange;
 
         #region Private Stuff
 
@@ -83,12 +88,19 @@ namespace Medusa
             Layer lay = new Layer(Rows, Columns, name);
             lay.SceneNode.transform.parent = SceneNode.transform;
             layers [name] = lay;
+            lay.OnChange += LayerChangeEventHandler;
             return lay;
         }
 
         public Layer FindLayer(GameObject go)
         {
             return this [go.transform.parent.name];
+        }
+
+        private void LayerChangeEventHandler(Layer layer, Position pos, GameObject oldGO, GameObject newGO)
+        {
+            if (OnChange != null)
+                OnChange(this, layer, pos, oldGO, newGO);
         }
 
         #endregion

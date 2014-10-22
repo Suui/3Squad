@@ -5,6 +5,8 @@ using System.Collections.Generic;
 namespace Medusa
 {
 
+    public delegate void LayerOnChange(Layer caller,Position pos,GameObject oldGO,GameObject newGO);
+
     public class Layer : Dimension
     {
    
@@ -33,6 +35,8 @@ namespace Medusa
         }
 
         #endregion
+
+        public event LayerOnChange OnChange;
 
         #region Private Stuff
 
@@ -101,6 +105,8 @@ namespace Medusa
                     value.transform.parent = SceneNode.transform;
                 }
                 container [pos.Row, pos.Column] = value;
+                if (OnChange != null)
+                    OnChange(this, pos, old, value);
             }
         }
     
