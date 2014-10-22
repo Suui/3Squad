@@ -5,7 +5,11 @@ using System.Collections.Generic;
 namespace Medusa
 {
 
+    #region Event Handler Declaration
+
     public delegate void LayerOnChange(Layer caller,Position pos,GameObject oldGO,GameObject newGO);
+
+    #endregion
 
     public class Layer : Dimension
     {
@@ -36,7 +40,11 @@ namespace Medusa
 
         #endregion
 
+        #region Layer Change Event
+
         public event LayerOnChange OnChange;
+
+        #endregion
 
         #region Private Stuff
 
@@ -77,25 +85,47 @@ namespace Medusa
     
         public GameObject this [Position pos]
         {
+
+            #region Getter
+
             get
             { 
+                #region Argument Validation
+
                 if (pos == null)
                     throw new ArgumentOutOfRangeException("Trying to access null");
                 if (pos.Outside(this))
                     throw new ArgumentOutOfRangeException(pos + " not in layer");
+
+                #endregion
+
                 return container [pos.Row, pos.Column]; 
             }
+
+            #endregion
+
+            #region Setter
+
             set
             {
+                #region Argument Validation
+
                 if (pos == null)
                     throw new ArgumentOutOfRangeException("Trying to access null");
                 if (pos.Outside(this))
                     throw new ArgumentOutOfRangeException(pos + " not in layer");
+
+                #endregion
+
+                #region Handle Old & Transform
+
                 GameObject old = this [pos];
+
                 if (value == null)
                 {
                     if (old == null)
                         throw new ArgumentException("Removing a Nothing");
+
                 } else
                 {
                     if (old != null)
@@ -104,10 +134,20 @@ namespace Medusa
                     }
                     value.transform.parent = SceneNode.transform;
                 }
+
+                #endregion
+
+                #region Set New Value & Call Event
+
                 container [pos.Row, pos.Column] = value;
                 if (OnChange != null)
                     OnChange(this, pos, old, value);
+
+                #endregion
             }
+
+            #endregion
+
         }
     
         #endregion

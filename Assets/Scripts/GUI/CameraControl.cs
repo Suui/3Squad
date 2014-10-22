@@ -6,6 +6,9 @@ using Medusa;
 // Controla zoom y rotacion
 public class CameraControl : MonoBehaviour
 {
+
+    #region Private Properties
+
     private Camera cam;
     private float minFOV = 2;
     private float maxFOV = 8;
@@ -21,10 +24,18 @@ public class CameraControl : MonoBehaviour
     
     private float keyDeltaX;
     private float keySensitivity = 2;
-    
+
+    #endregion
+
+    #region Public Flags
+
     public bool doRotate;
     public bool doZoom;
-    
+
+    #endregion
+
+    #region Awake
+
     void Awake()
     {
         cam = Camera.main;
@@ -32,9 +43,13 @@ public class CameraControl : MonoBehaviour
         distance = cam.orthographicSize;
         rotation = transform.eulerAngles.y;
 
-        Director.Instance.OnBoardChange += ResetTransform;
+        Director.Instance.OnNewBoard += ResetTransform;
 
     }
+
+    #endregion
+
+    #region Board Resize
 
     private void ResetTransform(Board board)
     {
@@ -42,7 +57,11 @@ public class CameraControl : MonoBehaviour
                                          , -0.75f
                                          , ((float)board.Rows) / 2 - 0.5f);
     }
-    
+
+    #endregion
+
+    #region Update
+
     void Update()
     {
         if (doZoom)
@@ -50,6 +69,10 @@ public class CameraControl : MonoBehaviour
         if (doRotate)
             RotateScreen();
     }
+
+    #endregion
+
+    #region Camera Zoom
     
     void ZoomCamera()
     {
@@ -57,10 +80,16 @@ public class CameraControl : MonoBehaviour
         distance = Mathf.Clamp(distance, minFOV, maxFOV);
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, distance, Time.deltaTime * zoomInertia);
     }
+
+    #endregion
+
+    #region Screen Rotation
     
     void RotateScreen()
     {
-        
+
+        #region Mouse Input
+
         if (Input.GetMouseButtonDown(1))
         {
             isRotating = true;
@@ -70,7 +99,11 @@ public class CameraControl : MonoBehaviour
         {
             isRotating = false;
         }
-        
+
+        #endregion
+
+        #region Calculate Delta X
+
         float dx;
         
         if (isRotating)
@@ -81,7 +114,11 @@ public class CameraControl : MonoBehaviour
         {
             dx = - rotDelta;
         }
-        
+
+        #endregion
+
+        #region Key Interaction
+
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             keyDeltaX = -1;
@@ -99,7 +136,11 @@ public class CameraControl : MonoBehaviour
         {
             keyDeltaX = 0;
         }
-        
+
+        #endregion
+
+        #region Apply Rotation
+
         dx += keyDeltaX * keySensitivity;
         
         
@@ -107,7 +148,11 @@ public class CameraControl : MonoBehaviour
         
         rotation += rotDelta;
         transform.eulerAngles = new Vector3(30, rotation, 0);
-        
+
+        #endregion
+
     }
+
+    #endregion
     
 }

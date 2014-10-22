@@ -3,17 +3,32 @@ using System.Collections;
 
 namespace Medusa
 {
-    public delegate void BoardChange(Board board);
+
+    #region Event Handler Declaration
+
+    public delegate void BoardOnNew(Board board);
+
+    #endregion
 
     public class Director : MonoBehaviour
     {
+
+        #region Inspector
 
         public int boardRows;
         public int boardColumns;
 
         public GameObject terrainPrefab;
 
-        public event BoardChange OnBoardChange;
+        #endregion
+
+        #region Event
+
+        public event BoardOnNew OnNewBoard;
+
+        #endregion
+
+        #region Singleton
 
         private static Director instance;
 
@@ -27,11 +42,19 @@ namespace Medusa
             }
         }
 
+        #endregion
+
+        #region Public Board
+
         public Board CurrentBoard
         {
             get;
             private set;
         }
+
+        #endregion
+
+        #region Start / Update
 
         void Start()
         {
@@ -44,29 +67,52 @@ namespace Medusa
                 RecreateBoard();
         }
 
+        #endregion
+
+        #region Board Creation
+
         private void RecreateBoard()
         {
+
+            #region Destroy Old
+
             if (CurrentBoard != null)
             {
                 GameObject.Destroy(CurrentBoard.SceneNode);
             }
 
+            #endregion
+
+            #region Create Scene Node
+
             CurrentBoard = new Board(boardRows, boardColumns, "Terrain", "Tokens", "Effects");
+
+            #endregion
         
+            #region Put Terrain
+
             foreach (Position pos in Position.Range(CurrentBoard))
             {
                 GameObject go = (GameObject)Instantiate(terrainPrefab);
                 go.name = "Cell @ " + pos;
                 CurrentBoard ["Terrain"] [pos] = go;
-                CurrentBoard.ValidatePosition(go);
+                go.transform.position = (Vector3)pos;
             }
 
-            if (OnBoardChange != null)
+            #endregion
+
+            #region Call Event
+
+            if (OnNewBoard != null)
             {
-                OnBoardChange(CurrentBoard);
+                OnNewBoard(CurrentBoard);
             }
+
+            #endregion
 
         }
+
+        #endregion
 	
     }
 }

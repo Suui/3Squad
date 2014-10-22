@@ -5,7 +5,11 @@ using System.Collections.Generic;
 namespace Medusa
 {
 
+    #region Event Handler Declaration
+
     public delegate void BoardOnChange(Board caller,Layer layer,Position pos,GameObject oldGO,GameObject newGO);
+
+    #endregion
 
     public class Board : Dimension
     {
@@ -31,7 +35,11 @@ namespace Medusa
 
         #endregion
 
+        #region Board Change Event
+
         public event BoardOnChange OnChange;
+
+        #endregion
 
         #region Private Stuff
 
