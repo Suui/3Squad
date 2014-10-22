@@ -96,6 +96,16 @@ namespace Medusa
             return new Position(Int32.Parse(str.Substring(1)) - 1, (int)str [0] - ASCII_OFFSET);
         }
 
+        public static explicit operator Position(Transform tr)
+        {
+            return (Position)tr.position;
+        }
+
+        public static explicit operator Position(GameObject go)
+        {
+            return (Position)go.transform;
+        }
+
         #endregion
 
         #endregion

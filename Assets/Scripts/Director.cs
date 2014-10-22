@@ -58,7 +58,7 @@ namespace Medusa
                 GameObject go = (GameObject)Instantiate(terrainPrefab);
                 go.name = "Cell @ " + pos;
                 CurrentBoard ["Terrain"] [pos] = go;
-                go.transform.position = (Vector3)pos;
+                CurrentBoard.ValidatePosition(go);
             }
 
             if (OnBoardChange != null)

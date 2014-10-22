@@ -103,6 +103,13 @@ namespace Medusa
                 OnChange(this, layer, pos, oldGO, newGO);
         }
 
+        public void ValidatePosition(GameObject go)
+        {
+            Position pos = FindLayer(go).Find(go);
+            if (pos != null)
+                go.transform.position = (Vector3)pos;
+        }
+
         #endregion
     }
 }
