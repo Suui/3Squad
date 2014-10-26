@@ -42,6 +42,8 @@ namespace Medusa
                 return gameObjects[position.x, position.z]; 
             }
 
+            // TODO: Functionality of set: Are we able to replace an object? Would be better to have a function to do that
+            // Only able to set if the position you are trying to establish is empty
             set
             {
                 if (position == null)
@@ -50,42 +52,27 @@ namespace Medusa
                 if (board.CheckIndex(position) == false)
                     throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
-                // Handle Old & Transform
-
-                GameObject old = this[position];
-
-                if (value == null)
+                if (this[position] == null)
                 {
-                    if (old == null)
-                        throw new ArgumentException("Removing a Nothing");
-
-                } else
-                {
-                    if (old != null)
-                    {
-                        old.transform.parent = null;
-                    }
+                    gameObjects[position.x, position.z] = value;
                     value.transform.parent = SceneNode.transform;
+
+                    if (OnChange != null)
+                        OnChange(this, position, null, value);
                 }
-
-
-                // Set New Value & Call Event
-
-                gameObjects [position.Row, position.Column] = value;
-                if (OnChange != null)
-                    OnChange(this, position, old, value);
-
+                else
+                    throw new ArgumentException("Cannot set " + position + " as it is already occupied by " + this[position].name);
             }
         }
 
 
-        public bool Empty(Position pos)
+        public bool IsEmpty(Position position)
         {
-            return this [pos] == null;
+            return this [position] == null;
         }
 
 
-        public void Clear()
+        public void ClearLayer()
         {
             foreach (GameObject go in GameObjects)
             {
@@ -93,58 +80,69 @@ namespace Medusa
             }
         }
 
-
-        public bool Contains(GameObject go)
+        // TODO: == or = ?
+        public bool Contains(GameObject gameObject)
         {
-            return go.transform.parent = SceneNode.transform;
+            return gameObject.transform.parent == SceneNode.transform;
         }
 
 
-        public Position Find(GameObject go)
+        public Position GetPositionOf(GameObject gameObject)
         {
-            if (go == null)
+            if (gameObject == null)
                 return null;
-            foreach (Position pos in Position.Range(this))
+
+            for (int x = 0, rows = board.Rows; x < rows; x++)
             {
-                if (this [pos] == go)
-                    return pos; 
+                for (int z = 0, columns = board.Columns; z < columns; z++)
+                {
+                    if (gameObjects[x, z] == gameObject)
+                        return new Position(x, z);
+                }
             }
+
             return null;
         }
 
 
-        public bool Has<T>(Position pos) where T : Component
+        public bool HasComponent<T>(Position pos) where T : Component
         {
-            GameObject go = this [pos];
+            GameObject go = this[pos];
+
             if (go == null)
                 return false;
+
             T item = go.GetComponent<T>();
             return (item != null);
         }
 
 
-        public T Get<T>(Position pos) where T : Component
+        public T GetComponent<T>(Position pos) where T : Component
         {
-            GameObject go = this [pos];
+            GameObject go = this[pos];
+
             if (go == null)
                 return null;
+
             T item = go.GetComponent<T>();
             return item;
         }
 
 
-        public T[] All<T>(Position pos) where T : Component
+        public T[] GetAllComponents<T>(Position pos) where T : Component
         {
-            GameObject go = this [pos];
+            GameObject go = this[pos];
+
             if (go == null)
                 return null;
+
             T[] items = go.GetComponents<T>();
             return items;
         }
 
 
         // Lambda
-        public IEnumerable<GameObject> Where(Func<GameObject,bool> test)
+        public IEnumerable<GameObject> Where(Func<GameObject, bool> test)
         {
             foreach (GameObject go in GameObjects)
             {

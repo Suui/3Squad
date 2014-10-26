@@ -45,19 +45,6 @@ namespace Medusa
             }
         }
 
-
-        public static IEnumerable<Position> Range(Dimension dim)
-        {
-            for (int row = 0; row < dim.Rows; row++)
-            {
-                for (int column = 0; column < dim.Columns; column++)
-                {
-                    yield return new Position(row, column);
-                }
-            }
-        }
-
-
         #endregion
 
 

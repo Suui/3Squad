@@ -72,7 +72,7 @@ namespace Medusa
         // What does this?
         public void ValidatePosition(GameObject gameObject)
         {
-            Position pos = GetLayerOf(gameObject).Find(gameObject);
+            Position pos = GetLayerOf(gameObject).GetPositionOf(gameObject);
 
             if (pos != null)
                 gameObject.transform.position = pos;        // Redundant cast to Vector3
