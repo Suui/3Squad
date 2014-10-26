@@ -2,124 +2,55 @@
 using System;
 using System.Collections.Generic;
 
+
 namespace Medusa
 {
 
-    #region Event Handler Declaration
-
     public delegate void LayerOnChange(Layer caller,Position pos,GameObject oldGO,GameObject newGO);
 
-    #endregion
 
-    public class Layer : Dimension
+    public class Layer
     {
-   
-        #region Basic Properties
-
-        public int Rows
-        {
-            get { return container.GetLength(0); }
-        }
-
-        public int Columns
-        {
-            get { return container.GetLength(1); }
-        }
-
-        public GameObject SceneNode
-        {
-            get;
-            private set;
-        }
-
-        public string Name
-        {
-            get;
-            private set;
-        }
-
-        #endregion
-
-        #region Layer Change Event
 
         public event LayerOnChange OnChange;
 
-        #endregion
+        private GameObject[,] gameObjects;
 
-        #region Private Stuff
-
-        private GameObject[,] container;
-
-        #endregion
-
-        #region Iterator Objects
-        
-        public IEnumerable<GameObject> Objects
-        {
-            get
-            {
-                foreach (GameObject go in container)
-                {
-                    if (go != null)
-                    {
-                        yield return go;
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        #region Contructor
 
         public Layer(int rows, int columns, string name)
         {
-            container = new GameObject[rows, columns];
+            gameObjects = new GameObject[rows, columns];
             Name = name;
+
             SceneNode = new GameObject(name);
         }
 
-        #endregion
 
-        #region Index
-    
-        public GameObject this [Position pos]
+        public GameObject this [Position position]
         {
-
-            #region Getter
-
             get
             { 
-                #region Argument Validation
-
-                if (pos == null)
+                if (position == null)
                     throw new ArgumentOutOfRangeException("Trying to access null");
-                if (pos.Outside(this))
-                    throw new ArgumentOutOfRangeException(pos + " not in layer");
+                if (position.Outside(this))
+                    throw new ArgumentOutOfRangeException(position + " not in layer");
 
-                #endregion
-
-                return container [pos.Row, pos.Column]; 
+                return gameObjects [position.Row, position.Column]; 
             }
-
-            #endregion
-
-            #region Setter
 
             set
             {
-                #region Argument Validation
+                // Argument Validation
 
-                if (pos == null)
+                if (position == null)
                     throw new ArgumentOutOfRangeException("Trying to access null");
-                if (pos.Outside(this))
-                    throw new ArgumentOutOfRangeException(pos + " not in layer");
+                if (position.Outside(this))
+                    throw new ArgumentOutOfRangeException(position + " not in layer");
 
-                #endregion
 
-                #region Handle Old & Transform
+                // Handle Old & Transform
 
-                GameObject old = this [pos];
+                GameObject old = this [position];
 
                 if (value == null)
                 {
@@ -135,42 +66,37 @@ namespace Medusa
                     value.transform.parent = SceneNode.transform;
                 }
 
-                #endregion
 
-                #region Set New Value & Call Event
+                // Set New Value & Call Event
 
-                container [pos.Row, pos.Column] = value;
+                gameObjects [position.Row, position.Column] = value;
                 if (OnChange != null)
-                    OnChange(this, pos, old, value);
+                    OnChange(this, position, old, value);
 
-                #endregion
             }
-
-            #endregion
-
         }
-    
-        #endregion
 
-        #region Basic Methods
 
         public bool Empty(Position pos)
         {
             return this [pos] == null;
         }
 
+
         public void Clear()
         {
-            foreach (GameObject go in Objects)
+            foreach (GameObject go in GameObjects)
             {
                 GameObject.Destroy(go);
             }
         }
 
+
         public bool Contains(GameObject go)
         {
             return go.transform.parent = SceneNode.transform;
         }
+
 
         public Position Find(GameObject go)
         {
@@ -184,9 +110,6 @@ namespace Medusa
             return null;
         }
 
-        #endregion
-
-        #region Component Interaction
 
         public bool Has<T>(Position pos) where T : Component
         {
@@ -196,7 +119,8 @@ namespace Medusa
             T item = go.GetComponent<T>();
             return (item != null);
         }
-        
+
+
         public T Get<T>(Position pos) where T : Component
         {
             GameObject go = this [pos];
@@ -206,7 +130,8 @@ namespace Medusa
             return item;
         }
 
-        public T[] All<T>(Position pos) where T :Component
+
+        public T[] All<T>(Position pos) where T : Component
         {
             GameObject go = this [pos];
             if (go == null)
@@ -214,15 +139,12 @@ namespace Medusa
             T[] items = go.GetComponents<T>();
             return items;
         }
-        
-        
-        #endregion       
-       
-        #region Utilities
 
+
+        // Lambda
         public IEnumerable<GameObject> Where(Func<GameObject,bool> test)
         {
-            foreach (GameObject go in Objects)
+            foreach (GameObject go in GameObjects)
             {
                 if (test(go))
                 {
@@ -231,7 +153,59 @@ namespace Medusa
             }
         }
 
+
+        private bool CheckIndex(Position position)
+        {
+            return position.
+        }
+
+
+        #region Getters and Setters
+
+        // Do we need this?
+        public int Rows
+        {
+            get { return gameObjects.GetLength(0); }
+        }
+
+
+        // Do we need this?
+        public int Columns
+        {
+            get { return gameObjects.GetLength(1); }
+        }
+
+
+        public GameObject SceneNode
+        {
+            get;
+            private set;
+        }
+
+
+        public string Name
+        {
+            get;
+            private set;
+        }
+
+
+        public IEnumerable<GameObject> GameObjects
+        {
+            get
+            {
+                foreach (GameObject go in gameObjects)
+                {
+                    if (go != null)
+                    {
+                        yield return go;
+                    }
+                }
+            }
+        }
+
         #endregion
+
 
     }
 }
