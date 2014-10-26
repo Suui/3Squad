@@ -156,20 +156,6 @@ namespace Medusa
 
         #region Getters and Setters
 
-        // Do we need this?
-        public int Rows
-        {
-            get { return gameObjects.GetLength(0); }
-        }
-
-
-        // Do we need this?
-        public int Columns
-        {
-            get { return gameObjects.GetLength(1); }
-        }
-
-
         public GameObject SceneNode
         {
             get;
@@ -179,8 +165,7 @@ namespace Medusa
 
         public string Name
         {
-            get;
-            private set;
+            get { return name; }
         }
 
 

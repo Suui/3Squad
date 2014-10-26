@@ -5,7 +5,6 @@ using System.Collections.Generic;
 namespace Medusa
 {
 
-
     public delegate void BoardOnChange(Board caller,Layer layer,Position pos,GameObject oldGO,GameObject newGO);
 
 
@@ -56,26 +55,19 @@ namespace Medusa
         }
 
 
+        // TODO: Search a way to implement this w/o depending on the GO structures
         public Layer GetLayerOf(GameObject gameObject)
         {
-            return this[gameObject.transform.parent.name];          // This of a way of implementing this w/o depending on the GO structure
+            return this[gameObject.transform.parent.name];
         }
 
 
-        private void LayerChangeEventHandler(Layer layer, Position position, GameObject oldGameObject, GameObject newGameObject)
-        {
-            if (OnChange != null)
-                OnChange(this, layer, position, oldGameObject, newGameObject);
-        }
-
-
-        // What does this?
-        public void ValidatePosition(GameObject gameObject)
+        public void RefreshPositionOf(GameObject gameObject)
         {
             Position pos = GetLayerOf(gameObject).GetPositionOf(gameObject);
 
             if (pos != null)
-                gameObject.transform.position = pos;        // Redundant cast to Vector3
+                gameObject.transform.position = pos;
         }
 
 
@@ -85,6 +77,13 @@ namespace Medusa
                    && position.z >= 0
                    && position.x < rows
                    && position.z < columns;
+        }
+
+
+        private void LayerChangeEventHandler(Layer layer, Position position, GameObject oldGameObject, GameObject newGameObject)
+        {
+            if (OnChange != null)
+                OnChange(this, layer, position, oldGameObject, newGameObject);
         }
 
 
