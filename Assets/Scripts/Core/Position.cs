@@ -1,6 +1,5 @@
-﻿using System;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using UnityEngine;
+
 
 namespace Medusa
 {
@@ -8,10 +7,7 @@ namespace Medusa
     public sealed class Position
     {
 
-        public static int MAX_COLUMNS = 100;
-        public int x, z;
-
-        private static int ASCII_OFFSET = 97;
+        private readonly int x, z;
 
 
         public Position(int x, int z)
@@ -21,31 +17,18 @@ namespace Medusa
         }
 
 
-        #region Utilities
-
+        // TODO: Test, possible mistakes
         public Direction GetDirectionTo(Position position)
         {
-            return new Direction(x - position.x, z - position.z);
+            return new Direction(x + position.x, z + position.z);
         }
 
 
+        // TODO: Test, possible mistakes
         public int GetDistanceTo(Position position)
         {
             return GetDirectionTo(position).Length;
         }
-
-
-        // Set new name
-        public IEnumerable<Position> Ray(Direction direction, Dimension bounds, int range = Int32.MaxValue)
-        {
-            Position pos = this;
-            while ((pos += direction).Inside(bounds) && range-- > 0)
-            {
-                yield return pos;
-            }
-        }
-
-        #endregion
 
 
         #region Operators

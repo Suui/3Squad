@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 
+
 namespace Medusa
 {
 
@@ -32,14 +33,15 @@ namespace Medusa
         }
 
 
+        // TODO: Verify SceneNode and Event
         public void AddLayer(string name)
         {
             Layer layer = new Layer(this, rows, columns, name);
 
-            layer.SceneNode.transform.parent = SceneNode.transform;     // Verify
-            layers[name] = layer;                                       // Verify
+            layer.SceneNode.transform.parent = SceneNode.transform;
+            layers[name] = layer;
 
-            layer.OnChange += LayerChangeEventHandler;                  // Event
+            layer.OnChange += LayerChangeEventHandler;
         }
 
 
@@ -71,12 +73,31 @@ namespace Medusa
         }
 
 
+        // TODO: Set new name.
+        public IEnumerable<Position> GetPositions(Position originPosition, Direction direction, int range, params string[] affectedLayers)
+        {
+            Position pos = originPosition;
+
+            while (CheckIndex(pos += direction) && range-- > 0)
+                yield return pos;
+        }
+
+
+        public IEnumerable<Position> GetPositionsWithoutRange(Position originPosition, Direction direction, params string[] affectedLayers)
+        {
+            Position pos = originPosition;
+
+            while (CheckIndex(pos += direction))
+                yield return pos;
+        }
+
+
         public bool CheckIndex(Position position)
         {
-            return position.x >= 0
-                   && position.z >= 0
-                   && position.x < rows
-                   && position.z < columns;
+            return position.X >= 0
+                   && position.Z >= 0
+                   && position.X < rows
+                   && position.Z < columns;
         }
 
 
@@ -116,7 +137,6 @@ namespace Medusa
         }
 
         #endregion
-
 
     }
 }

@@ -39,11 +39,11 @@ namespace Medusa
                 if (board.CheckIndex(position) == false)        // Return null instead of exception?
                     throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
-                return gameObjects[position.x, position.z]; 
+                return gameObjects[position.X, position.Z]; 
             }
 
             // TODO: Functionality of set: Are we able to replace an object? Would be better to have a function to do that
-            // Only able to set if the position you are trying to establish is empty
+            // Actually set to able set if the position you are trying to establish is empty
             set
             {
                 if (position == null)
@@ -54,7 +54,7 @@ namespace Medusa
 
                 if (this[position] == null)
                 {
-                    gameObjects[position.x, position.z] = value;
+                    gameObjects[position.X, position.Z] = value;
                     value.transform.parent = SceneNode.transform;
 
                     if (OnChange != null)
@@ -147,9 +147,7 @@ namespace Medusa
             foreach (GameObject go in GameObjects)
             {
                 if (test(go))
-                {
                     yield return go;
-                }
             }
         }
 
@@ -184,7 +182,6 @@ namespace Medusa
         }
 
         #endregion
-
 
     }
 }
