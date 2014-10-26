@@ -23,24 +23,28 @@ namespace Medusa
 
         #region Utilities
 
-        public Direction To(Position other)
+        public Direction GetDirectionTo(Position position)
         {
-            return new Direction(this.Column - other.Column, this.Row - other.Row);
+            return new Direction(x - position.x, z - position.z);
         }
 
-        public int Distance(Position other)
+
+        public int GetDistanceTo(Position position)
         {
-            return this.To(other).Length;
+            return GetDirectionTo(position).Length;
         }
 
-        public IEnumerable<Position> Ray(Direction dir, Dimension bounds, int range = Int32.MaxValue)
+
+        // Set new name
+        public IEnumerable<Position> Ray(Direction direction, Dimension bounds, int range = Int32.MaxValue)
         {
             Position pos = this;
-            while ((pos += dir).Inside(bounds) && range-- > 0)
+            while ((pos += direction).Inside(bounds) && range-- > 0)
             {
                 yield return pos;
             }
         }
+
 
         public static IEnumerable<Position> Range(Dimension dim)
         {
@@ -80,15 +84,29 @@ namespace Medusa
         }
 
 
-        // Operator +
+        // Operator + Position
         public static Position operator +(Position a, Position b)
         {
             return new Position(a.x + b.x, a.z + b.z);
         }
 
 
-        // Operator -
+        // Operator - Position
         public static Position operator -(Position a, Position b)
+        {
+            return new Position(a.x - b.x, a.z - b.z);
+        }
+
+
+        // Operator + Direction
+        public static Position operator +(Position a, Direction b)
+        {
+            return new Position(a.x + b.x, a.z + b.z);
+        }
+
+
+        // Operator - Direction
+        public static Position operator -(Position a, Direction b)
         {
             return new Position(a.x - b.x, a.z - b.z);
         }

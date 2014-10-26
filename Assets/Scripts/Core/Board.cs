@@ -35,7 +35,7 @@ namespace Medusa
 
         public void AddLayer(string name)
         {
-            Layer layer = new Layer(rows, columns, name);
+            Layer layer = new Layer(this, rows, columns, name);
 
             layer.SceneNode.transform.parent = SceneNode.transform;     // Verify
             layers[name] = layer;                                       // Verify
@@ -79,6 +79,15 @@ namespace Medusa
         }
 
 
+        public bool CheckIndex(Position position)
+        {
+            return position.x >= 0
+                   && position.z >= 0
+                   && position.x < rows
+                   && position.z < columns;
+        }
+
+
         #region Getters and Setters
 
         public int Rows
@@ -108,6 +117,7 @@ namespace Medusa
         }
 
         #endregion
+
 
     }
 }

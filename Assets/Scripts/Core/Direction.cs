@@ -1,4 +1,6 @@
 ﻿using System;
+using UnityEngine;
+
 
 namespace Medusa
 {
@@ -6,49 +8,23 @@ namespace Medusa
     public struct Direction
     {
 
-        #region Basic Properties
-
-        public int Rows
-        {
-            get;
-            private set;
-        }
-
-        public int Columns
-        {
-            get;
-            private set;
-        }
-
-        public int Length
-        {
-            get;
-            private set;
-        }
-
-        #endregion
-
-        #region Static Stuff
-
         public static readonly Direction Left = new Direction(-1, 0);
         public static readonly Direction Right = -Left;
         public static readonly Direction Up = new Direction(0, 1);
         public static readonly Direction Down = -Up;
 
-        public static readonly Direction[] All = {Up,Right,Down,Left};
+        public static readonly Direction[] AllStaticDirections = { Up, Right, Down, Left };
 
-        #endregion
+        private int x, z, length;
 
-        #region Constructor
 
-        public Direction(int rows, int columns)
+        public Direction(int x, int z)
         {
-            Rows = rows;
-            Columns = columns;
-            Length = Math.Abs(rows) + Math.Abs(columns);
+            this.x = x;
+            this.z = z;
+            length = Math.Abs(x) + Math.Abs(z);
         }
 
-        #endregion
 
         #region Operators
 
@@ -107,6 +83,29 @@ namespace Medusa
         }
 
         #endregion
+
+
+        #region Getters
+
+        public int X
+        {
+            get { return x; }
+        }
+
+
+        public int Z
+        {
+            get { return z; }
+        }
+
+
+        public int Length
+        {
+            get { return length; }
+        }
+
+        #endregion
+
 
     }
 }

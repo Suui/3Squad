@@ -15,42 +15,44 @@ namespace Medusa
         public event LayerOnChange OnChange;
 
         private GameObject[,] gameObjects;
+        private Board board;
+        private string name;
 
 
-        public Layer(int rows, int columns, string name)
+        public Layer(Board board, int rows, int columns, string name)
         {
-            gameObjects = new GameObject[rows, columns];
-            Name = name;
+            this.board = board;
+            this.name = name;
 
+            gameObjects = new GameObject[rows, columns];
             SceneNode = new GameObject(name);
         }
 
 
-        public GameObject this [Position position]
+        public GameObject this[Position position]
         {
             get
             { 
-                if (position == null)
-                    throw new ArgumentOutOfRangeException("Trying to access null");
-                if (position.Outside(this))
-                    throw new ArgumentOutOfRangeException(position + " not in layer");
+                if (position == null)                           // Return null instead of exception?
+                    throw new ArgumentOutOfRangeException("The parameter position is null");
 
-                return gameObjects [position.Row, position.Column]; 
+                if (board.CheckIndex(position) == false)        // Return null instead of exception?
+                    throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
+
+                return gameObjects[position.x, position.z]; 
             }
 
             set
             {
-                // Argument Validation
-
                 if (position == null)
-                    throw new ArgumentOutOfRangeException("Trying to access null");
-                if (position.Outside(this))
-                    throw new ArgumentOutOfRangeException(position + " not in layer");
+                    throw new ArgumentOutOfRangeException("The parameter position is null");
 
+                if (board.CheckIndex(position) == false)
+                    throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
                 // Handle Old & Transform
 
-                GameObject old = this [position];
+                GameObject old = this[position];
 
                 if (value == null)
                 {
@@ -151,12 +153,6 @@ namespace Medusa
                     yield return go;
                 }
             }
-        }
-
-
-        private bool CheckIndex(Position position)
-        {
-            return position.
         }
 
 
