@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 namespace Medusa
@@ -15,71 +14,98 @@ namespace Medusa
 
         public static readonly Direction[] AllStaticDirections = { Up, Right, Down, Left };
 
-        private int x, z, length;
+        private readonly int x, z, magnitude;
 
 
+        // TODO: What is magnitud used for?
         public Direction(int x, int z)
         {
             this.x = x;
             this.z = z;
-            length = Math.Abs(x) + Math.Abs(z);
+            magnitude = Mathf.Abs(x) + Mathf.Abs(z);
         }
 
 
         #region Operators
 
-        #region Equality
-
+        // Operator ==
         public static bool operator ==(Direction a, Direction b)
         {
-            return a.Rows == b.Rows && a.Columns == b.Columns;
+            return a.x == b.x && a.z == b.z;
         }
 
+
+        // Operator !=
         public static bool operator !=(Direction a, Direction b)
         {
-            return a.Rows != b.Rows || a.Columns != b.Columns;
+            return a.x != b.x || a.z != b.z;
         }
 
-        #endregion
 
-        #region Arithmetic
-
+        // Operator + Direction
         public static Direction operator +(Direction a, Direction b)
         {
-            return new Direction(a.Rows + b.Rows, a.Columns + b.Columns);
+            return new Direction(a.x + b.x, a.z + b.z);
         }
-        
+
+
+        // Operator - Direction
         public static Direction operator -(Direction a, Direction b)
         {
-            return new Direction(a.Rows - b.Rows, a.Columns - b.Columns);
+            return new Direction(a.x - b.x, a.z - b.z);
         }
 
+
+        // Operator + Position
+        public static Direction operator +(Direction a, Position b)
+        {
+            return new Direction(a.x + b.X, a.z + b.Z);
+        }
+
+
+        // Operator - Position
+        public static Direction operator -(Direction a, Position b)
+        {
+            return new Direction(a.x - b.X, a.z - b.Z);
+        }
+
+
+        // Operator opposed
         public static Direction operator -(Direction dir)
         {
-            return new Direction(-dir.Rows, -dir.Columns);
+            return new Direction(-dir.x, -dir.z);
         }
 
+
+        // Operator * int
         public static Direction operator *(Direction dir, int scalar)
         {
-            return new Direction(dir.Rows * scalar, dir.Columns * scalar);
+            return new Direction(dir.x * scalar, dir.z * scalar);
         }
 
         #endregion
 
-        #endregion
 
-        #region System.Object Override
+        #region Equals, GetHasCode Overrides
 
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
+
             return this == (Direction)obj;
         }
 
+
+        public bool Equals(Direction direction)
+        {
+            return this == direction;
+        }
+
+
         public override int GetHashCode()
         {
-            return Columns * Position.MAX_COLUMNS + Rows;
+            return x ^ z;
         }
 
         #endregion
@@ -99,9 +125,9 @@ namespace Medusa
         }
 
 
-        public int Length
+        public int Magnitude
         {
-            get { return length; }
+            get { return magnitude; }
         }
 
         #endregion

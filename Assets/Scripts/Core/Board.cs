@@ -92,6 +92,18 @@ namespace Medusa
         }
 
 
+        public IEnumerable<Position> AllBoardPositions()
+        {
+            for (int x = 0; x < rows; x++)
+            {
+                for (int z = 0; z < columns; z++)
+                {
+                    yield return new Position(x, z);
+                }
+            }
+        }
+
+
         public bool CheckIndex(Position position)
         {
             return position.X >= 0

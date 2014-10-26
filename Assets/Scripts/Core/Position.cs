@@ -27,7 +27,7 @@ namespace Medusa
         // TODO: Test, possible mistakes
         public int GetDistanceTo(Position position)
         {
-            return GetDirectionTo(position).Length;
+            return GetDirectionTo(position).Magnitude;
         }
 
 
@@ -71,14 +71,14 @@ namespace Medusa
         // Operator + Direction
         public static Position operator +(Position a, Direction b)
         {
-            return new Position(a.x + b.x, a.z + b.z);
+            return new Position(a.x + b.X, a.z + b.Z);
         }
 
 
         // Operator - Direction
         public static Position operator -(Position a, Direction b)
         {
-            return new Position(a.x - b.x, a.z - b.z);
+            return new Position(a.x - b.X, a.z - b.Z);
         }
 
         #endregion
