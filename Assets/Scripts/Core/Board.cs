@@ -13,9 +13,9 @@ namespace Medusa
     {
 
         public event BoardOnChange OnChange;
-        public int rows, columns;
+        public readonly int rows, columns;
 
-        private Dictionary<string,Layer> layers;
+        private readonly Dictionary<string,Layer> layers;
 
 
         public Board(int rows, int columns, params string[] names)
@@ -57,7 +57,7 @@ namespace Medusa
         }
 
 
-        // TODO: Search a way to implement this w/o depending on the GO structures
+        // TODO: Search a way to implement this w/o depending on the GO structures -- Not needed right now
         public Layer GetLayerOf(GameObject gameObject)
         {
             return this[gameObject.transform.parent.name];
@@ -73,21 +73,11 @@ namespace Medusa
         }
 
 
-        // TODO: Set new name.
-        public IEnumerable<Position> GetPositions(Position originPosition, Direction direction, int range, params string[] affectedLayers)
+        public IEnumerable<Position> Way(Position originPosition, Direction direction, int range = Int32.MaxValue)
         {
             Position pos = originPosition;
 
-            while (CheckIndex(pos += direction) && range-- > 0)
-                yield return pos;
-        }
-
-
-        public IEnumerable<Position> GetPositionsWithoutRange(Position originPosition, Direction direction, params string[] affectedLayers)
-        {
-            Position pos = originPosition;
-
-            while (CheckIndex(pos += direction))
+            while (IsInside(pos += direction) && range-- > 0)
                 yield return pos;
         }
 
@@ -104,7 +94,7 @@ namespace Medusa
         }
 
 
-        public bool CheckIndex(Position position)
+        public bool IsInside(Position position)
         {
             return position.X >= 0
                    && position.Z >= 0

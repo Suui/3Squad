@@ -36,26 +36,28 @@ namespace Medusa
                 if (position == null)                           // Return null instead of exception?
                     throw new ArgumentOutOfRangeException("The parameter position is null");
 
-                if (board.CheckIndex(position) == false)        // Return null instead of exception?
+                if (board.IsInside(position) == false)        // Return null instead of exception?
                     throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
                 return gameObjects[position.X, position.Z]; 
             }
 
             // TODO: Functionality of set: Are we able to replace an object? Would be better to have a function to do that
-            // Actually set to able set if the position you are trying to establish is empty
+            // Actually set to able set IF the position you are trying to establish is empty
             set
             {
                 if (position == null)
                     throw new ArgumentOutOfRangeException("The parameter position is null");
 
-                if (board.CheckIndex(position) == false)
+                if (board.IsInside(position) == false)
                     throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
                 if (this[position] == null)
                 {
                     gameObjects[position.X, position.Z] = value;
-                    value.transform.parent = SceneNode.transform;
+
+                    if (value != null)
+                        value.transform.parent = SceneNode.transform;
 
                     if (OnChange != null)
                         OnChange(this, position, null, value);
@@ -63,6 +65,29 @@ namespace Medusa
                 else
                     throw new ArgumentException("Cannot set " + position + " as it is already occupied by " + this[position].name);
             }
+        }
+
+
+        // TODO: Does this set the position as null? It should.
+        public void RemoveGameObjectAt(Position position)
+        {
+            if (IsEmpty(position) == false)
+                UnityEngine.Object.Destroy(this[position]);
+        }
+
+
+        public void RemoveGameObject(GameObject gameObject)
+        {
+            if (Contains(gameObject))
+                RemoveGameObjectAt(GetPositionOf(gameObject));
+            else
+                throw new ArgumentException("The GameObject " + gameObject.name + " is not in the Layer");
+        }
+
+
+        public void AddGameObjectAt(GameObject gameObject, Position position)
+        {
+            this[position] = gameObject;
         }
 
 
@@ -80,7 +105,7 @@ namespace Medusa
             }
         }
 
-        // TODO: == or = ?
+
         public bool Contains(GameObject gameObject)
         {
             return gameObject.transform.parent == SceneNode.transform;

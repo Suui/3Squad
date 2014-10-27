@@ -14,10 +14,9 @@ namespace Medusa
 
         public static readonly Direction[] AllStaticDirections = { Up, Right, Down, Left };
 
-        private readonly int x, z, magnitude;
+        private readonly int x, z, magnitude;   // Manhattan magnitud
 
 
-        // TODO: What is magnitud used for?
         public Direction(int x, int z)
         {
             this.x = x;
