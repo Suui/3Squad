@@ -13,8 +13,11 @@ namespace Medusa
         public event BoardOnNew OnNewBoard;
 
         public GameObject boardCellPrefab;
+        public GameObject[] obstaclePrefabs;
+        public int obstaclesLimit;
         public int boardRows;
         public int boardColumns;
+        public int seed;
 
         private BoardGenerator boardGenerator;
 
@@ -39,7 +42,8 @@ namespace Medusa
         void Start()
         {
             boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
-            boardGenerator.CreateBoard();
+            boardGenerator.CreateEmptyBoard();
+            boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
         }
 
 
