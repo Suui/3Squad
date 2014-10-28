@@ -2,6 +2,7 @@
 Library
 Temp
 Assets/UnityVS
+obj
 *.csproj
 *.pidb
 *.unityproj
