@@ -43,7 +43,7 @@ public class CameraControl : MonoBehaviour
         distance = cam.orthographicSize;
         rotation = transform.eulerAngles.y;
 
-        Director.Instance.OnNewBoard += ResetTransform;
+        GameMaster.Instance.OnNewBoard += ResetTransform;
 
     }
 
