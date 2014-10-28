@@ -14,17 +14,17 @@ namespace Medusa
 
         public event LayerOnChange OnChange;
 
-        private GameObject[,] gameObjects;
-        private Board board;
-        private string name;
+        private readonly GameObject[,] gameObjects;
+        private readonly Board board;
+        private readonly string name;
 
 
-        public Layer(Board board, int rows, int columns, string name)
+        public Layer(Board board, string name)
         {
             this.board = board;
             this.name = name;
 
-            gameObjects = new GameObject[rows, columns];
+            gameObjects = new GameObject[board.rows, board.columns];
             SceneNode = new GameObject(name);
         }
 
