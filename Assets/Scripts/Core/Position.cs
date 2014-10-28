@@ -100,6 +100,7 @@ namespace Medusa
         }
 
 
+        // TODO: Maybe not useful
         // Casting Transform to Position
         public static explicit operator Position(Transform transform)
         {
@@ -142,7 +143,7 @@ namespace Medusa
 
         public override string ToString()
         {
-            return x + ", " + z;
+            return "(" + x + ", " + z + ")";
         }
 
         #endregion
