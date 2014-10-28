@@ -36,7 +36,7 @@ namespace Medusa
         // TODO: Verify SceneNode and Event
         public void AddLayer(string name)
         {
-            Layer layer = new Layer(this, rows, columns, name);
+            Layer layer = new Layer(this, name);
 
             layer.SceneNode.transform.parent = SceneNode.transform;
             layers[name] = layer;
@@ -114,15 +114,13 @@ namespace Medusa
 
         public int Rows
         {
-            get;
-            private set;
+            get { return rows; }
         }
 
 
         public int Columns
         {
-            get;
-            private set;
+            get { return columns; }
         }
 
 
