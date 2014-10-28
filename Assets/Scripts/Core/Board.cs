@@ -82,7 +82,7 @@ namespace Medusa
         }
 
 
-        public IEnumerable<Position> AllBoardPositions()
+        public IEnumerable<Position> Positions()
         {
             for (int x = 0; x < rows; x++)
             {
