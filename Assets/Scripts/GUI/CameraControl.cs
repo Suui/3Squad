@@ -102,7 +102,7 @@ public class CameraControl : MonoBehaviour
 
         #endregion
 
-        #region Calculate Delta X
+        #region Calculate Delta row
 
         float dx;
         

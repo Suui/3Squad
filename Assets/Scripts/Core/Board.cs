@@ -96,10 +96,10 @@ namespace Medusa
 
         public bool IsInside(Position position)
         {
-            return position.X >= 0
-                   && position.Z >= 0
-                   && position.X < rows
-                   && position.Z < columns;
+            return position.Row >= 0
+                   && position.Column >= 0
+                   && position.Row < rows
+                   && position.Column < columns;
         }
 
 

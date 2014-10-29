@@ -20,6 +20,7 @@ namespace Medusa
         public int seed;
 
         private BoardGenerator boardGenerator;
+        private SelectionBehaviour selection;
 
 
         #region Singleton
@@ -44,6 +45,9 @@ namespace Medusa
             boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
             boardGenerator.CreateEmptyBoard();
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
+
+            selection = new SelectionBehaviour(boardGenerator.Board);
+            selection.Begin();
         }
 
 

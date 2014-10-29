@@ -7,20 +7,20 @@ namespace Medusa
     public sealed class Position
     {
 
-        private readonly int x, z;
+        private readonly int row, column;
 
 
-        public Position(int x, int z)
+        public Position(int row, int column)
         {
-            this.x = x;
-            this.z = z;
+            this.row = row;
+            this.column = column;
         }
 
 
         // TODO: Test, possible mistakes
         public Direction GetDirectionTo(Position position)
         {
-            return new Direction(x + position.x, z + position.z);
+            return new Direction(row + position.row, column + position.column);
         }
 
 
@@ -43,7 +43,7 @@ namespace Medusa
             if (((object)a == null) || ((object)b == null))
                 return false;
 
-            return a.x == b.x && a.z == b.z;
+            return a.row == b.row && a.column == b.column;
         }
 
 
@@ -57,28 +57,28 @@ namespace Medusa
         // Operator + Position
         public static Position operator +(Position a, Position b)
         {
-            return new Position(a.x + b.x, a.z + b.z);
+            return new Position(a.row + b.row, a.column + b.column);
         }
 
 
         // Operator - Position
         public static Position operator -(Position a, Position b)
         {
-            return new Position(a.x - b.x, a.z - b.z);
+            return new Position(a.row - b.row, a.column - b.column);
         }
 
 
         // Operator + Direction
         public static Position operator +(Position a, Direction b)
         {
-            return new Position(a.x + b.X, a.z + b.Z);
+            return new Position(a.row + b.Row, a.column + b.Column);
         }
 
 
         // Operator - Direction
         public static Position operator -(Position a, Direction b)
         {
-            return new Position(a.x - b.X, a.z - b.Z);
+            return new Position(a.row - b.Row, a.column - b.Column);
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace Medusa
         // Casting Position to Vector3
         public static implicit operator Vector3(Position position)
         {
-            return new Vector3(position.x, 0, position.z);
+            return new Vector3(position.row, 0, position.column);
         }
 
 
@@ -122,7 +122,7 @@ namespace Medusa
             if ((System.Object)position == null)
                 return false;
 
-            return (x == position.x) && (z == position.z);
+            return (row == position.row) && (column == position.column);
         }
 
 
@@ -131,19 +131,19 @@ namespace Medusa
             if ((object)position == null)
                 return false;
 
-            return (x == position.x) && (z == position.z);
+            return (row == position.row) && (column == position.column);
         }
 
 
         public override int GetHashCode()
         {
-            return x ^ z;
+            return row ^ column;
         }
 
 
         public override string ToString()
         {
-            return "(" + x + ", " + z + ")";
+            return "(" + row + ", " + column + ")";
         }
 
         #endregion
@@ -151,14 +151,14 @@ namespace Medusa
 
         #region Getters
 
-        public int X
+        public int Row
         {
-            get { return x; }
+            get { return row; }
         }
 
-        public int Z
+        public int Column
         {
-            get { return z; }
+            get { return column; }
         }
 
         #endregion

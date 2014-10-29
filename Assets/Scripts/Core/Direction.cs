@@ -14,14 +14,14 @@ namespace Medusa
 
         public static readonly Direction[] AllStaticDirections = { Up, Right, Down, Left };
 
-        private readonly int x, z, magnitude;   // Manhattan magnitud
+        private readonly int row, column, magnitude;   // Manhattan magnitud
 
 
-        public Direction(int x, int z)
+        public Direction(int row, int column)
         {
-            this.x = x;
-            this.z = z;
-            magnitude = Mathf.Abs(x) + Mathf.Abs(z);
+            this.row = row;
+            this.column = column;
+            magnitude = Mathf.Abs(row) + Mathf.Abs(column);
         }
 
 
@@ -30,56 +30,56 @@ namespace Medusa
         // Operator ==
         public static bool operator ==(Direction a, Direction b)
         {
-            return a.x == b.x && a.z == b.z;
+            return a.row == b.row && a.column == b.column;
         }
 
 
         // Operator !=
         public static bool operator !=(Direction a, Direction b)
         {
-            return a.x != b.x || a.z != b.z;
+            return a.row != b.row || a.column != b.column;
         }
 
 
         // Operator + Direction
         public static Direction operator +(Direction a, Direction b)
         {
-            return new Direction(a.x + b.x, a.z + b.z);
+            return new Direction(a.row + b.row, a.column + b.column);
         }
 
 
         // Operator - Direction
         public static Direction operator -(Direction a, Direction b)
         {
-            return new Direction(a.x - b.x, a.z - b.z);
+            return new Direction(a.row - b.row, a.column - b.column);
         }
 
 
         // Operator + Position
         public static Direction operator +(Direction a, Position b)
         {
-            return new Direction(a.x + b.X, a.z + b.Z);
+            return new Direction(a.row + b.Row, a.column + b.Column);
         }
 
 
         // Operator - Position
         public static Direction operator -(Direction a, Position b)
         {
-            return new Direction(a.x - b.X, a.z - b.Z);
+            return new Direction(a.row - b.Row, a.column - b.Column);
         }
 
 
         // Operator opposed
         public static Direction operator -(Direction dir)
         {
-            return new Direction(-dir.x, -dir.z);
+            return new Direction(-dir.row, -dir.column);
         }
 
 
         // Operator * int
         public static Direction operator *(Direction dir, int scalar)
         {
-            return new Direction(dir.x * scalar, dir.z * scalar);
+            return new Direction(dir.row * scalar, dir.column * scalar);
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace Medusa
 
         public override int GetHashCode()
         {
-            return x ^ z;
+            return row ^ column;
         }
 
         #endregion
@@ -112,15 +112,15 @@ namespace Medusa
 
         #region Getters
 
-        public int X
+        public int Row
         {
-            get { return x; }
+            get { return row; }
         }
 
 
-        public int Z
+        public int Column
         {
-            get { return z; }
+            get { return column; }
         }
 
 
