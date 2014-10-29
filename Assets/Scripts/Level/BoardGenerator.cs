@@ -21,7 +21,7 @@ namespace Medusa
         }
 
 
-        public void CreateEmptyBoard()
+        public void CreateEmptyBoard(float boardYSize)
         {
             board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays");
 
@@ -29,7 +29,7 @@ namespace Medusa
             {
                 GameObject go = Object.Instantiate(boardCellPrefab) as GameObject;
                 go.name = "cell " + pos;
-                go.transform.position = pos;
+                go.transform.position = new Vector3(pos.Row, -boardYSize, pos.Column);
 
                 board["terrain"][pos] = go;
             }
@@ -56,7 +56,7 @@ namespace Medusa
                     // Initial instantiation
                     GameObject go = Object.Instantiate(obstacles[obstacleIndex]) as GameObject;
                     go.name = "token " + pos;
-                    go.transform.position = new Vector3(pos.Row, 1.0f, pos.Column);
+                    go.transform.position = pos;
                     board["tokens"][pos] = go;
 
                     // Symetric Instantiation
@@ -64,21 +64,12 @@ namespace Medusa
 
                     GameObject symetricGO = Object.Instantiate(obstacles[obstacleIndex]) as GameObject;
                     symetricGO.name = "token " + symetricPos;
-                    symetricGO.transform.position = new Vector3(symetricPos.Row, 1.0f, symetricPos.Column);
+                    symetricGO.transform.position = symetricPos;
                     board["tokens"][symetricPos] = symetricGO;
 
                     limit--;
                 }
             }
-
-            SymetrizeObstacles();
-
-        }
-
-
-        private void SymetrizeObstacles()
-        {
-            
         }
 
 
