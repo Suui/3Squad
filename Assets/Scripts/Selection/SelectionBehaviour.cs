@@ -6,19 +6,31 @@ namespace Medusa
     class SelectionBehaviour
     {
 
+        private Board board;
         private State selectionState;
+        private RaySelection raySelection;
 
 
-        public SelectionBehaviour()
+        public SelectionBehaviour(Board board)
         {
+            this.board = board;
             selectionState = State.NothingSelected;
+        }
+
+
+        public void Begin()
+        {
             OnNothingSelected();
         }
 
 
         private void OnNothingSelected()
         {
-            
+            Position pos = raySelection.SelectedPos;
+            if (ComponentCheck.IsCharacter(board["tokens"][pos]))
+            {
+                OnCharacterSelected();
+            }
         }
 
 
