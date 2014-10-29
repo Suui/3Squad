@@ -17,6 +17,7 @@ namespace Medusa
         public int obstaclesLimit;
         public int boardRows;
         public int boardColumns;
+        public float boardYSize;
         public int seed;
 
         private BoardGenerator boardGenerator;
@@ -40,14 +41,14 @@ namespace Medusa
         #endregion
 
 
-        void Start()
+        void Awake()
         {
             boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
-            boardGenerator.CreateEmptyBoard();
+            boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
 
-            selection = new SelectionBehaviour(boardGenerator.Board);
-            selection.Begin();
+            //selection = new SelectionBehaviour(boardGenerator.Board);
+            //selection.Run();
         }
 
 
