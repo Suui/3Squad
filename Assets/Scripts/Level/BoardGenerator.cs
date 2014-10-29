@@ -56,15 +56,15 @@ namespace Medusa
                     // Initial instantiation
                     GameObject go = Object.Instantiate(obstacles[obstacleIndex]) as GameObject;
                     go.name = "token " + pos;
-                    go.transform.position = new Vector3(pos.X, 1.0f, pos.Z);
+                    go.transform.position = new Vector3(pos.Row, 1.0f, pos.Column);
                     board["tokens"][pos] = go;
 
                     // Symetric Instantiation
-                    Position symetricPos = new Position(board.rows - 1 - pos.X , board.columns - 1 - pos.Z);
+                    Position symetricPos = new Position(board.rows - 1 - pos.Row , board.columns - 1 - pos.Column);
 
                     GameObject symetricGO = Object.Instantiate(obstacles[obstacleIndex]) as GameObject;
                     symetricGO.name = "token " + symetricPos;
-                    symetricGO.transform.position = new Vector3(symetricPos.X, 1.0f, symetricPos.Z);
+                    symetricGO.transform.position = new Vector3(symetricPos.Row, 1.0f, symetricPos.Column);
                     board["tokens"][symetricPos] = symetricGO;
 
                     limit--;

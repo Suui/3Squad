@@ -39,7 +39,7 @@ namespace Medusa
                 if (board.IsInside(position) == false)        // Return null instead of exception?
                     throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
-                return gameObjects[position.X, position.Z]; 
+                return gameObjects[position.Row, position.Column]; 
             }
 
             // TODO: Functionality of set: Are we able to replace an object? Would be better to have a function to do that
@@ -54,7 +54,7 @@ namespace Medusa
 
                 if (this[position] == null)
                 {
-                    gameObjects[position.X, position.Z] = value;
+                    gameObjects[position.Row, position.Column] = value;
 
                     if (value != null)
                         value.transform.parent = SceneNode.transform;
