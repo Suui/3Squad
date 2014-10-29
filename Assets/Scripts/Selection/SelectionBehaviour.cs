@@ -1,70 +1,86 @@
-﻿
+﻿using UnityEngine;
+using System.Collections;
+
 
 namespace Medusa
 {
 
-    class SelectionBehaviour
+    class SelectionBehaviour : MonoBehaviour
     {
 
-        private Board board;
-        private State selectionState;
-        private RaySelection raySelection;
+        //public enum State
+        //{
+        //    NothingSelected,
+        //    TokenSelected,
+        //    SkillSelected,
+        //    SkillConfirmAction
+        //}
+
+        //private readonly Board board;
+        //private State selectionState;
+        //private RaySelection raySelection;
 
 
-        public SelectionBehaviour(Board board)
-        {
-            this.board = board;
-            selectionState = State.NothingSelected;
-        }
+        //public SelectionBehaviour(Board board)
+        //{
+        //    this.board = board;
+        //}
 
 
-        public void Begin()
-        {
-            OnNothingSelected();
-        }
+        //public void Run()
+        //{
+        //    selectionState = State.NothingSelected;
+
+        //    StartCoroutine(FSM());
+        //}
 
 
-        private void OnNothingSelected()
-        {
-            Position pos = raySelection.SelectedPos;
-            if (ComponentCheck.IsCharacter(board["tokens"][pos]))
-            {
-                OnCharacterSelected();
-            }
-        }
+        //IEnumerator FSM()
+        //{
+        //    while (true)
+        //        yield return StartCoroutine(selectionState.ToString());
+        //}
 
 
-        private void OnCharacterSelected()
-        {
+
+        //IEnumerator NothingSelected()
+        //{
+        //    while (true)
+        //    {
+        //        Position pos = raySelection.SelectedPos;
+        //        if (ComponentCheck.IsCharacter(board["tokens"][pos]))
+        //        {
+        //            TokenSelected();
+        //        }
+        //    }
+        //}
+
+
+        //IEnumerator TokenSelected()
+        //{
             
-        }
+        //}
 
 
-        private void OnSkillSeleceted()
-        {
+        //IEnumerator SkillSeleceted()
+        //{
             
-        }
+        //}
 
 
-        private void OnSkillConfirmAction()
-        {
+        //IEnumerator SkillConfirmAction()
+        //{
             
-        }
+        //}
 
 
-        public State SelectionState
-        {
-            get { return selectionState; }
-        }
+        //public State SelectionState
+        //{
+        //    get { return selectionState; }
+        //}
     }
 
 
-    public enum State
-    {
-        NothingSelected,
-        CharacterSelected,
-        SkillSelected,
-        SkillConfirmAction
-    }
+
 
 }
