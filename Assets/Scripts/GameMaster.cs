@@ -46,9 +46,6 @@ namespace Medusa
             boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
-
-            //selection = new SelectionBehaviour(boardGenerator.Board);
-            //selection.Run();
         }
 
 
