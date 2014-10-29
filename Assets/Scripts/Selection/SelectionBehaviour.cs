@@ -3,14 +3,16 @@
 namespace Medusa
 {
 
-    class Selection
+    class SelectionBehaviour
     {
 
-        private SelectionStates selectionState;
+        private State selectionState;
 
-        public Selection()
+
+        public SelectionBehaviour()
         {
-            selectionState = SelectionStates.NothingSelected;
+            selectionState = State.NothingSelected;
+            OnNothingSelected();
         }
 
 
@@ -38,14 +40,14 @@ namespace Medusa
         }
 
 
-        public SelectionStates SelectionState
+        public State SelectionState
         {
             get { return selectionState; }
         }
     }
 
 
-    public enum SelectionStates
+    public enum State
     {
         NothingSelected,
         CharacterSelected,
