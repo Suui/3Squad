@@ -14,10 +14,15 @@ namespace Medusa
             skillGUI.transform.position = BasicAttackPos;
             skillGUI.transform.parent = gameObject.transform;
 
-            skillGUI.GetComponent<SkillToFire>().SkillType = typeof(BasicAttack);
+            skillGUI.GetComponent<SkillToFire>().Skill = this;
         }
 
 
+        // TODO: Remove testing block
+        public override void FireSkill()
+        {
+            Debug.Log("Basic Attack!");
+        }
     }
 
 }

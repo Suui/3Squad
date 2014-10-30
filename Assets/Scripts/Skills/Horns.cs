@@ -14,14 +14,14 @@ namespace Medusa
             skillGUI.transform.position = SpecialAttackPos;
             skillGUI.transform.parent = gameObject.transform;
 
-            skillGUI.GetComponent<SkillToFire>().SkillType = typeof(Horns);
+            skillGUI.GetComponent<SkillToFire>().Skill = this;
         }
 
 
         // TODO: Remove testing block
-        private void Test()
+        public override void FireSkill()
         {
-            
+            Debug.Log("Horns!");
         }
 
     }

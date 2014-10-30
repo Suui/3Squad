@@ -21,9 +21,10 @@ namespace Medusa
         }
 
 
-        private void FireSkill(GameObject gameObject, Type skillType)
+        private void FireSkill(GameObject character, Skill skill)
         {
-            Debug.Log("Pressed button! " + "Parent gameObject is: " + gameObject.name + ". Skill type is: " + skillType);
+            Debug.Log("Pressed button! " + "Parent gameObject is: " + character.name + ". Skill type is: " + skill);
+            skill.FireSkill();
         }
 
     }

@@ -17,6 +17,12 @@ namespace Medusa
             
         }
 
+
+        public virtual void FireSkill()
+        {
+            
+        }
+
     }
 
 }

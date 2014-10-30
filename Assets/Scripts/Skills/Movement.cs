@@ -14,9 +14,15 @@ namespace Medusa
             skillGUI.transform.position = MovementPos;
             skillGUI.transform.parent = gameObject.transform;
 
-            skillGUI.GetComponent<SkillToFire>().SkillType = typeof(Movement);
+            skillGUI.GetComponent<SkillToFire>().Skill = this;
         }
 
+
+        // TODO: Remove testing block
+        public override void FireSkill()
+        {
+            Debug.Log("Movement!");
+        }
 
     }
 

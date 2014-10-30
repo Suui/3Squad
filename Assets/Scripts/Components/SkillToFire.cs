@@ -7,7 +7,7 @@ namespace Medusa
 
     public class SkillToFire : MonoBehaviour
     {
-        public Type SkillType { get; set; }
+        public Skill Skill { get; set; }
     }
 
 }
