@@ -1,19 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
-public class ClickableGUIElement : MonoBehaviour
+namespace Medusa
 {
 
-    public delegate void ClickAction(GameObject guiElement);
-    public static event ClickAction OnClick;
-
-
-    void OnMouseUp()
+    public class ClickableGUIElement : MonoBehaviour
     {
-        Debug.Log("Pushed!");
 
-        if (OnClick != null)
-            OnClick(gameObject);
+        public delegate void ClickAction(GameObject guiElement, Type skill);
+        public static event ClickAction OnClick;
+
+
+        void OnMouseUp()
+        {
+            if (OnClick != null)
+                OnClick(gameObject.transform.parent.gameObject, GetComponent<SkillToFire>().SkillType);
+        }
+
     }
 
 }
+

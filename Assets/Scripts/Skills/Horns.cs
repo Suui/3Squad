@@ -13,8 +13,16 @@ namespace Medusa
             skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/TestButton2") as Texture2D;
             skillGUI.transform.position = SpecialAttackPos;
             skillGUI.transform.parent = gameObject.transform;
+
+            skillGUI.GetComponent<SkillToFire>().SkillType = typeof(Horns);
         }
 
+
+        // TODO: Remove testing block
+        private void Test()
+        {
+            
+        }
 
     }
 
