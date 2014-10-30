@@ -14,7 +14,6 @@ namespace Medusa
 
         private Ray raySelection;
         private RaycastHit rayHit;
-        private Layer overlay;
 
 
         void Update()

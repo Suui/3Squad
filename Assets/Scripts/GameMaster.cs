@@ -21,9 +21,9 @@ namespace Medusa
         public int seed;
 
         private BoardGenerator boardGenerator;
-        private SelectionBehaviour selection;
 
 
+        // TODO: Not used?! Calvin watcha doin'!
         #region Singleton
 
         private static GameMaster instance;
@@ -46,12 +46,14 @@ namespace Medusa
             boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
-        }
 
 
-        void Update()
-        {
-
+            // TODO: Remove testing block when over
+            // Test GUI
+            GameObject go = Instantiate(Resources.Load("Prefabs/Superr_Character")) as GameObject;
+            go.name = "Superrrr Characterr";
+            go.transform.position = new Position(0, 0);
+            CurrentBoard["tokens"][new Position(0, 0)] = go;
         }
 
 
