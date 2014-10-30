@@ -11,21 +11,19 @@ namespace Medusa
 
         void OnEnable()
         {
-            ClickableGUIElement.OnClick += FireSkill;
+            ClickableSkill.OnClick += FireSkill;
         }
 
 
         void OnDisable()
         {
-            ClickableGUIElement.OnClick -= FireSkill;
+            ClickableSkill.OnClick -= FireSkill;
         }
 
 
         private void FireSkill(GameObject gameObject, Type skillType)
         {
-            Debug.Log("Pressed button!");
-            Debug.Log("Parent gameObject is: " + gameObject.name);
-            Debug.Log("Skill type is: " + skillType);
+            Debug.Log("Pressed button! " + "Parent gameObject is: " + gameObject.name + ". Skill type is: " + skillType);
         }
 
     }

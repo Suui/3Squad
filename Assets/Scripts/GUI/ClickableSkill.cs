@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Medusa
 {
 
-    public class ClickableGUIElement : MonoBehaviour
+    public class ClickableSkill : MonoBehaviour
     {
 
         public delegate void ClickAction(GameObject guiElement, Type skill);
