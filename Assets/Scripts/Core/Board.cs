@@ -82,18 +82,6 @@ namespace Medusa
         }
 
 
-        public IEnumerable<Position> Positions()
-        {
-            for (int x = 0; x < rows; x++)
-            {
-                for (int z = 0; z < columns; z++)
-                {
-                    yield return new Position(x, z);
-                }
-            }
-        }
-
-
         public bool IsInside(Position position)
         {
             return position.Row >= 0
@@ -134,6 +122,19 @@ namespace Medusa
         {
             get;
             private set;
+        }
+
+
+        public IEnumerable<Position> Positions
+        {
+            get
+            {
+                for (int x = 0; x < rows; x++)
+                {
+                    for (int z = 0; z < columns; z++)
+                        yield return new Position(x, z);
+                }
+            }
         }
 
         #endregion
