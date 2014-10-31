@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using Object = UnityEngine.Object;
 
 
 namespace Medusa
@@ -9,8 +11,9 @@ namespace Medusa
 
         private Board board;
 
-        private GameObject boardCellPrefab;
-        private int boardRows, boardColumns;
+        private readonly GameObject boardCellPrefab;
+        private readonly int boardRows, boardColumns;
+        private readonly List<Position> possiblePositions;
 
 
         public BoardGenerator(GameObject boardCellPrefab, int boardRows, int boardColumns)
@@ -18,6 +21,7 @@ namespace Medusa
             this.boardCellPrefab = boardCellPrefab;
             this.boardRows = boardRows;
             this.boardColumns = boardColumns;
+            possiblePositions = new List<Position>(boardRows * boardColumns / 2);
         }
 
 
@@ -25,7 +29,7 @@ namespace Medusa
         {
             board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays");
 
-            foreach (Position pos in board.Positions())
+            foreach (Position pos in board.Positions)
             {
                 GameObject go = Object.Instantiate(boardCellPrefab) as GameObject;
                 go.name = "cell " + pos;
@@ -39,17 +43,19 @@ namespace Medusa
         // TODO: Make a list so that randoms never collide. Set all the obstacle types with a single seed.
         public void SpawnObstacles(GameObject[] obstacles, int limit, int seed)
         {
-            int x, z, obstacleIndex;
-            System.Random randPos = new System.Random(seed);   // seed
-            System.Random randObs = new System.Random(seed);   // seed
+            FillPossiblePositions();
+
+            int obstacleIndex;
+            System.Random randPos = new System.Random(seed);
+            System.Random randObs = new System.Random(seed);
 
             while (limit > 0)
             {
-                x = randPos.Next(0, board.Rows);
-                z = randPos.Next(2, board.Columns / 2 - 1);
-                obstacleIndex = randObs.Next(0, obstacles.Length);
+                obstacleIndex = randObs.Next(1000) % 2;
 
-                Position pos = new Position(x, z);
+                Position pos = GetUniquePosition(randPos.Next(0, possiblePositions.Count));
+                if (pos == null)
+                    break;
 
                 if (board["tokens"][pos] == null)
                 {
@@ -70,6 +76,32 @@ namespace Medusa
                     limit--;
                 }
             }
+        }
+
+
+        private void FillPossiblePositions()
+        {
+            for (int x = 0; x < boardRows; x++)
+            {
+                for (int z = 2; z < boardColumns / 2; z++)
+                    possiblePositions.Add(new Position(x, z));
+            }
+        }
+
+
+        private Position GetUniquePosition(int index)
+        {
+            if (possiblePositions.Count == 0)
+            {
+                Debug.LogWarning("There will only be placed " + (boardRows*boardColumns/2 - 2*boardRows) +
+                                 " obstacles as limit");
+                return null;
+            }
+
+            Position pos = possiblePositions[index];
+            possiblePositions.RemoveAt(index);
+
+            return pos;
         }
 
 
