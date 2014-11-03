@@ -32,16 +32,16 @@ namespace Medusa
 
         private void ColorSelectionCell(Position selectedPos)
         {
-            if (overlays[selectedPos] == null)
-            {
-                overlays.ClearLayer();
+            //if (overlays[selectedPos] == null)
+            //{
+            //    overlays.ClearLayer();
 
-                GameObject go = Instantiate(selectionOverlay) as GameObject;
-                go.name = "overlay " + selectedPos;
-                go.transform.position = selectedPos;
+            //    GameObject go = Instantiate(selectionOverlay) as GameObject;
+            //    go.name = "overlay " + selectedPos;
+            //    go.transform.position = selectedPos;
 
-                overlays[selectedPos] = go;
-            }
+            //    overlays[selectedPos] = go;
+            //}
         }
 
     }

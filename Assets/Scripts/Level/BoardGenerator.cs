@@ -28,15 +28,24 @@ namespace Medusa
         public void CreateEmptyBoard(float boardYSize)
         {
             board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays");
-
+            
             foreach (Position pos in board.Positions)
             {
-                GameObject go = Object.Instantiate(boardCellPrefab) as GameObject;
-                go.name = "cell " + pos;
-                go.transform.position = new Vector3(pos.Row, -boardYSize, pos.Column);
+                // Terrain
+                GameObject cell = Object.Instantiate(boardCellPrefab) as GameObject;
+                cell.name = "cell " + pos;
+                cell.transform.position = new Vector3(pos.Row, -boardYSize, pos.Column);
 
-                board["terrain"][pos] = go;
+                board["terrain"][pos] = cell;
+
+                // Overlays
+                GameObject overlay = Object.Instantiate(Resources.Load("Prefabs/Overlay_Prefab")) as GameObject;
+                overlay.name = "overlay " + pos;
+                overlay.transform.position = pos;
+
+                board["overlays"][pos] = overlay;
             }
+
         }
 
 
