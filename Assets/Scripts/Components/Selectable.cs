@@ -17,7 +17,7 @@ namespace Medusa
         }
 
 
-        void SetOverlayMaterial(int materialIndex)
+        public void SetOverlayMaterial(int materialIndex)
         {
             gameObject.renderer.material = colorMaterials[materialIndex];
         }
