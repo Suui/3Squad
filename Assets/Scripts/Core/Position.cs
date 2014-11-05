@@ -1,6 +1,5 @@
-﻿using System;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using UnityEngine;
+
 
 namespace Medusa
 {
@@ -8,183 +7,160 @@ namespace Medusa
     public sealed class Position
     {
 
-        #region Static Stuff
+        private readonly int row, column;
 
-        private static int ASCII_OFFSET = 97;
-
-        public static int MAX_COLUMNS = 100;
-
-        #endregion
-
-        #region Basic Properties
-
-        public int Row
-        {
-            get;
-            private set;
-        }
-
-        public int Column
-        {
-            get;
-            private set;
-        }
-
-        #endregion
-
-        #region Constructor
 
         public Position(int row, int column)
         {
-            Row = row;
-            Column = column;
+            this.row = row;
+            this.column = column;
         }
 
-        #endregion
 
-		#region Operators
+        public Direction GetDirectionTo(Position position)
+        {
+            return new Direction(position.row - row, position.column - column);
+        }
 
-        #region Equality
 
+        public int GetDistanceTo(Position position)
+        {
+            return GetDirectionTo(position).Magnitude;
+        }
+
+
+        #region Operators
+
+        // Operator ==
         public static bool operator ==(Position a, Position b)
         {
-            if ((object)a == null)
-                return (object)b == null;
-            if ((object)b == null)
-                return (object)a == null;
-            return (a.Column == b.Column) && (a.Row == b.Row);
+            // If both are null, or both are same instance, return true.
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (((object)a == null) || ((object)b == null))
+                return false;
+
+            return a.row == b.row && a.column == b.column;
         }
 
+
+        // Operator !=
         public static bool operator !=(Position a, Position b)
         {
-            if ((object)a == null)
-                return (object)b != null;
-            if ((object)b == null)
-                return (object)a != null;
-            return (a.Column != b.Column) || (a.Row != b.Row);
+            return !(a == b);
+        }
+
+
+        // Operator + Position
+        public static Position operator +(Position a, Position b)
+        {
+            return new Position(a.row + b.row, a.column + b.column);
+        }
+
+
+        // Operator - Position
+        public static Position operator -(Position a, Position b)
+        {
+            return new Position(a.row - b.row, a.column - b.column);
+        }
+
+
+        // Operator + Direction
+        public static Position operator +(Position a, Direction b)
+        {
+            return new Position(a.row + b.Row, a.column + b.Column);
+        }
+
+
+        // Operator - Direction
+        public static Position operator -(Position a, Direction b)
+        {
+            return new Position(a.row - b.Row, a.column - b.Column);
         }
 
         #endregion
 
-        #region Arithmetic
 
-        public static Position operator +(Position pos, Direction dir)
+        #region Castings
+
+        // Casting Position to Vector3
+        public static implicit operator Vector3(Position position)
         {
-            return new Position(pos.Column + dir.Columns, pos.Row + dir.Rows);
+            return new Vector3(position.row, 0, position.column);
         }
 
-        public static Position operator -(Position pos, Direction dir)
+
+        // Casting Vector3 to Position
+        public static explicit operator Position(Vector3 vector3)
         {
-            return new Position(pos.Column - dir.Columns, pos.Row - dir.Rows);
+            return new Position(Mathf.FloorToInt(vector3.x), Mathf.FloorToInt(vector3.z));
         }
 
-        #endregion
 
-        #region Conversion
-
-        public static implicit operator Vector3(Position pos)
+        // TODO: Maybe not useful
+        // Casting Transform to Position
+        public static explicit operator Position(Transform transform)
         {
-            return new Vector3(pos.Column, 0, pos.Row);
-        }
-
-        public static explicit operator Position(Vector3 vec)
-        {
-            return new Position(Convert.ToInt32(vec.z), Convert.ToInt32(vec.x));
-        }
-
-        // TODO Dangeorus
-        public static explicit operator Position(String str)
-        {
-            str = str.ToLower();
-            return new Position(Int32.Parse(str.Substring(1)) - 1, (int)str [0] - ASCII_OFFSET);
-        }
-
-        public static explicit operator Position(Transform tr)
-        {
-            return (Position)tr.position;
-        }
-
-        public static explicit operator Position(GameObject go)
-        {
-            return (Position)go.transform;
+            return (Position) transform.position;
         }
 
         #endregion
 
-        #endregion
 
-        #region System.Object Override
+        #region Equals, GetHashCode, ToString Overrides
 
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
-            return this == (Position)obj;
+
+            // If parameter cannot be cast to Position return false.
+            Position position = obj as Position;
+            if ((System.Object)position == null)
+                return false;
+
+            return (row == position.row) && (column == position.column);
         }
+
+
+        public bool Equals(Position position)
+        {
+            if ((object)position == null)
+                return false;
+
+            return (row == position.row) && (column == position.column);
+        }
+
 
         public override int GetHashCode()
         {
-            return Column * MAX_COLUMNS + Row;
+            return row ^ column;
         }
+
 
         public override string ToString()
         {
-            return char.ConvertFromUtf32(Column + ASCII_OFFSET) + (Row + 1);
+            return "(" + row + ", " + column + ")";
         }
 
         #endregion
 
-        #region Bound Checking
-        
-        public bool Inside(Dimension dim)
+
+        #region Getters
+
+        public int Row
         {
-            return Row >= 0 && Row < dim.Rows
-                && Column >= 0 && Column < dim.Columns;
+            get { return row; }
         }
-        
-        public bool Outside(Dimension dim)
+
+        public int Column
         {
-            return Row < 0 || Row >= dim.Rows
-                || Column < 0 || Column >= dim.Columns;
+            get { return column; }
         }
-        
+
         #endregion
 
-        #region Utilities
-
-        public Direction To(Position other)
-        {
-            return new Direction(this.Column - other.Column, this.Row - other.Row);
-        }
-        
-        public int Distance(Position other)
-        {
-            return this.To(other).Length;
-        }
-        
-        public IEnumerable<Position> Ray(Direction dir, Dimension bounds, int range = Int32.MaxValue)
-        {
-            Position pos = this;
-            while ((pos+=dir).Inside(bounds) && range-- > 0)
-            {
-                yield return pos;
-            }
-        }
-
-        public static IEnumerable<Position> Range(Dimension dim)
-        {
-            for (int row = 0; row < dim.Rows; row++)
-            {
-                for (int column = 0; column < dim.Columns; column++)
-                {
-                    yield return new Position(row, column);
-                }
-            }
-        }
-
-        
-        #endregion
-        
     }
     
 }

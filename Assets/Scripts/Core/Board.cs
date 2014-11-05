@@ -2,58 +2,31 @@
 using System;
 using System.Collections.Generic;
 
+
 namespace Medusa
 {
 
-    #region Event Handler Declaration
-
     public delegate void BoardOnChange(Board caller,Layer layer,Position pos,GameObject oldGO,GameObject newGO);
 
-    #endregion
 
-    public class Board : Dimension
+    public class Board
     {
-        #region Basic Properties
-
-        public int Rows
-        {
-            get;
-            private set;
-        }
-
-        public int Columns
-        {
-            get;
-            private set;
-        }
-
-        public GameObject SceneNode
-        {
-            get;
-            private set;
-        }
-
-        #endregion
-
-        #region Board Change Event
 
         public event BoardOnChange OnChange;
+        public readonly int rows, columns;
 
-        #endregion
+        private readonly Dictionary<string,Layer> layers;
+        private readonly List<Position> positions;
 
-        #region Private Stuff
-
-        private Dictionary<string,Layer> layers;
-
-        #endregion
-
-        #region Constructor
 
         public Board(int rows, int columns, params string[] names)
         {
-            Rows = rows;
-            Columns = columns;
+            this.rows = rows;
+            this.columns = columns;
+            positions = new List<Position>(rows * columns);
+
             SceneNode = new GameObject("BoardNode");
+
             layers = new Dictionary<string,Layer >();
             foreach (string name in names)
             {
@@ -61,67 +34,122 @@ namespace Medusa
             }
         }
 
-        #endregion
 
-        #region Iterator Layers
+        // TODO: Verify SceneNode and Event
+        public void AddLayer(string name)
+        {
+            Layer layer = new Layer(this, name);
+
+            layer.SceneNode.transform.parent = SceneNode.transform;
+            layers[name] = layer;
+
+            layer.OnChange += LayerChangeEventHandler;
+        }
+
+
+        public Layer this[string name]
+        {
+            get
+            {
+                if (layers.ContainsKey(name) == false)
+                    throw new ArgumentException("The board does not contain a layer named '" + name + "'");
+
+                return layers[name];
+            }
+        }
+
+
+        // TODO: Search a way to implement this w/o depending on the GO structures -- Not needed right now
+        public Layer GetLayerOf(GameObject gameObject)
+        {
+            return this[gameObject.transform.parent.name];
+        }
+
+
+        public void RefreshPositionOf(GameObject gameObject)
+        {
+            Position pos = GetLayerOf(gameObject).GetPositionOf(gameObject);
+
+            if (pos != null)
+                gameObject.transform.position = pos;
+        }
+
+
+        public IEnumerable<Position> Way(Position originPosition, Direction direction, int range = Int32.MaxValue)
+        {
+            Position pos = originPosition;
+
+            while (IsInside(pos += direction) && range-- > 0)
+                yield return pos;
+        }
+
+
+        public bool IsInside(Position position)
+        {
+            return position.Row >= 0
+                   && position.Column >= 0
+                   && position.Row < rows
+                   && position.Column < columns;
+        }
+
+
+        private void LayerChangeEventHandler(Layer layer, Position position, GameObject oldGameObject, GameObject newGameObject)
+        {
+            if (OnChange != null)
+                OnChange(this, layer, position, oldGameObject, newGameObject);
+        }
+
+
+        #region Getters and Setters
+
+        public int Rows
+        {
+            get { return rows; }
+        }
+
+
+        public int Columns
+        {
+            get { return columns; }
+        }
+
 
         public IEnumerable<Layer> Layers
         {
+            get { return layers.Values; }
+        }
+
+
+        public GameObject SceneNode
+        {
+            get;
+            private set;
+        }
+
+
+        public IEnumerable<Position> Positions
+        {
             get
             {
-                return layers.Values;
+                if (positions.Count == 0)
+                    FillPositions();
+
+                foreach (Position pos in positions)
+                    yield return pos;
+            }
+        }
+
+
+        private void FillPositions()
+        {
+            for (int x = 0; x < rows; x++)
+            {
+                for (int z = 0; z < columns; z++)
+                    positions.Add(new Position(x, z));
             }
         }
 
         #endregion
 
-        #region Index
-
-        public Layer this [string name]
-        {
-            get
-            {
-                if (!layers.ContainsKey(name))
-                    throw new ArgumentException("Board doesn't contain any layer '" + name + "'");
-                return layers [name];
-            }
-        }
-
-        #endregion
-
-        #region Layer Interaction
-
-        public Layer AddLayer(string name)
-        {
-            Layer lay = new Layer(Rows, Columns, name);
-            lay.SceneNode.transform.parent = SceneNode.transform;
-            layers [name] = lay;
-            lay.OnChange += LayerChangeEventHandler;
-            return lay;
-        }
-
-        public Layer FindLayer(GameObject go)
-        {
-            return this [go.transform.parent.name];
-        }
-
-        private void LayerChangeEventHandler(Layer layer, Position pos, GameObject oldGO, GameObject newGO)
-        {
-            if (OnChange != null)
-                OnChange(this, layer, pos, oldGO, newGO);
-        }
-
-        #endregion
-
-        #region Utilities
-
-        public void ValidatePosition(GameObject go)
-        {
-            Position pos = FindLayer(go).Find(go);
-            if (pos != null)
-                go.transform.position = (Vector3)pos;
-        }
-
-        #endregion
     }
 }

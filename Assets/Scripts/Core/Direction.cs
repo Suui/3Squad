@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+
 
 namespace Medusa
 {
@@ -6,107 +7,130 @@ namespace Medusa
     public struct Direction
     {
 
-        #region Basic Properties
-
-        public int Rows
-        {
-            get;
-            private set;
-        }
-
-        public int Columns
-        {
-            get;
-            private set;
-        }
-
-        public int Length
-        {
-            get;
-            private set;
-        }
-
-        #endregion
-
-        #region Static Stuff
-
         public static readonly Direction Left = new Direction(-1, 0);
         public static readonly Direction Right = -Left;
         public static readonly Direction Up = new Direction(0, 1);
         public static readonly Direction Down = -Up;
 
-        public static readonly Direction[] All = {Up,Right,Down,Left};
+        public static readonly Direction[] AllStaticDirections = { Up, Right, Down, Left };
 
-        #endregion
+        private readonly int row, column, magnitude;   // Manhattan magnitud
 
-        #region Constructor
 
-        public Direction(int rows, int columns)
+        public Direction(int row, int column)
         {
-            Rows = rows;
-            Columns = columns;
-            Length = Math.Abs(rows) + Math.Abs(columns);
+            this.row = row;
+            this.column = column;
+            magnitude = Mathf.Abs(row) + Mathf.Abs(column);
         }
 
-        #endregion
 
         #region Operators
 
-        #region Equality
-
+        // Operator ==
         public static bool operator ==(Direction a, Direction b)
         {
-            return a.Rows == b.Rows && a.Columns == b.Columns;
+            return a.row == b.row && a.column == b.column;
         }
 
+
+        // Operator !=
         public static bool operator !=(Direction a, Direction b)
         {
-            return a.Rows != b.Rows || a.Columns != b.Columns;
+            return a.row != b.row || a.column != b.column;
         }
 
-        #endregion
 
-        #region Arithmetic
-
+        // Operator + Direction
         public static Direction operator +(Direction a, Direction b)
         {
-            return new Direction(a.Rows + b.Rows, a.Columns + b.Columns);
+            return new Direction(a.row + b.row, a.column + b.column);
         }
-        
+
+
+        // Operator - Direction
         public static Direction operator -(Direction a, Direction b)
         {
-            return new Direction(a.Rows - b.Rows, a.Columns - b.Columns);
+            return new Direction(a.row - b.row, a.column - b.column);
         }
 
+
+        // Operator + Position
+        public static Direction operator +(Direction a, Position b)
+        {
+            return new Direction(a.row + b.Row, a.column + b.Column);
+        }
+
+
+        // Operator - Position
+        public static Direction operator -(Direction a, Position b)
+        {
+            return new Direction(a.row - b.Row, a.column - b.Column);
+        }
+
+
+        // Operator opposed
         public static Direction operator -(Direction dir)
         {
-            return new Direction(-dir.Rows, -dir.Columns);
+            return new Direction(-dir.row, -dir.column);
         }
 
+
+        // Operator * int
         public static Direction operator *(Direction dir, int scalar)
         {
-            return new Direction(dir.Rows * scalar, dir.Columns * scalar);
+            return new Direction(dir.row * scalar, dir.column * scalar);
         }
 
         #endregion
 
-        #endregion
 
-        #region System.Object Override
+        #region Equals, GetHasCode Overrides
 
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
+
             return this == (Direction)obj;
         }
 
+
+        public bool Equals(Direction direction)
+        {
+            return this == direction;
+        }
+
+
         public override int GetHashCode()
         {
-            return Columns * Position.MAX_COLUMNS + Rows;
+            return row ^ column;
         }
 
         #endregion
+
+
+        #region Getters
+
+        public int Row
+        {
+            get { return row; }
+        }
+
+
+        public int Column
+        {
+            get { return column; }
+        }
+
+
+        public int Magnitude
+        {
+            get { return magnitude; }
+        }
+
+        #endregion
+
 
     }
 }

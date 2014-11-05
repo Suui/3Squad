@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+
 
 using Medusa;
 
@@ -43,7 +43,7 @@ public class CameraControl : MonoBehaviour
         distance = cam.orthographicSize;
         rotation = transform.eulerAngles.y;
 
-        Director.Instance.OnNewBoard += ResetTransform;
+        GameMaster.Instance.OnNewBoard += ResetTransform;
 
     }
 
@@ -102,7 +102,7 @@ public class CameraControl : MonoBehaviour
 
         #endregion
 
-        #region Calculate Delta X
+        #region Calculate Delta row
 
         float dx;
         

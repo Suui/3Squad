@@ -1,10 +1,13 @@
 .DS_Store
 Library
 Temp
+Assets/UnityVS
+obj
 *.csproj
 *.pidb
 *.unityproj
 *.sln
+*.suo
 *.userprefs
 **/google-play-services_lib.meta
 **/google-play-services_lib/**
