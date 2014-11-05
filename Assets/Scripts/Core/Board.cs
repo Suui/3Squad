@@ -16,14 +16,16 @@ namespace Medusa
         public readonly int rows, columns;
 
         private readonly Dictionary<string,Layer> layers;
+        private readonly List<Position> positions;
 
 
         public Board(int rows, int columns, params string[] names)
         {
             this.rows = rows;
             this.columns = columns;
+            positions = new List<Position>(rows * columns);
 
-            SceneNode = new GameObject("BoardNode");                    // Verify
+            SceneNode = new GameObject("BoardNode");
 
             layers = new Dictionary<string,Layer >();
             foreach (string name in names)
@@ -129,11 +131,21 @@ namespace Medusa
         {
             get
             {
-                for (int x = 0; x < rows; x++)
-                {
-                    for (int z = 0; z < columns; z++)
-                        yield return new Position(x, z);
-                }
+                if (positions.Count == 0)
+                    FillPositions();
+
+                foreach (Position pos in positions)
+                    yield return pos;
+            }
+        }
+
+
+        private void FillPositions()
+        {
+            for (int x = 0; x < rows; x++)
+            {
+                for (int z = 0; z < columns; z++)
+                    positions.Add(new Position(x, z));
             }
         }
 
