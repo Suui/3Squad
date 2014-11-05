@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 namespace Medusa
@@ -24,9 +25,9 @@ namespace Medusa
         }
 
 
-        public virtual void Click(Position position)
+        public virtual bool Click(Position position)
         {
-            
+            return true;
         }
 
 
@@ -38,7 +39,7 @@ namespace Medusa
 
         public virtual void Confirm()
         {
-            
+
         }
 
     }

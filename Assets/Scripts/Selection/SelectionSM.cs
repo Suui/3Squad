@@ -8,6 +8,8 @@ namespace Medusa
     {
 
         private Board board;
+
+        private Skill previousSelectedSkill;
         private Position previousSelectedPos;
         private Selected currentState;
 
@@ -38,6 +40,8 @@ namespace Medusa
         void Start()
         {
             board = GetComponent<GameMaster>().CurrentBoard;
+
+            previousSelectedSkill = null;
             previousSelectedPos = new Position(0, 0);
             currentState = Selected.Nothing;
         }
@@ -53,7 +57,6 @@ namespace Medusa
             if (currentState == Selected.Nothing)
             {
                 DisplaySelectionOverlay(position);
-                previousSelectedPos = position;
 
                 // Selected a Character
                 if (board["tokens"][position] != null && board["tokens"][position].GetComponent<Skill>() != null)
@@ -66,20 +69,17 @@ namespace Medusa
                     currentState = Selected.Character;
                     return;
                 }
-
-                // Select Nothing
-                return;
             }
 
             if (currentState == Selected.Character)
             {
                 DisplaySelectionOverlay(position);
-                previousSelectedPos = position;
 
                 // Selected a Skill
                 if (skill != null)
                 {
                     skill.Setup();  // TODO: Coordinar con David
+                    previousSelectedSkill = skill;
                     currentState = Selected.Skill;
                     return;
                 }
@@ -108,7 +108,59 @@ namespace Medusa
 
             if (currentState == Selected.Skill)
             {
-                skill.Click(position);
+                // Selected another skill
+                if (skill != null)
+                {
+                    if (skill != previousSelectedSkill)
+                    {
+                        previousSelectedSkill.Clean();
+                        skill.Setup(); // TODO: Coordinar con David
+                        previousSelectedSkill = skill;
+                        return;
+                    }
+
+                    return;
+                }
+
+                // Selected an unavailable position == Cancel
+                if (previousSelectedSkill.Click(position) == false)
+                {
+                    previousSelectedSkill.Clean();
+                    currentState = Selected.Character;
+                    return;
+                }
+
+                // Selected an available position
+                currentState = Selected.SkillConfirm;
+            }
+
+            if (currentState == Selected.SkillConfirm)
+            {
+                // Selected another skill
+                if (skill != null && skill != previousSelectedSkill)
+                {
+                    previousSelectedSkill.Clean();
+                    skill.Setup();
+                    previousSelectedSkill = skill;
+                    currentState = Selected.Skill;
+                    return;
+                }
+
+                // Selected an unavailable position == Cancel
+                if (previousSelectedSkill.Click(position) == false)
+                {
+                    previousSelectedSkill.Clean();
+                    currentState = Selected.Character;
+                    return;
+                }
+
+                // Selected the same skill to confirm
+                if (skill == previousSelectedSkill)
+                {
+                    skill.Confirm();
+                    skill.Clean();
+                    currentState = Selected.Character;
+                }
             }
         }
 
@@ -117,6 +169,8 @@ namespace Medusa
         {
             board["overlays"][previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
             board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(1);
+
+            previousSelectedPos = position;
         }
     }
 
