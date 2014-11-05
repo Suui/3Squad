@@ -17,14 +17,12 @@ namespace Medusa
         }
 
 
-        // TODO: Test, possible mistakes
         public Direction GetDirectionTo(Position position)
         {
-            return new Direction(row + position.row, column + position.column);
+            return new Direction(position.row - row, position.column - column);
         }
 
 
-        // TODO: Test, possible mistakes
         public int GetDistanceTo(Position position)
         {
             return GetDirectionTo(position).Magnitude;
