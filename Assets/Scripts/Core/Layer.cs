@@ -42,8 +42,7 @@ namespace Medusa
                 return gameObjects[position.Row, position.Column]; 
             }
 
-            // TODO: Functionality of set: Are we able to replace an object? Would be better to have a function to do that
-            // Actually set to able set IF the position you are trying to establish is empty
+
             set
             {
                 if (position == null)
@@ -52,18 +51,13 @@ namespace Medusa
                 if (board.IsInside(position) == false)
                     throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
-                if (this[position] == null)
-                {
-                    gameObjects[position.Row, position.Column] = value;
+                gameObjects[position.Row, position.Column] = value;
 
-                    if (value != null)
-                        value.transform.parent = SceneNode.transform;
+                if (value != null)
+                    value.transform.parent = SceneNode.transform;
 
-                    if (OnChange != null)
-                        OnChange(this, position, null, value);
-                }
-                else
-                    throw new ArgumentException("Cannot set " + position + " as it is already occupied by " + this[position].name);
+                if (OnChange != null)
+                    OnChange(this, position, null, value);
             }
         }
 
@@ -72,7 +66,10 @@ namespace Medusa
         public void RemoveGameObjectAt(Position position)
         {
             if (IsEmpty(position) == false)
+            {
                 UnityEngine.Object.Destroy(this[position]);
+                this[position] = null;
+            }
         }
 
 
@@ -88,6 +85,15 @@ namespace Medusa
         public void AddGameObjectAt(GameObject gameObject, Position position)
         {
             this[position] = gameObject;
+        }
+
+
+        public void MoveGameObject(GameObject gameObject, Position to)
+        {
+            this[to] = gameObject;
+            this[(Position) gameObject.transform] = null;
+
+            gameObject.transform.position = to;
         }
 
 
