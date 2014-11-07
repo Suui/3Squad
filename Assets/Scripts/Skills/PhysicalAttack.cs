@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
 namespace Medusa
 {
 	
-	public class Horns : Skill
+	public class PhysicalAttack : Skill
 	{
-		private int damage = 20;
+		
+		public int damage;
 		private bool doneThisTurn;
 		
 		List<Position> posibleAttacks = new List<Position>();
@@ -26,12 +28,11 @@ namespace Medusa
 			
 			
 		}
-		
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;
 			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/TestButton2") as Texture2D;
-			skillGUI.transform.position = ThirdPos;
+			skillGUI.transform.position = FirstPos;
 			skillGUI.transform.parent = gameObject.transform;
 			
 			skillGUI.GetComponent<SkillToFire>().Skill = this;
@@ -49,21 +50,21 @@ namespace Medusa
 			}
 		}
 		
-		public string Clicked(Position pos)
+		public bool Click(Position pos)
 		{
 			if(pos.GetDistanceTo(playerPosition) != 1) {
 				Clear();
-				return "0";
+				return false;
 			}
 			
 			
 			if(board["tokens"][pos].GetComponent<Life>() != null)
 			{
 				targetPosition = pos;
-				return "1";
+				return true;
 			}
 			
-			return "2";
+			return false;
 		}
 		
 		public void Confirm()

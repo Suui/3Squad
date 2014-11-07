@@ -22,6 +22,11 @@ namespace Medusa
             return new Direction(position.row - row, position.column - column);
         }
 
+		public bool Outside(Layer layer)
+		{
+			return layer.Outside(this);
+		}
+
 
         public int GetDistanceTo(Position position)
         {

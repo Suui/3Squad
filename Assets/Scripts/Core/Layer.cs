@@ -214,5 +214,13 @@ namespace Medusa
 
         #endregion
 
+		public bool Outside (Position position)
+		{
+			return position.Row < 0
+				|| position.Row >= board.rows
+				|| position.Column < 0
+				|| position.Column >= board.columns;
+		}
+
     }
 }
