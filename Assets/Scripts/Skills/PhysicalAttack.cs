@@ -38,7 +38,7 @@ namespace Medusa
 			skillGUI.GetComponent<SkillToFire>().Skill = this;
 		}
 		
-		public void Setup()
+		public override void Setup()
 		{
 			Layer terrain = board["tokens"];
 			
@@ -50,7 +50,7 @@ namespace Medusa
 			}
 		}
 		
-		public bool Click(Position pos)
+		public override bool Click(Position pos)
 		{
 			if(pos.GetDistanceTo(playerPosition) != 1) {
 				Clear();
@@ -67,14 +67,14 @@ namespace Medusa
 			return false;
 		}
 		
-		public void Confirm()
+		public override void Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
 			Clear();
 			doneThisTurn = true;
 		}
 		
-		public void Clear()
+		public override void Clear()
 		{
 			for(int i = 0; i < posibleAttacks.Count;i++) posibleAttacks[i] = null;
 			targetPosition = null;
