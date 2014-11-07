@@ -69,6 +69,21 @@ namespace Medusa
                     currentState = Selected.Character;
                     return;
                 }
+
+
+                // Selected a Master
+                Skill[] masterSkills;
+
+                if (position.Column < 0)
+                    masterSkills = GetComponent<GameMaster>().GetMasterOne.GetComponents<Skill>();
+                else
+                    masterSkills = GetComponent<GameMaster>().GetMasterTwo.GetComponents<Skill>();
+
+                foreach (Skill sk in masterSkills)
+                        sk.ShowUpSkill();
+
+                currentState = Selected.Character;
+                return;
             }
 
             if (currentState == Selected.Character)
@@ -168,6 +183,13 @@ namespace Medusa
 
         private void DisplaySelectionOverlay(Position position)
         {
+            
+
+            if (position.Row < 0)
+            {
+                
+            }
+
             board["overlays"][previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
             board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(1);
 
