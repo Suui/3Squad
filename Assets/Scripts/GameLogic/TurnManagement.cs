@@ -7,8 +7,8 @@ namespace Medusa
     class TurnManagement : MonoBehaviour
     {
 
-        public readonly GameObject masterOne;
-        public readonly GameObject masterTwo;
+        private readonly GameObject masterOne;
+        private readonly GameObject masterTwo;
         private GameObject currentMasterPlaying;
 
 

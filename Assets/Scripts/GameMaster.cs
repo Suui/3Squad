@@ -25,6 +25,7 @@ namespace Medusa
         public int seed;
 
         private BoardGenerator boardGenerator;
+        private TurnManagement turnManagement;
 
 
         // TODO: Not used?! Calvin watcha doin'!
@@ -50,6 +51,8 @@ namespace Medusa
             boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
+
+            turnManagement = new TurnManagement(masterOne, masterTwo);
 
             // TODO: Remove testing block when over
             // Test GUI
