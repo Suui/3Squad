@@ -23,8 +23,6 @@ namespace Medusa
 			playerPosition = (Position) this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
-			
-			
 		}
 		
 		public override void ShowUpSkill()
@@ -49,7 +47,7 @@ namespace Medusa
 			}
 		}
 		
-		public override string Clicked(Position pos)
+		public string Clicked(Position pos)
 		{
 			if(pos.GetDistanceTo(playerPosition) != 1) {
 				Clear();
