@@ -132,6 +132,7 @@ namespace Medusa
 
                 // Selected an available position
                 currentState = Selected.SkillConfirm;
+                return;
             }
 
             if (currentState == Selected.SkillConfirm)
@@ -146,19 +147,19 @@ namespace Medusa
                     return;
                 }
 
-                // Selected an unavailable position == Cancel
-                if (previousSelectedSkill.Click(position) == false)
-                {
-                    previousSelectedSkill.Clean();
-                    currentState = Selected.Character;
-                    return;
-                }
-
                 // Selected the same skill to confirm
                 if (skill == previousSelectedSkill)
                 {
                     skill.Confirm();
                     skill.Clean();
+                    currentState = Selected.Character;
+                    return;
+                }
+
+                // Selected an unavailable position == Cancel
+                if (previousSelectedSkill.Click(position) == false)
+                {
+                    previousSelectedSkill.Clean();
                     currentState = Selected.Character;
                 }
             }

@@ -135,7 +135,7 @@ namespace Medusa
 
         public override int GetHashCode()
         {
-            return row ^ column;
+            return 31 * (31 + row) + column;
         }
 
 
