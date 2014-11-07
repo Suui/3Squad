@@ -12,6 +12,10 @@ namespace Medusa
 
         public event BoardOnNew OnNewBoard;
 
+        public GameObject masterOne;
+        public GameObject masterTwo;
+
+        public GameObject masterCellPrefab;
         public GameObject boardCellPrefab;
         public GameObject[] obstaclePrefabs;
         public int obstaclesLimit;
@@ -46,7 +50,6 @@ namespace Medusa
             boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
-
 
             // TODO: Remove testing block when over
             // Test GUI

@@ -4,11 +4,11 @@
 namespace Medusa
 {
 
-    class TurnManagement
+    class TurnManagement : MonoBehaviour
     {
 
-        private readonly GameObject masterOne;
-        private readonly GameObject masterTwo;
+        public readonly GameObject masterOne;
+        public readonly GameObject masterTwo;
         private GameObject currentMasterPlaying;
 
 
@@ -16,6 +16,7 @@ namespace Medusa
         {
             this.masterOne = masterOne;
             this.masterTwo = masterTwo;
+            currentMasterPlaying = masterOne;
         }
 
 
@@ -55,6 +56,7 @@ namespace Medusa
         {
             get { return masterTwo; }
         }
+
     }
 
 }
