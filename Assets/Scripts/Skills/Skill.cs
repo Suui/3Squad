@@ -31,7 +31,7 @@ namespace Medusa
         }
 
 
-        public virtual void Clean()
+        public virtual void Clear()
         {
             
         }

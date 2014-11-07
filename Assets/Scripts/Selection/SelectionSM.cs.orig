@@ -151,14 +151,22 @@ namespace Medusa
                 if (skill == previousSelectedSkill)
                 {
                     skill.Confirm();
+<<<<<<< HEAD
+                    skill.Clean();
+=======
                     skill.Clear();
+>>>>>>> Skills
                     currentState = Selected.Character;
                 }
 
                 // Selected an unavailable position == Cancel
                 if (previousSelectedSkill.Click(position) == false)
                 {
+<<<<<<< HEAD
+                    previousSelectedSkill.Clean();
+=======
                     previousSelectedSkill.Clear();
+>>>>>>> Skills
                     currentState = Selected.Character;
                     return;
                 }
