@@ -27,7 +27,7 @@ namespace Medusa
 
         public void CreateEmptyBoard(float boardYSize)
         {
-            board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays", "masters");
+            board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays", "TurnManagement");
 
             foreach (Position pos in board.Positions)
             {
@@ -57,16 +57,12 @@ namespace Medusa
             masterCellOne.name = "master 01";
             masterCellOne.transform.position = new Vector3(masterPos.Row, -boardYSize, masterPos.Column);
 
-            //board["masters"][masterPos] = masterCellOne;
-
 
             masterPos = new Position(boardRows / 2, boardColumns + 1);
 
             GameObject masterCellTwo = Object.Instantiate(masterCellPrefab) as GameObject;
             masterCellTwo.name = "master 02";
             masterCellTwo.transform.position = new Vector3(masterPos.Row, -boardYSize, masterPos.Column);
-
-            //board["masters"][masterPos] = masterCellTwo;
         }
 
 

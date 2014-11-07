@@ -4,7 +4,7 @@
 namespace Medusa
 {
 
-    public class Masters
+    public class TurnManagement
     {
 
         private readonly GameObject masterOne;
@@ -12,11 +12,15 @@ namespace Medusa
         private GameObject currentMasterPlaying;
 
 
-        public Masters(GameObject masterOne, GameObject masterTwo)
+        public TurnManagement(GameObject masterOne, GameObject masterTwo, int seed)
         {
             this.masterOne = masterOne;
             this.masterTwo = masterTwo;
-            currentMasterPlaying = masterOne;
+
+            System.Random randStarter = new System.Random(seed);
+            int starter = randStarter.Next(0, 1000) % 2;
+
+            currentMasterPlaying = starter == 0 ? masterOne : masterTwo;
         }
 
 
@@ -38,17 +42,6 @@ namespace Medusa
             {
                 return currentMasterPlaying == masterOne ? masterTwo : masterOne;
             }
-        }
-
-
-        public GameObject MasterOne
-        {
-            get { return masterOne; }
-        }
-
-        public GameObject MasterTwo
-        {
-            get { return masterTwo; }
         }
 
     }

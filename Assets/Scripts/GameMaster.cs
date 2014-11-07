@@ -25,7 +25,7 @@ namespace Medusa
         public int seed;
 
         private BoardGenerator boardGenerator;
-        private Masters _masters;
+        private TurnManagement turnManagement;
 
 
         // TODO: Not used?! Calvin watcha doin'!
@@ -53,7 +53,7 @@ namespace Medusa
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
             boardGenerator.SetUpMasters(masterCellPrefab, boardYSize);
 
-            _masters = new Masters(masterOne, masterTwo);
+            turnManagement = new TurnManagement(masterOne, masterTwo, seed);
 
             // TODO: Remove testing block when over
             // Test GUI
@@ -70,9 +70,21 @@ namespace Medusa
         }
 
 
-        public Masters Masters
+        public TurnManagement TurnManagement
         {
-            get { return _masters; }
+            get { return turnManagement; }
+        }
+
+
+        public GameObject GetMasterOne
+        {
+            get { return masterOne; }
+        }
+
+
+        public GameObject GetMasterTwo
+        {
+            get { return masterTwo; }
         }
     }
 }
