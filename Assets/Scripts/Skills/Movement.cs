@@ -40,7 +40,7 @@ namespace Medusa
 		}
 		
 		//show posible movements marking the cells and creating an array of posible movements
-		public void Setup()
+		public override void Setup()
 		{
 			
 			SearchWay (posiblePositions, board ["tokens"], playerPosition, range);
@@ -54,7 +54,7 @@ namespace Medusa
 		}
 		
 		//add pos to array
-		public bool Click(Position pos)
+		public override bool Click(Position pos)
 		{
 			
 			if(!posiblePositions.Contains (pos))
@@ -89,7 +89,7 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public void Confirm()
+		public override void Confirm()
 		{
 			
 			
@@ -99,7 +99,7 @@ namespace Medusa
 		}
 		
 		//deselect the cells and empty the array
-		public void Clear()
+		public override void Clear()
 		{
 			for(int i = 0; i < posiblePositions.Count;i++) posiblePositions[i] = null;
 			for(int j = 0; j < stepList.Count;j++) stepList[j] = null;

@@ -113,7 +113,7 @@ namespace Medusa
                 {
                     if (skill != previousSelectedSkill)
                     {
-                        previousSelectedSkill.Clean();
+                        previousSelectedSkill.Clear();
                         skill.Setup(); // TODO: Coordinar con David
                         previousSelectedSkill = skill;
                         return;
@@ -125,7 +125,7 @@ namespace Medusa
                 // Selected an unavailable position == Cancel
                 if (previousSelectedSkill.Click(position) == false)
                 {
-                    previousSelectedSkill.Clean();
+                    previousSelectedSkill.Clear();
                     currentState = Selected.Character;
                     return;
                 }
@@ -139,7 +139,7 @@ namespace Medusa
                 // Selected another skill
                 if (skill != null && skill != previousSelectedSkill)
                 {
-                    previousSelectedSkill.Clean();
+                    previousSelectedSkill.Clear();
                     skill.Setup();
                     previousSelectedSkill = skill;
                     currentState = Selected.Skill;
@@ -149,7 +149,7 @@ namespace Medusa
                 // Selected an unavailable position == Cancel
                 if (previousSelectedSkill.Click(position) == false)
                 {
-                    previousSelectedSkill.Clean();
+                    previousSelectedSkill.Clear();
                     currentState = Selected.Character;
                     return;
                 }
@@ -158,7 +158,7 @@ namespace Medusa
                 if (skill == previousSelectedSkill)
                 {
                     skill.Confirm();
-                    skill.Clean();
+                    skill.Clear();
                     currentState = Selected.Character;
                 }
             }
