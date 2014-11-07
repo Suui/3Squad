@@ -4,7 +4,7 @@
 namespace Medusa
 {
 
-    public class TurnManagement
+    public class Masters
     {
 
         private readonly GameObject masterOne;
@@ -12,7 +12,7 @@ namespace Medusa
         private GameObject currentMasterPlaying;
 
 
-        public TurnManagement(GameObject masterOne, GameObject masterTwo)
+        public Masters(GameObject masterOne, GameObject masterTwo)
         {
             this.masterOne = masterOne;
             this.masterTwo = masterTwo;

@@ -11,14 +11,14 @@ namespace Medusa
 
         private Board board;
 
-        private readonly GameObject masterCellPrefab;
+        private readonly GameObject boardCellPrefab;
         private readonly int boardRows, boardColumns;
         private readonly List<Position> possiblePositions;
 
 
-        public BoardGenerator(GameObject masterCellPrefab, int boardRows, int boardColumns)
+        public BoardGenerator(GameObject boardCellPrefab, int boardRows, int boardColumns)
         {
-            this.masterCellPrefab = masterCellPrefab;
+            this.boardCellPrefab = boardCellPrefab;
             this.boardRows = boardRows;
             this.boardColumns = boardColumns;
             possiblePositions = new List<Position>(boardRows * boardColumns / 2);
@@ -32,7 +32,7 @@ namespace Medusa
             foreach (Position pos in board.Positions)
             {
                 // Terrain
-                GameObject cell = Object.Instantiate(masterCellPrefab) as GameObject;
+                GameObject cell = Object.Instantiate(boardCellPrefab) as GameObject;
                 cell.name = "cell " + pos;
                 cell.transform.position = new Vector3(pos.Row, -boardYSize, pos.Column);
 
@@ -53,7 +53,7 @@ namespace Medusa
         {
             Position masterPos = new Position(boardRows / 2, -2);
 
-            GameObject masterCellOne = Object.Instantiate(this.masterCellPrefab) as GameObject;
+            GameObject masterCellOne = Object.Instantiate(masterCellPrefab) as GameObject;
             masterCellOne.name = "master 01";
             masterCellOne.transform.position = new Vector3(masterPos.Row, -boardYSize, masterPos.Column);
 
@@ -62,7 +62,7 @@ namespace Medusa
 
             masterPos = new Position(boardRows / 2, boardColumns + 1);
 
-            GameObject masterCellTwo = Object.Instantiate(this.masterCellPrefab) as GameObject;
+            GameObject masterCellTwo = Object.Instantiate(masterCellPrefab) as GameObject;
             masterCellTwo.name = "master 02";
             masterCellTwo.transform.position = new Vector3(masterPos.Row, -boardYSize, masterPos.Column);
 
