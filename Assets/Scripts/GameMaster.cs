@@ -51,6 +51,7 @@ namespace Medusa
             boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
+            boardGenerator.SetUpMasters(masterCellPrefab, boardYSize);
 
             turnManagement = new TurnManagement(masterOne, masterTwo);
 
@@ -68,5 +69,10 @@ namespace Medusa
             get { return boardGenerator.Board; }
         }
 
+
+        public TurnManagement TurnManagement
+        {
+            get { return turnManagement; }
+        }
     }
 }

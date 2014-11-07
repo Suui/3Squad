@@ -11,14 +11,14 @@ namespace Medusa
 
         private Board board;
 
-        private readonly GameObject boardCellPrefab;
+        private readonly GameObject masterCellPrefab;
         private readonly int boardRows, boardColumns;
         private readonly List<Position> possiblePositions;
 
 
-        public BoardGenerator(GameObject boardCellPrefab, int boardRows, int boardColumns)
+        public BoardGenerator(GameObject masterCellPrefab, int boardRows, int boardColumns)
         {
-            this.boardCellPrefab = boardCellPrefab;
+            this.masterCellPrefab = masterCellPrefab;
             this.boardRows = boardRows;
             this.boardColumns = boardColumns;
             possiblePositions = new List<Position>(boardRows * boardColumns / 2);
@@ -27,12 +27,12 @@ namespace Medusa
 
         public void CreateEmptyBoard(float boardYSize)
         {
-            board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays");
-            
+            board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays", "masters");
+
             foreach (Position pos in board.Positions)
             {
                 // Terrain
-                GameObject cell = Object.Instantiate(boardCellPrefab) as GameObject;
+                GameObject cell = Object.Instantiate(masterCellPrefab) as GameObject;
                 cell.name = "cell " + pos;
                 cell.transform.position = new Vector3(pos.Row, -boardYSize, pos.Column);
 
@@ -46,6 +46,27 @@ namespace Medusa
                 board["overlays"][pos] = overlay;
             }
 
+        }
+
+
+        public void SetUpMasters(GameObject masterCellPrefab, float boardYSize)
+        {
+            Position masterPos = new Position(boardRows / 2, -2);
+
+            GameObject masterCellOne = Object.Instantiate(this.masterCellPrefab) as GameObject;
+            masterCellOne.name = "master 01";
+            masterCellOne.transform.position = new Vector3(masterPos.Row, -boardYSize, masterPos.Column);
+
+            //board["masters"][masterPos] = masterCellOne;
+
+
+            masterPos = new Position(boardRows / 2, boardColumns + 1);
+
+            GameObject masterCellTwo = Object.Instantiate(this.masterCellPrefab) as GameObject;
+            masterCellTwo.name = "master 02";
+            masterCellTwo.transform.position = new Vector3(masterPos.Row, -boardYSize, masterPos.Column);
+
+            //board["masters"][masterPos] = masterCellTwo;
         }
 
 

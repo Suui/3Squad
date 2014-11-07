@@ -4,7 +4,7 @@
 namespace Medusa
 {
 
-    class TurnManagement : MonoBehaviour
+    public class TurnManagement
     {
 
         private readonly GameObject masterOne;
@@ -22,10 +22,7 @@ namespace Medusa
 
         public void ChangeTurn()
         {
-            if (currentMasterPlaying == masterOne)
-                currentMasterPlaying = masterTwo;
-            else
-                currentMasterPlaying = masterOne;
+            currentMasterPlaying = currentMasterPlaying == masterOne ? masterTwo : masterOne;
         }
 
 
@@ -39,10 +36,7 @@ namespace Medusa
         {
             get
             {
-                if (currentMasterPlaying == masterOne)
-                    return masterTwo;
-
-                return masterOne;
+                return currentMasterPlaying == masterOne ? masterTwo : masterOne;
             }
         }
 
