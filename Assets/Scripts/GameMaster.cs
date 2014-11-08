@@ -54,6 +54,12 @@ namespace Medusa
             go.name = "Superrrr Characterr";
             go.transform.position = new Position(0, 0);
             CurrentBoard["tokens"][new Position(0, 0)] = go;
+
+			/*GameObject go2 = Instantiate(Resources.Load("Prefabs/Superr_Character")) as GameObject;
+			go2.name = "Superrrr Characterr";
+			go2.transform.position = new Position(0, 1);
+			CurrentBoard["tokens"][new Position(0, 1)] = go2;
+			*/
         }
 
 

@@ -41,10 +41,10 @@ namespace Medusa
 		public override void Setup()
 		{
 			Layer terrain = board["tokens"];
-			
-			foreach ( Direction direction in Direction.AllStaticDirections) {
+
+			foreach (Direction direction in Direction.AllStaticDirections) {
 				Position position = playerPosition + direction;
-				if( !position.Outside(terrain) && terrain[position].GetComponent<Life>() != null) {
+				if(!position.Outside(terrain) && terrain[position] != null && terrain[position].GetComponent<Life>() != null) {
 					board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(2);
 				}
 			}
@@ -61,6 +61,7 @@ namespace Medusa
 			if(board["tokens"][pos].GetComponent<Life>() != null)
 			{
 				targetPosition = pos;
+				board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(1);
 				return true;
 			}
 			
@@ -76,7 +77,13 @@ namespace Medusa
 		
 		public override void Clear()
 		{
+			foreach(Position posi in posibleAttacks)
+			{
+				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
+				
+			}
 			for(int i = 0; i < posibleAttacks.Count;i++) posibleAttacks[i] = null;
+
 			targetPosition = null;
 		}
 	}

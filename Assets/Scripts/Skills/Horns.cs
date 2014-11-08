@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
 namespace Medusa
 {
 	
 	public class Horns : Skill
 	{
-		private int damage = 20;
+		
+		public int damage;
 		private bool doneThisTurn;
 		
 		List<Position> posibleAttacks = new List<Position>();
@@ -23,8 +25,9 @@ namespace Medusa
 			playerPosition = (Position) this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
+			
+			
 		}
-		
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;
@@ -39,29 +42,30 @@ namespace Medusa
 		{
 			Layer terrain = board["tokens"];
 			
-			foreach ( Direction direction in Direction.AllStaticDirections) {
+			foreach (Direction direction in Direction.AllStaticDirections) {
 				Position position = playerPosition + direction;
-				if( !position.Outside(terrain) && terrain[position].GetComponent<Life>() != null) {
+				if(!position.Outside(terrain) && terrain[position] != null && terrain[position].GetComponent<Life>() != null) {
 					board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(2);
 				}
 			}
 		}
 		
-		public string Clicked(Position pos)
+		public override bool Click(Position pos)
 		{
 			if(pos.GetDistanceTo(playerPosition) != 1) {
 				Clear();
-				return "0";
+				return false;
 			}
 			
 			
 			if(board["tokens"][pos].GetComponent<Life>() != null)
 			{
 				targetPosition = pos;
-				return "1";
+				board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(1);
+				return true;
 			}
 			
-			return "2";
+			return false;
 		}
 		
 		public override void Confirm()
@@ -73,7 +77,13 @@ namespace Medusa
 		
 		public override void Clear()
 		{
+			foreach(Position posi in posibleAttacks)
+			{
+				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
+				
+			}
 			for(int i = 0; i < posibleAttacks.Count;i++) posibleAttacks[i] = null;
+			
 			targetPosition = null;
 		}
 	}
