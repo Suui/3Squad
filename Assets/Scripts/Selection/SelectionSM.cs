@@ -54,6 +54,7 @@ namespace Medusa
                 ". Parameter position is: " + position + 
                 ". Parameter Skill is: " + skill);
 
+            // NOTHING
             if (currentState == Selected.Nothing)
             {
                 DisplaySelectionOverlay(position);
@@ -61,14 +62,9 @@ namespace Medusa
                 // Selected a Master
                 if (board.IsInside(position) == false)
                 {
-                    Skill[] masterSkills;
+                    Skill[] skills = board.Masters[position].Master.GetComponents<Skill>();
 
-                    if (position.Column < 0)
-                        masterSkills = GetComponent<GameMaster>().GetMasterOne.GetComponents<Skill>();
-                    else
-                        masterSkills = GetComponent<GameMaster>().GetMasterTwo.GetComponents<Skill>();
-
-                    foreach (Skill sk in masterSkills)
+                    foreach (Skill sk in skills)
                         sk.ShowUpSkill();
 
                     currentState = Selected.Character;
@@ -89,6 +85,7 @@ namespace Medusa
 
             }
 
+            // CHARACTER
             if (currentState == Selected.Character)
             {
                 DisplaySelectionOverlay(position);
@@ -99,6 +96,20 @@ namespace Medusa
                     skill.Setup();  // TODO: Coordinar con David
                     previousSelectedSkill = skill;
                     currentState = Selected.Skill;
+                    return;
+                }
+
+                // Selected another Master
+                if (board.IsInside(position) == false)
+                {
+                    foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
+                        Destroy(go);
+
+                    Skill[] skills = board.Masters[position].Master.GetComponents<Skill>();
+
+                    foreach (Skill sk in skills)
+                        sk.ShowUpSkill();
+
                     return;
                 }
 
@@ -116,7 +127,7 @@ namespace Medusa
                     return;
                 }
 
-                // Deselected a Character
+                // Deselected
                 foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
                     Destroy(go);
 
@@ -124,6 +135,7 @@ namespace Medusa
                 return;
             }
 
+            // SKILL
             if (currentState == Selected.Skill)
             {
                 // Selected another skill
@@ -153,6 +165,7 @@ namespace Medusa
                 return;
             }
 
+            // SKILL CONFIRM
             if (currentState == Selected.SkillConfirm)
             {
                 // Selected another skill
@@ -189,12 +202,12 @@ namespace Medusa
             if (board.IsInside(previousSelectedPos))
                 board["overlays"][previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
             else
-                board.Masters[previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
+                board.Masters[previousSelectedPos].Overlay.GetComponent<Selectable>().SetOverlayMaterial(0);
 
             if (board.IsInside(position))
                 board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(1);
             else
-                board.Masters[position].GetComponent<Selectable>().SetOverlayMaterial(1);
+                board.Masters[position].Overlay.GetComponent<Selectable>().SetOverlayMaterial(1);
 
             previousSelectedPos = position;
         }

@@ -56,9 +56,6 @@ namespace Medusa
             GameObject Cells = new GameObject("Cells");
             Cells.transform.parent = board.MastersNode.transform;
 
-            GameObject Overlays = new GameObject("Overlays");
-            Overlays.transform.parent = board.MastersNode.transform;
-
             Position masterOnePos = new Position(boardRows / 2, -2);
             Position masterTwoPos = new Position(boardRows / 2, boardColumns + 1);
 
@@ -72,18 +69,6 @@ namespace Medusa
             masterCellTwo.name = "Master 02 Cell";
             masterCellTwo.transform.position = new Vector3(masterTwoPos.Row, -boardYSize, masterTwoPos.Column);
             masterCellTwo.transform.parent = Cells.transform;
-
-
-            GameObject overlayOne = Object.Instantiate(Resources.Load("Prefabs/Master_Overlay_Prefab")) as GameObject;
-            overlayOne.name = "Master 01 Overlay";
-            overlayOne.transform.position = masterOnePos;
-            overlayOne.transform.parent = Overlays.transform;
-
-            GameObject overlayTwo = Object.Instantiate(Resources.Load("Prefabs/Master_Overlay_Prefab")) as GameObject;
-            overlayTwo.name = "Master 02 Overlay";
-            overlayTwo.transform.position = masterTwoPos;
-            overlayTwo.transform.parent = Overlays.transform;
-
 
             board.PlaceMasters(masterOne, masterTwo, masterOnePos, masterTwoPos);
         }

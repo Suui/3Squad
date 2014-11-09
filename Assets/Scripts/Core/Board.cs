@@ -16,7 +16,7 @@ namespace Medusa
         public event BoardOnChange OnChange;
         public readonly int rows, columns;
 
-        private Dictionary<Position, GameObject> masters;
+        private readonly Dictionary<Position, MasterAssets> masters;
         private readonly Dictionary<string,Layer> layers;
         private readonly List<Position> positions;
 
@@ -26,7 +26,7 @@ namespace Medusa
             this.rows = rows;
             this.columns = columns;
             positions = new List<Position>(rows * columns);
-            masters = new Dictionary<Position, GameObject>(2);
+            masters = new Dictionary<Position, MasterAssets>(2);
 
             SceneNode = new GameObject("BoardNode");
             MastersNode = new GameObject("MastersNode");
@@ -44,19 +44,34 @@ namespace Medusa
             GameObject node = new GameObject("Masters");
             node.transform.parent = MastersNode.transform;
 
+            GameObject Overlays = new GameObject("Overlays");
+            Overlays.transform.parent = MastersNode.transform;
+
+
             GameObject master1 = Object.Instantiate(masterOne) as GameObject;
             master1.name = "Mater 01";
             master1.transform.position = masterOnePos;
             master1.transform.parent = node.transform;
 
-            masters.Add(masterOnePos, masterOne);
+            GameObject overlayOne = Object.Instantiate(Resources.Load("Prefabs/Master_Overlay_Prefab")) as GameObject;
+            overlayOne.name = "Master 01 Overlay";
+            overlayOne.transform.position = masterOnePos;
+            overlayOne.transform.parent = Overlays.transform;
+
+            masters.Add(masterOnePos, new MasterAssets(master1, overlayOne));
+
 
             GameObject master2 = Object.Instantiate(masterTwo) as GameObject;
             master2.name = "Mater 02";
             master2.transform.position = masterTwoPos;
             master2.transform.parent = node.transform;
 
-            masters.Add(masterTwoPos, masterTwo);
+            GameObject overlayTwo = Object.Instantiate(Resources.Load("Prefabs/Master_Overlay_Prefab")) as GameObject;
+            overlayTwo.name = "Master 02 Overlay";
+            overlayTwo.transform.position = masterTwoPos;
+            overlayTwo.transform.parent = Overlays.transform;
+
+            masters.Add(masterTwoPos, new MasterAssets(master2, overlayTwo));
 
         }
 
@@ -139,7 +154,7 @@ namespace Medusa
         }
 
 
-        public Dictionary<Position, GameObject> Masters
+        public Dictionary<Position, MasterAssets> Masters
         {
             get { return masters; }
         }
