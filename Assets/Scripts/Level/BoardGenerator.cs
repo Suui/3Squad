@@ -12,13 +12,15 @@ namespace Medusa
         private Board board;
 
         private readonly GameObject boardCellPrefab;
+        private readonly GameObject masterCellPrefab;
         private readonly int boardRows, boardColumns;
         private readonly List<Position> possiblePositions;
 
 
-        public BoardGenerator(GameObject boardCellPrefab, int boardRows, int boardColumns)
+        public BoardGenerator(GameObject boardCellPrefab, GameObject masterCellPrefab, int boardRows, int boardColumns)
         {
             this.boardCellPrefab = boardCellPrefab;
+            this.masterCellPrefab = masterCellPrefab;
             this.boardRows = boardRows;
             this.boardColumns = boardColumns;
             possiblePositions = new List<Position>(boardRows * boardColumns / 2);
@@ -49,24 +51,44 @@ namespace Medusa
         }
 
 
-        public void SetUpMasters(GameObject masterCellPrefab, float boardYSize)
+        public void SetUpMasters(GameObject masterOne, GameObject masterTwo, float boardYSize)
         {
-            Position masterPos = new Position(boardRows / 2, -2);
+            GameObject Cells = new GameObject("Cells");
+            Cells.transform.parent = board.MastersNode.transform;
+
+            GameObject Overlays = new GameObject("Overlays");
+            Overlays.transform.parent = board.MastersNode.transform;
+
+            Position masterOnePos = new Position(boardRows / 2, -2);
+            Position masterTwoPos = new Position(boardRows / 2, boardColumns + 1);
+
 
             GameObject masterCellOne = Object.Instantiate(masterCellPrefab) as GameObject;
-            masterCellOne.name = "master 01";
-            masterCellOne.transform.position = new Vector3(masterPos.Row, -boardYSize, masterPos.Column);
-
-
-            masterPos = new Position(boardRows / 2, boardColumns + 1);
+            masterCellOne.name = "Master 01 Cell";
+            masterCellOne.transform.position = new Vector3(masterOnePos.Row, -boardYSize, masterOnePos.Column);
+            masterCellOne.transform.parent = Cells.transform;
 
             GameObject masterCellTwo = Object.Instantiate(masterCellPrefab) as GameObject;
-            masterCellTwo.name = "master 02";
-            masterCellTwo.transform.position = new Vector3(masterPos.Row, -boardYSize, masterPos.Column);
+            masterCellTwo.name = "Master 02 Cell";
+            masterCellTwo.transform.position = new Vector3(masterTwoPos.Row, -boardYSize, masterTwoPos.Column);
+            masterCellTwo.transform.parent = Cells.transform;
+
+
+            GameObject overlayOne = Object.Instantiate(Resources.Load("Prefabs/Master_Overlay_Prefab")) as GameObject;
+            overlayOne.name = "Master 01 Overlay";
+            overlayOne.transform.position = masterOnePos;
+            overlayOne.transform.parent = Overlays.transform;
+
+            GameObject overlayTwo = Object.Instantiate(Resources.Load("Prefabs/Master_Overlay_Prefab")) as GameObject;
+            overlayTwo.name = "Master 02 Overlay";
+            overlayTwo.transform.position = masterTwoPos;
+            overlayTwo.transform.parent = Overlays.transform;
+
+
+            board.PlaceMasters(masterOne, masterTwo, masterOnePos, masterTwoPos);
         }
 
 
-        // TODO: Make a list so that randoms never collide. Set all the obstacle types with a single seed.
         public void SpawnObstacles(GameObject[] obstacles, int limit, int seed)
         {
             FillPossiblePositions();

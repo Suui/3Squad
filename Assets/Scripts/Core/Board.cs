@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Object = UnityEngine.Object;
 
 
 namespace Medusa
@@ -15,6 +16,7 @@ namespace Medusa
         public event BoardOnChange OnChange;
         public readonly int rows, columns;
 
+        private Dictionary<Position, GameObject> masters;
         private readonly Dictionary<string,Layer> layers;
         private readonly List<Position> positions;
 
@@ -24,10 +26,12 @@ namespace Medusa
             this.rows = rows;
             this.columns = columns;
             positions = new List<Position>(rows * columns);
+            masters = new Dictionary<Position, GameObject>(2);
 
             SceneNode = new GameObject("BoardNode");
+            MastersNode = new GameObject("MastersNode");
 
-            layers = new Dictionary<string,Layer >();
+            layers = new Dictionary<string, Layer>();
             foreach (string name in names)
             {
                 AddLayer(name);
@@ -35,7 +39,28 @@ namespace Medusa
         }
 
 
-        // TODO: Verify SceneNode and Event
+        public void PlaceMasters(GameObject masterOne, GameObject masterTwo, Position masterOnePos, Position masterTwoPos)
+        {
+            GameObject node = new GameObject("Masters");
+            node.transform.parent = MastersNode.transform;
+
+            GameObject master1 = Object.Instantiate(masterOne) as GameObject;
+            master1.name = "Mater 01";
+            master1.transform.position = masterOnePos;
+            master1.transform.parent = node.transform;
+
+            masters.Add(masterOnePos, masterOne);
+
+            GameObject master2 = Object.Instantiate(masterTwo) as GameObject;
+            master2.name = "Mater 02";
+            master2.transform.position = masterTwoPos;
+            master2.transform.parent = node.transform;
+
+            masters.Add(masterTwoPos, masterTwo);
+
+        }
+
+
         public void AddLayer(string name)
         {
             Layer layer = new Layer(this, name);
@@ -114,6 +139,12 @@ namespace Medusa
         }
 
 
+        public Dictionary<Position, GameObject> Masters
+        {
+            get { return masters; }
+        }
+
+
         public IEnumerable<Layer> Layers
         {
             get { return layers.Values; }
@@ -121,6 +152,13 @@ namespace Medusa
 
 
         public GameObject SceneNode
+        {
+            get;
+            private set;
+        }
+
+
+        public GameObject MastersNode
         {
             get;
             private set;

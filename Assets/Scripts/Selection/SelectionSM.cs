@@ -58,6 +58,23 @@ namespace Medusa
             {
                 DisplaySelectionOverlay(position);
 
+                // Selected a Master
+                if (board.IsInside(position) == false)
+                {
+                    Skill[] masterSkills;
+
+                    if (position.Column < 0)
+                        masterSkills = GetComponent<GameMaster>().GetMasterOne.GetComponents<Skill>();
+                    else
+                        masterSkills = GetComponent<GameMaster>().GetMasterTwo.GetComponents<Skill>();
+
+                    foreach (Skill sk in masterSkills)
+                        sk.ShowUpSkill();
+
+                    currentState = Selected.Character;
+                    return;
+                }
+
                 // Selected a Character
                 if (board["tokens"][position] != null && board["tokens"][position].GetComponent<Skill>() != null)
                 {
@@ -70,20 +87,6 @@ namespace Medusa
                     return;
                 }
 
-
-                // Selected a Master
-                Skill[] masterSkills;
-
-                if (position.Column < 0)
-                    masterSkills = GetComponent<GameMaster>().GetMasterOne.GetComponents<Skill>();
-                else
-                    masterSkills = GetComponent<GameMaster>().GetMasterTwo.GetComponents<Skill>();
-
-                foreach (Skill sk in masterSkills)
-                        sk.ShowUpSkill();
-
-                currentState = Selected.Character;
-                return;
             }
 
             if (currentState == Selected.Character)
@@ -183,15 +186,15 @@ namespace Medusa
 
         private void DisplaySelectionOverlay(Position position)
         {
-            
+            if (board.IsInside(previousSelectedPos))
+                board["overlays"][previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
+            else
+                board.Masters[previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
 
-            if (position.Row < 0)
-            {
-                
-            }
-
-            board["overlays"][previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
-            board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(1);
+            if (board.IsInside(position))
+                board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(1);
+            else
+                board.Masters[position].GetComponent<Selectable>().SetOverlayMaterial(1);
 
             previousSelectedPos = position;
         }

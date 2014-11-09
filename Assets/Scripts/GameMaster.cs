@@ -48,10 +48,10 @@ namespace Medusa
 
         void Awake()
         {
-            boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
+            boardGenerator = new BoardGenerator(boardCellPrefab, masterCellPrefab, boardRows, boardColumns);
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
-            boardGenerator.SetUpMasters(masterCellPrefab, boardYSize);
+            boardGenerator.SetUpMasters(masterOne, masterTwo, boardYSize);
 
             turnManagement = new TurnManagement(masterOne, masterTwo, seed);
 
