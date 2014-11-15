@@ -4,13 +4,13 @@
 namespace Medusa
 {
 
-    class Player : MonoBehaviour
+    class PlayerComponent : MonoBehaviour
     {
 
         private readonly GameObject masterPlayer;
 
 
-        public Player(GameObject masterPlayer)
+        public PlayerComponent(GameObject masterPlayer)
         {
             this.masterPlayer = masterPlayer;
         }
