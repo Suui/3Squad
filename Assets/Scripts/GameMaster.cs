@@ -24,6 +24,8 @@ namespace Medusa
         public float boardYSize;
         public int seed;
 
+        private Player[] players;
+
         private BoardGenerator boardGenerator;
         private TurnManagement turnManagement;
 
@@ -53,7 +55,12 @@ namespace Medusa
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
             boardGenerator.SetUpMasters(masterOne, masterTwo, boardYSize);
 
-            turnManagement = new TurnManagement(masterOne, masterTwo, seed);
+            Player playerOne = new Player("Player One!", 5);
+            Player playerTwo = new Player("Player Two!", 5);
+            players = new[] { playerOne, playerTwo};
+            
+            turnManagement = new TurnManagement(players[0], players[1], seed);
+
 
             // TODO: Remove testing block when over
             // Test GUI
@@ -61,6 +68,9 @@ namespace Medusa
             go.name = "Superrrr Characterr";
             go.transform.position = new Position(0, 0);
             CurrentBoard["tokens"][new Position(0, 0)] = go;
+
+            go.AddComponent<PlayerComponent>();
+            go.GetComponent<PlayerComponent>().Player = players[0];
         }
 
 
@@ -76,15 +86,15 @@ namespace Medusa
         }
 
 
-        public GameObject GetMasterOne
+        public Player GetPlayerOne
         {
-            get { return masterOne; }
+            get { return players[0]; }
         }
 
 
-        public GameObject GetMasterTwo
+        public Player GetPlayerTwo
         {
-            get { return masterTwo; }
+            get { return players[1]; }
         }
     }
 }

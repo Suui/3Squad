@@ -7,40 +7,40 @@ namespace Medusa
     public class TurnManagement
     {
 
-        private readonly GameObject masterOne;
-        private readonly GameObject masterTwo;
-        private GameObject currentMasterPlaying;
+        private readonly Player playerOne;
+        private readonly Player playerTwo;
+        private Player currentPlayer;
 
 
-        public TurnManagement(GameObject masterOne, GameObject masterTwo, int seed)
+        public TurnManagement(Player playerOne, Player playerTwo, int seed)
         {
-            this.masterOne = masterOne;
-            this.masterTwo = masterTwo;
+            this.playerOne = playerOne;
+            this.playerTwo = playerTwo;
 
             System.Random randStarter = new System.Random(seed);
             int starter = randStarter.Next(0, 1000) % 2;
 
-            currentMasterPlaying = starter == 0 ? masterOne : masterTwo;
+            currentPlayer = starter == 0 ? playerOne : playerTwo;
         }
 
 
         public void ChangeTurn()
         {
-            currentMasterPlaying = currentMasterPlaying == masterOne ? masterTwo : masterOne;
+            currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne;
         }
 
 
-        public GameObject CurrentMasterPlaying
+        public Player CurrentPlayer
         {
-            get { return currentMasterPlaying; }
+            get { return currentPlayer; }
         }
 
 
-        public GameObject EnemyMasterThisTurn
+        public Player EnemyPlayerThisTurn
         {
             get
             {
-                return currentMasterPlaying == masterOne ? masterTwo : masterOne;
+                return currentPlayer == playerOne ? playerTwo : playerOne;
             }
         }
 
