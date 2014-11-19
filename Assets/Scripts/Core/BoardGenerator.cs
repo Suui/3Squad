@@ -12,15 +12,13 @@ namespace Medusa
         private Board board;
 
         private readonly GameObject boardCellPrefab;
-        private readonly GameObject masterCellPrefab;
         private readonly int boardRows, boardColumns;
         private readonly List<Position> possiblePositions;
 
 
-        public BoardGenerator(GameObject boardCellPrefab, GameObject masterCellPrefab, int boardRows, int boardColumns)
+        public BoardGenerator(GameObject boardCellPrefab, int boardRows, int boardColumns)
         {
             this.boardCellPrefab = boardCellPrefab;
-            this.masterCellPrefab = masterCellPrefab;
             this.boardRows = boardRows;
             this.boardColumns = boardColumns;
             possiblePositions = new List<Position>(boardRows * boardColumns / 2);
@@ -31,46 +29,31 @@ namespace Medusa
         {
             board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays", "TurnManagement");
 
-            foreach (Position pos in board.Positions)
+            foreach (Position pos in board["terrain"].Positions)
             {
                 // Terrain
                 GameObject cell = Object.Instantiate(boardCellPrefab) as GameObject;
                 cell.name = "cell " + pos;
                 cell.transform.position = new Vector3(pos.Row, -boardYSize, pos.Column);
 
-                board["terrain"][pos] = cell;
+                if (IsMasterPos(pos))
+                    cell.transform.localScale = new Vector3(2.0f, 1.0f, 2.0f);
 
+                board["terrain"][pos] = cell;
+            }
+
+            foreach (Position pos in board["overlays"].Positions)
+            {
                 // Overlays
                 GameObject overlay = Object.Instantiate(Resources.Load("Prefabs/Overlay_Prefab")) as GameObject;
                 overlay.name = "overlay " + pos;
                 overlay.transform.position = pos;
 
+                if (IsMasterPos(pos))
+                    overlay.transform.localScale = new Vector3(2.0f, 2.0f, 1.0f);
+
                 board["overlays"][pos] = overlay;
             }
-
-        }
-
-
-        public void SetUpMasters(GameObject masterOne, GameObject masterTwo, float boardYSize)
-        {
-            GameObject Cells = new GameObject("Cells");
-            Cells.transform.parent = board.MastersNode.transform;
-
-            Position masterOnePos = new Position(boardRows / 2, -2);
-            Position masterTwoPos = new Position(boardRows / 2, boardColumns + 1);
-
-
-            GameObject masterCellOne = Object.Instantiate(masterCellPrefab) as GameObject;
-            masterCellOne.name = "Master 01 Cell";
-            masterCellOne.transform.position = new Vector3(masterOnePos.Row, -boardYSize, masterOnePos.Column);
-            masterCellOne.transform.parent = Cells.transform;
-
-            GameObject masterCellTwo = Object.Instantiate(masterCellPrefab) as GameObject;
-            masterCellTwo.name = "Master 02 Cell";
-            masterCellTwo.transform.position = new Vector3(masterTwoPos.Row, -boardYSize, masterTwoPos.Column);
-            masterCellTwo.transform.parent = Cells.transform;
-
-            board.PlaceMasters(masterOne, masterTwo, masterOnePos, masterTwoPos);
         }
 
 
@@ -135,6 +118,15 @@ namespace Medusa
             possiblePositions.RemoveAt(index);
 
             return pos;
+        }
+
+
+        private bool IsMasterPos(Position position)
+        {
+            if (position.Column < 0 || position.Column >= boardRows)
+                return true;
+
+            return false;
         }
 
 

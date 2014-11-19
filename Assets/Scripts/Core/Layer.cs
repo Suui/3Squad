@@ -26,8 +26,24 @@ namespace Medusa
             this.board = board;
             this.name = name;
 
-            gameObjects = new Dictionary<Position, GameObject>(board.Rows * board.Columns);
+            gameObjects = new Dictionary<Position, GameObject>();
+            
+            InitializeDictionary();
             SceneNode = new GameObject(name);
+        }
+
+
+        private void InitializeDictionary()
+        {
+            // Master's Positions
+            gameObjects.Add(new Position(board.Rows / 2, -2), null);
+            gameObjects.Add(new Position(board.Rows / 2, board.Columns + 1), null);
+
+            for (int x = 0; x < board.Rows; x++)
+            {
+                for (int z = 0; z < board.Columns; z++)
+                    gameObjects.Add(new Position(x, z), null);
+            }
         }
 
 
@@ -180,11 +196,7 @@ namespace Medusa
         // Lambda
         public IEnumerable<GameObject> Where(Func<GameObject, bool> test)
         {
-            foreach (GameObject go in GameObjects)
-            {
-                if (test(go))
-                    yield return go;
-            }
+            return GameObjects.Where(test);
         }
 
 
@@ -210,15 +222,22 @@ namespace Medusa
             }
         }
 
+
+        public IEnumerable<Position> Positions
+        {
+            get { return gameObjects.Keys; }
+        }
+
         #endregion
 
-		public bool Outside (Position position)
-		{
-			return position.Row < 0
-				|| position.Row >= board.rows
-				|| position.Column < 0
-				|| position.Column >= board.columns;
-		}
+
+        public bool Outside (Position position)
+        {
+            return position.Row < 0
+                || position.Row >= board.rows
+                || position.Column < 0
+                || position.Column >= board.columns;
+        }
 
     }
 }
