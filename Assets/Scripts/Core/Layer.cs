@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Object = UnityEngine.Object;
 
 
 namespace Medusa
@@ -14,7 +16,7 @@ namespace Medusa
 
         public event LayerOnChange OnChange;
 
-        private readonly GameObject[,] gameObjects;
+        private readonly Dictionary<Position, GameObject> gameObjects;
         private readonly Board board;
         private readonly string name;
 
@@ -24,7 +26,7 @@ namespace Medusa
             this.board = board;
             this.name = name;
 
-            gameObjects = new GameObject[board.rows, board.columns];
+            gameObjects = new Dictionary<Position, GameObject>(board.Rows * board.Columns);
             SceneNode = new GameObject(name);
         }
 
@@ -39,7 +41,7 @@ namespace Medusa
                 if (board.IsInside(position) == false)        // Return null instead of exception?
                     throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
-                return gameObjects[position.Row, position.Column]; 
+                return gameObjects[position]; 
             }
 
 
@@ -51,7 +53,7 @@ namespace Medusa
                 if (board.IsInside(position) == false)
                     throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
-                gameObjects[position.Row, position.Column] = value;
+                gameObjects[position] = value;
 
                 if (value != null)
                     value.transform.parent = SceneNode.transform;
@@ -67,7 +69,7 @@ namespace Medusa
         {
             if (IsEmpty(position) == false)
             {
-                UnityEngine.Object.Destroy(this[position]);
+                Object.Destroy(this[position]);
                 this[position] = null;
             }
         }
@@ -107,7 +109,7 @@ namespace Medusa
         {
             foreach (GameObject go in GameObjects)
             {
-                GameObject.Destroy(go);
+                Object.Destroy(go);
             }
         }
 
@@ -123,12 +125,15 @@ namespace Medusa
             if (gameObject == null)
                 return null;
 
+            Position pos;
             for (int x = 0, rows = board.Rows; x < rows; x++)
             {
                 for (int z = 0, columns = board.Columns; z < columns; z++)
                 {
-                    if (gameObjects[x, z] == gameObject)
-                        return new Position(x, z);
+                    pos = new Position(x, z);
+
+                    if (gameObjects[pos] == gameObject)
+                        return pos;
                 }
             }
 
@@ -200,15 +205,8 @@ namespace Medusa
 
         public IEnumerable<GameObject> GameObjects
         {
-            get
-            {
-                foreach (GameObject go in gameObjects)
-                {
-                    if (go != null)
-                    {
-                        yield return go;
-                    }
-                }
+            get {
+                return gameObjects.Values.Where(go => go != null);
             }
         }
 
