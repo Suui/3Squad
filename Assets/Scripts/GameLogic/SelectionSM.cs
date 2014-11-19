@@ -50,9 +50,9 @@ namespace Medusa
         private void CheckSelection(Position position, Skill skill)
         {
             Debug.Log("Selection Performed! " + 
-                "Current SM State is: " + currentState +
-                ". Parameter position is: " + position + 
-                ". Parameter Skill is: " + skill);
+                "Current SM State was: " + currentState +
+                ". Parameter position was: " + position + 
+                ". Parameter Skill was: " + skill);
 
             // NOTHING
             if (currentState == Selected.Nothing)
