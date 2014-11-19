@@ -37,7 +37,10 @@ namespace Medusa
                 cell.transform.position = new Vector3(pos.Row, -boardYSize, pos.Column);
 
                 if (IsMasterPos(pos))
+                {
+                    Debug.Log(pos + "is master pos");
                     cell.transform.localScale = new Vector3(2.0f, 1.0f, 2.0f);
+                }
 
                 board["terrain"][pos] = cell;
             }
@@ -123,7 +126,7 @@ namespace Medusa
 
         private bool IsMasterPos(Position position)
         {
-            if (position.Column < 0 || position.Column >= boardRows)
+            if (position.Column < 0 || position.Column >= boardColumns)
                 return true;
 
             return false;

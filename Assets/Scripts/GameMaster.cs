@@ -50,10 +50,9 @@ namespace Medusa
 
         void Awake()
         {
-            boardGenerator = new BoardGenerator(boardCellPrefab, masterCellPrefab, boardRows, boardColumns);
+            boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
-            boardGenerator.SetUpMasters(masterOne, masterTwo, boardYSize);
 
             Player playerOne = new Player("Player One!", 5);
             Player playerTwo = new Player("Player Two!", 5);
