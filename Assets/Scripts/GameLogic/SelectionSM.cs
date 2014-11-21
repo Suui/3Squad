@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace Medusa
@@ -9,6 +10,7 @@ namespace Medusa
 
         private Board board;
 
+        private Player playingPlayer;
         private Skill previousSelectedSkill;
         private Position previousSelectedPos;
         private Selected currentState;
@@ -25,15 +27,15 @@ namespace Medusa
 
         void OnEnable()
         {
-            RaySelection.OnSelection    += CheckSelection;
-            ClickableSkill.OnSkillClick += CheckSelection;
+            RaySelection.OnSelection +=     BreakDownClickInfo;
+            ClickableSkill.OnSkillClick +=  BreakDownClickInfo;
         }
 
 
         void OnDisable()
         {
-            RaySelection.OnSelection    -= CheckSelection;
-            ClickableSkill.OnSkillClick -= CheckSelection;
+            RaySelection.OnSelection -=     BreakDownClickInfo;
+            ClickableSkill.OnSkillClick -=  BreakDownClickInfo;
         }
 
 
@@ -41,9 +43,20 @@ namespace Medusa
         {
             board = GetComponent<GameMaster>().CurrentBoard;
 
+            ClickEvents = new List<ClickInfo>();
+
+            playingPlayer = null;
             previousSelectedSkill = null;
             previousSelectedPos = new Position(0, 0);
             currentState = Selected.Nothing;
+        }
+
+
+        private void BreakDownClickInfo(ClickInfo clickInfo)
+        {
+            // TODO: Function to process if clickInfo should be included can be set up here
+            ClickEvents.Add(clickInfo);
+            CheckSelection(clickInfo.Position, clickInfo.Skill);
         }
 
 
@@ -178,6 +191,17 @@ namespace Medusa
 
             previousSelectedPos = position;
         }
+
+
+        public Player PlayingPlayer
+        {
+            set { playingPlayer = value; }
+        }
+
+
+        public List<ClickInfo> ClickEvents { get; set; }
+
+
     }
 
 }

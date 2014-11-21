@@ -6,13 +6,9 @@ using System.Collections.Generic;
 namespace Medusa
 {
 
-    public delegate void BoardOnChange(Board caller,Layer layer,Position pos,GameObject oldGO,GameObject newGO);
-
-
     public class Board
     {
 
-        public event BoardOnChange OnChange;
         public readonly int rows, columns;
 
         private readonly Dictionary<string,Layer> layers;
@@ -41,8 +37,6 @@ namespace Medusa
 
             layer.SceneNode.transform.parent = SceneNode.transform;
             layers[name] = layer;
-
-            layer.OnChange += LayerChangeEventHandler;
         }
 
 
@@ -89,13 +83,6 @@ namespace Medusa
                    && position.Column >= 0
                    && position.Row < rows
                    && position.Column < columns;
-        }
-
-
-        private void LayerChangeEventHandler(Layer layer, Position position, GameObject oldGameObject, GameObject newGameObject)
-        {
-            if (OnChange != null)
-                OnChange(this, layer, position, oldGameObject, newGameObject);
         }
 
 

@@ -8,13 +8,8 @@ using Object = UnityEngine.Object;
 namespace Medusa
 {
 
-    public delegate void LayerOnChange(Layer caller,Position pos,GameObject oldGO,GameObject newGO);
-
-
     public class Layer
     {
-
-        public event LayerOnChange OnChange;
 
         private readonly Dictionary<Position, GameObject> gameObjects;
         private readonly Board board;
@@ -50,7 +45,7 @@ namespace Medusa
         public GameObject this[Position position]
         {
             get
-            { 
+            {
                 if (position == null)                           // Return null instead of exception?
                     throw new ArgumentOutOfRangeException("The parameter position is null");
 
@@ -73,9 +68,6 @@ namespace Medusa
 
                 if (value != null)
                     value.transform.parent = SceneNode.transform;
-
-                if (OnChange != null)
-                    OnChange(this, position, null, value);
             }
         }
 

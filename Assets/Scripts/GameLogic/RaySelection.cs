@@ -7,7 +7,7 @@ namespace Medusa
     class RaySelection : MonoBehaviour
     {
 
-        public delegate void Selection(Position selectedPos, Skill skill);
+        public delegate void Selection(ClickInfo clickInfo);
         public static event Selection OnSelection;
 
         private Position selectedPos;
@@ -27,7 +27,7 @@ namespace Medusa
                     selectedPos = new Position((int)rayHit.transform.position.x, (int)rayHit.transform.position.z);
 
                     if (OnSelection != null)
-                        OnSelection(selectedPos, null);
+                        OnSelection(new ClickInfo(selectedPos, null));
                 }
             }
         }
