@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 
 namespace Medusa
 {
@@ -6,7 +7,7 @@ namespace Medusa
     public class TurnEvents
     {
 
-        public TurnEvents(ClickInfo[] clickEvents)
+        public TurnEvents(List<ClickInfo> clickEvents)
         {
             ClickEvents = clickEvents;
         }
@@ -18,7 +19,7 @@ namespace Medusa
         }
 
         //public JSON auto property...
-        public ClickInfo[] ClickEvents { get; private set; }
+        public List<ClickInfo> ClickEvents { get; private set; }
     }
 
 }

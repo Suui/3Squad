@@ -9,12 +9,14 @@ namespace Medusa
 
         private readonly Position position;
         private readonly Skill skill;
+        private readonly string buttonId;
 
 
-        public ClickInfo(Position position, Skill skill)
+        public ClickInfo(Position position, Skill skill, string buttonID)
         {
             this.position = position;
             this.skill = skill;
+            this.buttonId = buttonId;
         }
 
 
@@ -27,6 +29,12 @@ namespace Medusa
         public Skill Skill
         {
             get { return skill; }
+        }
+
+
+        public string ButtonId
+        {
+            get { return buttonId; }
         }
     }
 

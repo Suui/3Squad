@@ -60,11 +60,11 @@ namespace Medusa
         {
             // TODO: Function to process if clickInfo should be included can be set up here
             ClickEvents.Add(clickInfo);
-            CheckSelection(clickInfo.Position, clickInfo.Skill);
+            CheckSelection(clickInfo.Position, clickInfo.Skill, clickInfo.ButtonId);
         }
 
 
-        private void CheckSelection(Position position, Skill skill)
+        private void CheckSelection(Position position, Skill skill, string buttonId)
         {
             Debug.Log("Selection Performed! " + 
                 "Current SM State was: " + currentState +
@@ -95,11 +95,25 @@ namespace Medusa
                     return;
                 }
 
-                // Selected the Exit Button
+                // Selected a Button
+                if (buttonId != null)
+                {
+                    // Selcted the Exit Button
+                    if (buttonId == "Exit")
+                    {
+                        // I guess we need to save the state of the game before this
+                        Application.Quit();
+                    }
 
-
-                // Selected the End Turn Button
-
+                    // Selected the EndTurn Button
+                    if (buttonId == "EndTurn")
+                    {
+                        if (OnChangingTurn != null)
+                        {
+                            OnChangingTurn(new TurnEvents(ClickEvents));
+                        }
+                    }
+                }
             }
 
             // CHARACTER

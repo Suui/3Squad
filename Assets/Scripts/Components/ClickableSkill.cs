@@ -14,10 +14,13 @@ namespace Medusa
         void OnMouseUp()
         {
             if (OnSkillClick != null)
-                OnSkillClick(new ClickInfo(
-                    (Position)gameObject.transform.parent.gameObject.transform, 
-                    GetComponent<SkillToFire>().Skill)
-                    );
+                OnSkillClick(new ClickInfo
+                    (
+                        (Position)gameObject.transform.parent.gameObject.transform,
+                        GetComponent<SkillToFire>().Skill,
+                        null
+                    )
+                );
         }
 
     }

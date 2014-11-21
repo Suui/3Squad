@@ -27,7 +27,7 @@ namespace Medusa
                     selectedPos = new Position((int)rayHit.transform.position.x, (int)rayHit.transform.position.z);
 
                     if (OnSelection != null)
-                        OnSelection(new ClickInfo(selectedPos, null));
+                        OnSelection(new ClickInfo(selectedPos, null, null));
                 }
             }
         }
