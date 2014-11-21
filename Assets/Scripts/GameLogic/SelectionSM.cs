@@ -76,17 +76,29 @@ namespace Medusa
             {
                 DisplaySelectionOverlay(position);
 
-                // Selected a Character || Master
-                if (board["tokens"][position] != null && board["tokens"][position].GetComponent<Skill>() != null)
+                // Selected a Token
+                if (board["tokens"][position] != null)
                 {
-                    Skill[] skills = board["tokens"][position].GetComponents<Skill>();
+                    // Display Info of the character getting the right components. David.
 
-                    foreach (Skill sk in skills)
-                        sk.ShowUpSkill();
+                    // Selected a Character || Master
+                    if (board["tokens"][position].GetComponent<Skill>() != null)
+                    {
+                        Skill[] skills = board["tokens"][position].GetComponents<Skill>();
+
+                        foreach (Skill sk in skills)
+                            sk.ShowUpSkill();
+
+                    }
 
                     currentState = Selected.Character;
                     return;
                 }
+
+                // Selected the Exit Button
+
+
+                // Selected the End Turn Button
 
             }
 
@@ -98,27 +110,47 @@ namespace Medusa
                 // Selected a Skill
                 if (skill != null)
                 {
-                    skill.Setup();  // TODO: Coordinar con David
+                    skill.Setup();
                     previousSelectedSkill = skill;
                     currentState = Selected.Skill;
+
+                    // Display Confirm / Cancel Buttons
+
                     return;
                 }
 
-                // Selected another Character || Master
-                if (board["tokens"][position] != null && board["tokens"][position].GetComponent<Skill>() != null)
+                // Selected a Token
+                if (board["tokens"][position] != null)
                 {
-                    foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
-                        Destroy(go);
+                    // Delete Info of the token getting the right components. David.
+                    // Display Info of the token getting the right components. David.
 
-                    Skill[] skills = board["tokens"][position].GetComponents<Skill>();
+                    // Selected another Character || Master
+                    if (board["tokens"][position] != null && board["tokens"][position].GetComponent<Skill>() != null)
+                    {
+                        foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
+                            Destroy(go);
 
-                    foreach (Skill sk in skills)
-                        sk.ShowUpSkill();
+                        Skill[] skills = board["tokens"][position].GetComponents<Skill>();
+
+                        foreach (Skill sk in skills)
+                            sk.ShowUpSkill();
+                    }
 
                     return;
                 }
 
-                // Deselected
+                // Selected the DisplayInfoAboutToken Button
+
+
+                // Selected the Exit Button
+
+
+                // Selected the End Turn Button
+
+
+                // Selected Nothing
+                // Delete Info of the token getting the right components. David.
                 foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
                     Destroy(go);
 
@@ -129,62 +161,17 @@ namespace Medusa
             // SKILL
             if (currentState == Selected.Skill)
             {
-                // Selected another skill
-                if (skill != null)
-                {
-                    if (skill != previousSelectedSkill)
-                    {
-                        previousSelectedSkill.Clear();
-                        skill.Setup(); // TODO: Coordinar con David
-                        previousSelectedSkill = skill;
-                        return;
-                    }
 
-                    return;
-                }
+                // Clicked on Confirm
 
-                // Selected an unavailable position == Cancel
-                if (previousSelectedSkill.Click(position) == false)
-                {
-                    previousSelectedSkill.Clear();
-                    currentState = Selected.Character;
-                    return;
-                }
+
+                // Clicked on Cancel
+
 
                 // Selected an available position
-                currentState = Selected.SkillConfirm;
                 return;
             }
 
-            // SKILL CONFIRM
-            if (currentState == Selected.SkillConfirm)
-            {
-                // Selected another skill
-                if (skill != null && skill != previousSelectedSkill)
-                {
-                    previousSelectedSkill.Clear();
-                    skill.Setup();
-                    previousSelectedSkill = skill;
-                    currentState = Selected.Skill;
-                    return;
-                }
-
-                // Selected the same skill to confirm
-                if (skill == previousSelectedSkill)
-                {
-                    skill.Confirm();
-                    skill.Clear();
-                    currentState = Selected.Character;
-                }
-
-                // Selected an unavailable position == Cancel
-                if (previousSelectedSkill.Click(position) == false)
-                {
-                    previousSelectedSkill.Clear();
-                    currentState = Selected.Character;
-                    return;
-                }
-            }
         }
 
 
