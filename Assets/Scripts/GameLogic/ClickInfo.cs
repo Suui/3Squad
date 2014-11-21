@@ -12,7 +12,7 @@ namespace Medusa
         private readonly string buttonId;
 
 
-        public ClickInfo(Position position, Skill skill, string buttonID)
+        public ClickInfo(Position position, Skill skill, string buttonId)
         {
             this.position = position;
             this.skill = skill;

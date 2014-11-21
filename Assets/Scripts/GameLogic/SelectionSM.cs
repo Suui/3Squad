@@ -31,15 +31,17 @@ namespace Medusa
 
         void OnEnable()
         {
-            RaySelection.OnSelection +=     BreakDownClickInfo;
-            ClickableSkill.OnSkillClick +=  BreakDownClickInfo;
+            RaySelection.OnSelection +=         BreakDownClickInfo;
+            ClickableSkill.OnSkillClick +=      BreakDownClickInfo;
+            ClickableButton.OnButtonClick +=    BreakDownClickInfo;
         }
 
 
         void OnDisable()
         {
-            RaySelection.OnSelection -=     BreakDownClickInfo;
-            ClickableSkill.OnSkillClick -=  BreakDownClickInfo;
+            RaySelection.OnSelection -=         BreakDownClickInfo;
+            ClickableSkill.OnSkillClick -=      BreakDownClickInfo;
+            ClickableButton.OnButtonClick -=    BreakDownClickInfo;
         }
 
 
@@ -74,6 +76,29 @@ namespace Medusa
             // NOTHING
             if (currentState == Selected.Nothing)
             {
+
+                // Selected a Button
+                if (buttonId != null)
+                {
+                    // Selcted the Exit Button
+                    if (buttonId == "Exit")
+                    {
+                        // I guess we need to save the state of the game before this
+                        Application.Quit();
+                    }
+
+                    // Selected the EndTurn Button
+                    if (buttonId == "EndTurn")
+                    {
+                        if (OnChangingTurn != null)
+                        {
+                            OnChangingTurn(new TurnEvents(ClickEvents));
+                        }
+                    }
+
+                    return;
+                }
+
                 DisplaySelectionOverlay(position);
 
                 // Selected a Token
@@ -95,25 +120,7 @@ namespace Medusa
                     return;
                 }
 
-                // Selected a Button
-                if (buttonId != null)
-                {
-                    // Selcted the Exit Button
-                    if (buttonId == "Exit")
-                    {
-                        // I guess we need to save the state of the game before this
-                        Application.Quit();
-                    }
-
-                    // Selected the EndTurn Button
-                    if (buttonId == "EndTurn")
-                    {
-                        if (OnChangingTurn != null)
-                        {
-                            OnChangingTurn(new TurnEvents(ClickEvents));
-                        }
-                    }
-                }
+                
             }
 
             // CHARACTER

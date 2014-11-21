@@ -49,9 +49,9 @@ namespace Medusa
             players = new[] { playerOne, playerTwo};
 
             SetUpMasters();
+            SetUpButtons();
 
             turnManagement = new TurnManagement(players[0], players[1], seed);
-
 
 
             // TODO: Remove testing block when over
@@ -78,6 +78,23 @@ namespace Medusa
             master2.name = "Master 02";
             master2.transform.position = MasterOnePos;
             CurrentBoard["tokens"][MasterOnePos] = master2;
+        }
+
+
+        private void SetUpButtons()
+        {
+            GameObject exitButton = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
+            exitButton.GetComponent<GUITexture>().texture = Resources.Load("Textures/TestButton") as Texture2D;
+            exitButton.transform.position = new Vector3(0.9f, 0.9f, 0.0f);
+
+            exitButton.GetComponent<ClickableButton>().Id = "Exit";
+
+
+            GameObject endTurnButton = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
+            endTurnButton.GetComponent<GUITexture>().texture = Resources.Load("Textures/TestButton2") as Texture2D;
+            endTurnButton.transform.position = new Vector3(0.9f, 0.8f, 0.0f);
+
+            endTurnButton.GetComponent<ClickableButton>().Id = "EndTurn";
         }
 
 

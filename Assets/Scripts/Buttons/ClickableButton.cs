@@ -16,7 +16,7 @@ namespace Medusa
             if (OnButtonClick != null)
                 OnButtonClick(new ClickInfo
                     (
-                        (Position)gameObject.transform.parent.gameObject.transform,
+                        null,
                         null,
                         Id
                     )
