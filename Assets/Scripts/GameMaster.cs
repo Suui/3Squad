@@ -7,6 +7,18 @@ namespace Medusa
     public class GameMaster : MonoBehaviour
     {
 
+        void OnEnable()
+        {
+            SelectionSM.OnChangingTurn += ChangeTurn;
+        }
+
+
+        void OnDisable()
+        {
+            SelectionSM.OnChangingTurn -= ChangeTurn;
+        }
+
+
         public GameObject masterOne;
         public GameObject masterTwo;
 
@@ -69,7 +81,7 @@ namespace Medusa
         }
 
 
-        public void ChangeTurn()
+        public void ChangeTurn(TurnEvents turnEvents)
         {
             
         }

@@ -3,7 +3,7 @@
 namespace Medusa
 {
 
-    class TurnEvents
+    public class TurnEvents
     {
 
         public TurnEvents(ClickInfo[] clickEvents)
