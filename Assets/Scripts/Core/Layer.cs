@@ -46,11 +46,8 @@ namespace Medusa
         {
             get
             {
-                if (position == null)                           // Return null instead of exception?
+                if (position == null)
                     throw new ArgumentOutOfRangeException("The parameter position is null");
-
-                //if (board.IsInside(position) == false)        // Return null instead of exception?
-                //    throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
                 return gameObjects[position]; 
             }
@@ -60,9 +57,6 @@ namespace Medusa
             {
                 if (position == null)
                     throw new ArgumentOutOfRangeException("The parameter position is null");
-
-                //if (board.IsInside(position) == false)
-                //    throw new ArgumentOutOfRangeException("The position " + position + " is out of range");
 
                 gameObjects[position] = value;
 

@@ -8,6 +8,10 @@ namespace Medusa
     public class SelectionSM : MonoBehaviour
     {
 
+        public delegate void ChangingTurn(TurnEvents turnEvents);
+        public static event ChangingTurn OnChangingTurn;
+
+
         private Board board;
 
         private Player playingPlayer;
