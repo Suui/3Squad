@@ -80,22 +80,7 @@ namespace Medusa
                 // Selected a Button
                 if (buttonId != null)
                 {
-                    // Selcted the Exit Button
-                    if (buttonId == "Exit")
-                    {
-                        // I guess we need to save the state of the game before this
-                        Application.Quit();
-                    }
-
-                    // Selected the EndTurn Button
-                    if (buttonId == "EndTurn")
-                    {
-                        if (OnChangingTurn != null)
-                        {
-                            OnChangingTurn(new TurnEvents(ClickEvents));
-                        }
-                    }
-
+                    CheckButtons(buttonId);
                     return;
                 }
 
@@ -113,14 +98,12 @@ namespace Medusa
 
                         foreach (Skill sk in skills)
                             sk.ShowUpSkill();
-
                     }
 
                     currentState = Selected.Character;
                     return;
                 }
 
-                
             }
 
             // CHARACTER
@@ -193,6 +176,28 @@ namespace Medusa
                 return;
             }
 
+        }
+
+
+        private void CheckButtons(string buttonId)
+        {
+            // Selcted the Exit Button
+            if (buttonId == "Exit")
+            {
+                // I guess we need to save the state of the game before this
+                Application.Quit();
+            }
+
+            // Selected the EndTurn Button
+            if (buttonId == "EndTurn")
+            {
+                if (OnChangingTurn != null)
+                {
+                    OnChangingTurn(new TurnEvents(ClickEvents));
+                    ClickEvents.Clear();
+                    currentState = Selected.Nothing;
+                }
+            }
         }
 
 
