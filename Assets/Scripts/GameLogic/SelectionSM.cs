@@ -15,7 +15,8 @@ namespace Medusa
         private Board board;
 
         private Player playingPlayer;
-        private Skill previousSelectedSkill;
+        private GameObject selectedToken;
+        private Skill selectedSkill;
         private Position previousSelectedPos;
         private Selected currentState;
 
@@ -23,9 +24,8 @@ namespace Medusa
         public enum Selected
         {
             Nothing,
-            Character,
+            Token,
             Skill,
-            SkillConfirm
         }
 
 
@@ -52,7 +52,7 @@ namespace Medusa
             ClickEvents = new List<ClickInfo>();
 
             playingPlayer = null;
-            previousSelectedSkill = null;
+            selectedSkill = null;
             previousSelectedPos = new Position(0, 0);
             currentState = Selected.Nothing;
         }
@@ -91,7 +91,7 @@ namespace Medusa
                 {
                     // Display Info of the character getting the right components. David.
 
-                    // Selected a Character || Master
+                    // Selected a Token || Master
                     if (board["tokens"][position].GetComponent<Skill>() != null)
                     {
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
@@ -100,41 +100,55 @@ namespace Medusa
                             sk.ShowUpSkill();
                     }
 
-                    currentState = Selected.Character;
+                    currentState = Selected.Token;
                     return;
                 }
 
             }
 
             // CHARACTER
-            if (currentState == Selected.Character)
+            if (currentState == Selected.Token)
             {
+
+                // Selected a Button
+                if (buttonId != null)
+                {
+                    CheckButtons(buttonId);
+                    return;
+                }
+
                 DisplaySelectionOverlay(position);
 
                 // Selected a Skill
                 if (skill != null)
                 {
                     skill.Setup();
-                    previousSelectedSkill = skill;
-                    currentState = Selected.Skill;
 
-                    // Display Confirm / Cancel Buttons
+                    ShowConfirmCancel();
+                    HideExitEndTurn();
+
+                    foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
+                        Destroy(go);
+
+                    selectedSkill = skill;
+                    selectedToken = board["tokens"][previousSelectedPos].gameObject;
+                    currentState = Selected.Skill;
 
                     return;
                 }
 
-                // Selected a Token
+                // Selected Token
                 if (board["tokens"][position] != null)
                 {
                     // Delete Info of the token getting the right components. David.
                     // Display Info of the token getting the right components. David.
 
-                    // Selected another Character || Master
-                    if (board["tokens"][position] != null && board["tokens"][position].GetComponent<Skill>() != null)
-                    {
-                        foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
-                            Destroy(go);
+                    foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
+                        Destroy(go);
 
+                    // Selected another Token || Master
+                    if (board["tokens"][position].GetComponent<Skill>() != null)
+                    {
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
 
                         foreach (Skill sk in skills)
@@ -145,12 +159,6 @@ namespace Medusa
                 }
 
                 // Selected the DisplayInfoAboutToken Button
-
-
-                // Selected the Exit Button
-
-
-                // Selected the End Turn Button
 
 
                 // Selected Nothing
@@ -165,12 +173,27 @@ namespace Medusa
             // SKILL
             if (currentState == Selected.Skill)
             {
+                if (buttonId != null)
+                {
+                    // Selected the Confirm Button
+                    if (buttonId == "Confirm")
+                    {
+                        selectedSkill.Confirm();
+                        selectedSkill.Clear();
 
-                // Clicked on Confirm
+                        HideConfirmCancel();
+                        ShowExitEndTurn();
 
+                        currentState = Selected.Token;
+                        return;
+                    }
 
-                // Clicked on Cancel
+                    // Selected the Cancel Button
+                    if (buttonId == "Cancel")
+                    {
 
+                    }
+                }
 
                 // Selected an available position
                 return;
@@ -181,7 +204,7 @@ namespace Medusa
 
         private void CheckButtons(string buttonId)
         {
-            // Selcted the Exit Button
+            // Selwcted the Exit Button
             if (buttonId == "Exit")
             {
                 // I guess we need to save the state of the game before this
@@ -195,9 +218,38 @@ namespace Medusa
                 {
                     OnChangingTurn(new TurnEvents(ClickEvents));
                     ClickEvents.Clear();
+
                     currentState = Selected.Nothing;
                 }
             }
+        }
+
+
+        private void ShowConfirmCancel()
+        {
+            foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
+                go.GetComponent<GUITexture>().enabled = true;
+        }
+
+
+        private void HideConfirmCancel()
+        {
+            foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
+                go.GetComponent<GUITexture>().enabled = false;
+        }
+
+
+        private void ShowExitEndTurn()
+        {
+            foreach (var go in GameObject.FindGameObjectsWithTag("ExitEndTurn"))
+                go.GetComponent<GUITexture>().enabled = true;
+        }
+
+
+        private void HideExitEndTurn()
+        {
+            foreach (var go in GameObject.FindGameObjectsWithTag("ExitEndTurn"))
+                go.GetComponent<GUITexture>().enabled = false;
         }
 
 

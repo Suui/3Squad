@@ -83,24 +83,34 @@ namespace Medusa
 
         private void SetUpButtons()
         {
-            GameObject exitButton = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
-            exitButton.GetComponent<GUITexture>().texture = Resources.Load("Textures/TestButton") as Texture2D;
-            exitButton.transform.position = new Vector3(0.9f, 0.9f, 0.0f);
+            // Exit and EndTurn buttons
+            CreateButton("Textures/TestButton", new Vector3(0.9f, 0.9f, 0.0f), "ExitEndTurn", "Exit");
+            CreateButton("Textures/TestButton2", new Vector3(0.9f, 0.7f, 0.0f), "ExitEndTurn", "EndTurn");
 
-            exitButton.GetComponent<ClickableButton>().Id = "Exit";
+            // Confirm and Cancel skill buttons
+            CreateButton("Textures/TestButton", new Vector3(0.2f, 0.1f, 0.0f), "ConfirmCancel", "Confirm");
+            CreateButton("Textures/TestButton2", new Vector3(0.8f, 0.1f, 0.0f), "ConfirmCancel", "Cancel");
 
-
-            GameObject endTurnButton = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
-            endTurnButton.GetComponent<GUITexture>().texture = Resources.Load("Textures/TestButton2") as Texture2D;
-            endTurnButton.transform.position = new Vector3(0.9f, 0.8f, 0.0f);
-
-            endTurnButton.GetComponent<ClickableButton>().Id = "EndTurn";
+            // Hide the Confirm and Cancel skill buttons at first
+            foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
+                go.GetComponent<GUITexture>().enabled = false;
         }
 
 
         public void ChangeTurn(TurnEvents turnEvents)
         {
             
+        }
+
+
+        public static void CreateButton(string texturePath, Vector3 position, string tag, string id)
+        {
+            GameObject button = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
+            button.GetComponent<GUITexture>().texture = Resources.Load(texturePath) as Texture2D;
+            button.transform.position = position;
+            button.tag = tag;
+
+            button.GetComponent<ClickableButton>().Id = id;
         }
 
 
