@@ -14,7 +14,7 @@ namespace Medusa
 
 
         void OnDisable()
-    {
+        {
             SelectionSM.OnChangingTurn -= ChangeTurn;
         }
 
@@ -61,8 +61,16 @@ namespace Medusa
             go.transform.position = new Position(0, 0);
             CurrentBoard["tokens"][new Position(0, 0)] = go;
 
+<<<<<<< HEAD
             go.AddComponent<PlayerComponent>();
             go.GetComponent<PlayerComponent>().Player = players[0];
+=======
+			/*GameObject go2 = Instantiate(Resources.Load("Prefabs/Superr_Character")) as GameObject;
+			go2.name = "Superrrr Characterr";
+			go2.transform.position = new Position(0, 1);
+			CurrentBoard["tokens"][new Position(0, 1)] = go2;
+			*/
+>>>>>>> Skills
         }
 
 

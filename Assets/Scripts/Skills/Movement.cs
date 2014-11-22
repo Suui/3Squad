@@ -11,7 +11,7 @@ namespace Medusa
 		public int range;
 		private bool doneThisTurn;
 		
-		private List<Position> posiblePositions = new List<Position>();
+		private HashSet<Position> posiblePositions = new HashSet<Position>();
 		private List<Position> stepList = new List<Position>();
 		
 		
@@ -21,11 +21,8 @@ namespace Medusa
 		
 		public void Start()
 		{
-			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
+
 			doneThisTurn = false;
-			playerPosition = (Position) this.transform.position;
-			player = this.gameObject;
-			
 		}
 		
 		
@@ -42,12 +39,13 @@ namespace Medusa
 		//show posible movements marking the cells and creating an array of posible movements
 		public override void Setup()
 		{
-			
+			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
+			playerPosition = (Position) this.transform.position;
+			player = this.gameObject;
 			SearchWay (posiblePositions, board ["tokens"], playerPosition, range);
 			
 			foreach(Position posi in posiblePositions)
 			{
-				Debug.Log(posi + " " + board["overlays"][posi].name);
 				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(2);
 				
 			}
@@ -56,7 +54,10 @@ namespace Medusa
 		//add pos to array
 		public override bool Click(Position pos)
 		{
-			
+			if(stepList.Count >= range)
+			{
+				return false;
+			}
 			if(!posiblePositions.Contains (pos))
 			{
 				return false;
@@ -69,19 +70,17 @@ namespace Medusa
 			if(stepList.Count == 0) {
 				if(pos.GetDistanceTo(playerPosition) == 1 &&  stepList.Count < range) {
 					stepList.Add(pos);
+					board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(1);
 					return true;
 				}
 				
 				return false;
 			}
-			
-			/*if(pos == stepList[stepList.Count - 1]) {
-				stepList.RemoveAt((stepList.Count - 1));
-				return "2";
-			}*/
+
 			
 			if (pos.GetDistanceTo(stepList[stepList.Count - 1]) == 1 && !stepList.Contains (pos) && stepList.Count < range) {
 				stepList.Add(pos);
+				board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(1);
 				return true;
 			}
 			
@@ -94,29 +93,41 @@ namespace Medusa
 			
 			
 			board["tokens"].MoveGameObject(player,stepList[stepList.Count - 1]);
-			Clear();
+			//Clear();
 			doneThisTurn = true;
 		}
 		
 		//deselect the cells and empty the array
 		public override void Clear()
 		{
-			for(int i = 0; i < posiblePositions.Count;i++) posiblePositions[i] = null;
+
+			foreach(Position posi in posiblePositions)
+			{
+				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
+				
+			}
+
+			//for(int i = 0; i < posiblePositions.Count;i++) posiblePositions[i] = null;
+				posiblePositions.Clear();
+			
+
+
 			for(int j = 0; j < stepList.Count;j++) stepList[j] = null;
 		}
 		
-		public void SearchWay (List<Position> inRange, Layer layer, Position startingPosition, int stepCount)
+		public void SearchWay (HashSet<Position> inRange, Layer layer, Position startingPosition, int stepCount)
 		{
 			if (stepCount-- == 0)
 				return;
 			Position position;
 			foreach (Direction dir in Direction.AllStaticDirections) {
 				position = startingPosition + dir;
+
 				if (position.Outside(layer))
 					continue;
 				if (layer [position] == null) {
-					inRange.Add (position);
-					SearchWay (inRange, layer, position, stepCount);
+						inRange.Add (position);
+						SearchWay (inRange, layer, position, stepCount);
 				}
 			}
 		}
