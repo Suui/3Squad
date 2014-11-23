@@ -12,7 +12,7 @@ namespace Medusa
 		public int damage;
 		private bool doneThisTurn;
 		
-		List<Position> posibleAttacks = new List<Position>();
+		LinkedList<Position> posibleAttacks = new LinkedList<Position>();
 		Position targetPosition;
 		
 		private Position playerPosition;
@@ -20,18 +20,11 @@ namespace Medusa
 		private Board board;
 		
 		
-		public void Start()
-		{
-			playerPosition = (Position) this.transform.position;
-			player = this.gameObject;
-			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
-			
-			
-		}
+
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;
-			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/TestButton2") as Texture2D;
+			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/espada") as Texture2D;
 			skillGUI.transform.position = FirstPos;
 			skillGUI.transform.parent = gameObject.transform;
 			
@@ -40,9 +33,13 @@ namespace Medusa
 		
 		public override void Setup()
 		{
+			playerPosition = (Position) this.transform.position;
+			player = this.gameObject;
+			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			Layer terrain = board["tokens"];
 
 			foreach (Direction direction in Direction.AllStaticDirections) {
+
 				Position position = playerPosition + direction;
 				if(!position.Outside(terrain) && terrain[position] != null && terrain[position].GetComponent<Life>() != null) {
 					board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(2);
@@ -57,14 +54,20 @@ namespace Medusa
 				return false;
 			}
 			
-			
-			if(board["tokens"][pos].GetComponent<Life>() != null)
+			if(targetPosition != null)
+			{
+				board["overlays"][targetPosition].GetComponent<Selectable>().SetOverlayMaterial(2);
+				targetPosition = null;
+			}
+
+			if(board["tokens"][pos].GetComponent<Life>() != null && pos != playerPosition)
 			{
 				targetPosition = pos;
-				board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(1);
+				Debug.Log(pos);
+				board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(4);
 				return true;
 			}
-			
+			Clear ();
 			return false;
 		}
 		
@@ -82,8 +85,9 @@ namespace Medusa
 				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
 				
 			}
-			for(int i = 0; i < posibleAttacks.Count;i++) posibleAttacks[i] = null;
-
+			board["overlays"][playerPosition].GetComponent<Selectable>().SetOverlayMaterial(0);
+			if(targetPosition != null) board["overlays"][targetPosition].GetComponent<Selectable>().SetOverlayMaterial(0);
+			posibleAttacks.Clear();
 			targetPosition = null;
 		}
 	}
