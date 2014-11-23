@@ -23,7 +23,6 @@ namespace Medusa
         public GameObject masterTwo;
 
         public int startingActionPoints = 5;
-        public GameObject masterCellPrefab;
         public GameObject boardCellPrefab;
         public GameObject[] obstaclePrefabs;
         public int obstaclesLimit;
@@ -76,24 +75,27 @@ namespace Medusa
 
             GameObject master2 = Instantiate(masterOne) as GameObject;
             master2.name = "Master 02";
-            master2.transform.position = MasterOnePos;
-            CurrentBoard["tokens"][MasterOnePos] = master2;
+            master2.transform.position = MasterTwoPos;
+            CurrentBoard["tokens"][MasterTwoPos] = master2;
         }
 
 
         private void SetUpButtons()
         {
             // Exit and EndTurn buttons
-            CreateButton("Textures/TestButton", new Vector3(0.9f, 0.9f, 0.0f), "ExitEndTurn", "Exit");
-            CreateButton("Textures/TestButton2", new Vector3(0.9f, 0.7f, 0.0f), "ExitEndTurn", "EndTurn");
+			CreateButton("Textures/Buttons/ExitButton", "ExitEndTurn", "Exit");
+			CreateButton("Textures/Buttons/EndTurnButton","ExitEndTurn", "EndTurn");
 
             // Confirm and Cancel skill buttons
-            CreateButton("Textures/TestButton", new Vector3(0.2f, 0.1f, 0.0f), "ConfirmCancel", "Confirm");
-            CreateButton("Textures/TestButton2", new Vector3(0.8f, 0.1f, 0.0f), "ConfirmCancel", "Cancel");
+			CreateButton("Textures/Buttons/ConfirmButton", "ConfirmCancel", "Confirm");
+			CreateButton("Textures/Buttons/CancelButton", "ConfirmCancel", "Cancel");
+
+			// Info button
+			CreateButton("Textures/Buttons/InfoButton", "Info", "Info");
 
             // Hide the Confirm and Cancel skill buttons at first
-            foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
-                go.GetComponent<GUITexture>().enabled = false;
+			foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
+				go.GetComponent<GUITexture>().enabled = false;
         }
 
 
@@ -103,14 +105,34 @@ namespace Medusa
         }
 
 
-        public static void CreateButton(string texturePath, Vector3 position, string tag, string id)
+        public static void CreateButton(string texturePath, string tag, string id)
         {
             GameObject button = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
-            button.GetComponent<GUITexture>().texture = Resources.Load(texturePath) as Texture2D;
-            button.transform.position = position;
-            button.tag = tag;
+			button.GetComponent<ClickableButton>().Id = id;
+			button.tag = tag;
+			button.name = id;
 
-            button.GetComponent<ClickableButton>().Id = id;
+			GUITexture gui = button.GetComponent<GUITexture>();
+
+			gui.texture = Resources.Load(texturePath) as Texture2D;
+			int width = gui.texture.width;
+			int height = gui.texture.height;
+
+			if (id == "Exit")
+				gui.pixelInset = new Rect(Screen.width - width, Screen.height - height, width, height);
+
+			if (id == "EndTurn")
+				gui.pixelInset = new Rect(Screen.width - width, 0, width, height);
+
+			if (id == "Confirm")
+				gui.pixelInset = new Rect((Screen.width / 12) * 5 - width, Screen.height / 24, width, height);
+
+			if (id == "Cancel")
+				gui.pixelInset = new Rect((Screen.width / 12) * 7, Screen.height / 24, width, height);
+
+			if (id == "Info")
+				gui.pixelInset = new Rect(Screen.width / 2 - width, Screen.height - height, width, height);
+
         }
 
 
