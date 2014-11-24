@@ -21,7 +21,7 @@ namespace Medusa
 		
 		public void Start()
 		{
-
+			ActionPointCost = 1;
 			doneThisTurn = false;
 		}
 		

@@ -45,13 +45,13 @@ namespace Medusa
         }
 
 
-        void Start()
+	    void Start()
         {
             board = GetComponent<GameMaster>().CurrentBoard;
 
             ClickEvents = new List<ClickInfo>();
 
-            playingPlayer = null;
+            playingPlayer = GameObject.Find("GameMaster").GetComponent<GameMaster>().TurnManagement.CurrentPlayer;
             selectedSkill = null;
             previousSelectedPos = new Position(0, 0);
             currentState = Selected.Nothing;
@@ -98,8 +98,11 @@ namespace Medusa
                     {
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
 
-                        foreach (Skill sk in skills)
-                            sk.ShowUpSkill();
+	                    foreach (Skill sk in skills)
+	                    {
+							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+								sk.ShowUpSkill();
+	                    }
                     }
 
                     currentState = Selected.Token;
@@ -128,6 +131,7 @@ namespace Medusa
 
                     ShowConfirmCancel();
                     HideExitEndTurn();
+	                HideInfoButton();
 
                     foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
                         Destroy(go);
@@ -154,7 +158,10 @@ namespace Medusa
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
 
                         foreach (Skill sk in skills)
-                            sk.ShowUpSkill();
+						{
+							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+								sk.ShowUpSkill();
+						}
                     }
 
                     return;
@@ -185,8 +192,23 @@ namespace Medusa
                         selectedSkill.Confirm();
                         selectedSkill.Clear();
 
+						// Manage Action Points
+	                    playingPlayer.ActionPoints -= selectedSkill.ActionPointCost;
+
                         HideConfirmCancel();
                         ShowExitEndTurn();
+
+						// Set the selection to the character again
+	                    Position pos = (Position) selectedToken.transform.position;
+						DisplaySelectionOverlay(pos);
+
+						Skill[] skills = board["tokens"][pos].GetComponents<Skill>();
+
+						foreach (Skill sk in skills)
+						{
+							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+								sk.ShowUpSkill();
+						}
 
                         currentState = Selected.Token;
                         return;
@@ -195,11 +217,29 @@ namespace Medusa
                     // Selected the Cancel Button
                     if (buttonId == "Cancel")
                     {
+	                    selectedSkill.Clear();
 
+	                    HideConfirmCancel();
+	                    ShowExitEndTurn();
+
+						// Set the selection to the character again
+						Position pos = (Position)selectedToken.transform.position;
+						DisplaySelectionOverlay(pos);
+						
+						Skill[] skills = board["tokens"][pos].GetComponents<Skill>();
+
+						foreach (Skill sk in skills)
+						{
+							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+								sk.ShowUpSkill();
+						}
+
+	                    currentState = Selected.Token;
+	                    return;
                     }
                 }
 
-                // Selected an available position
+	            selectedSkill.Click(position);
                 return;
             }
 
