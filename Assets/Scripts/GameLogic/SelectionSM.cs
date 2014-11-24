@@ -91,7 +91,9 @@ namespace Medusa
                 {
                     // Display Info of the character getting the right components. David.
 
-                    // Selected a Token || Master
+	                ShowInfoButton();
+
+                    // Selected a Character || Master
                     if (board["tokens"][position].GetComponent<Skill>() != null)
                     {
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
@@ -166,6 +168,8 @@ namespace Medusa
                 foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
                     Destroy(go);
 
+	            HideInfoButton();
+
                 currentState = Selected.Nothing;
                 return;
             }
@@ -204,7 +208,7 @@ namespace Medusa
 
         private void CheckButtons(string buttonId)
         {
-            // Selwcted the Exit Button
+            // Selected the Exit Button
             if (buttonId == "Exit")
             {
                 // I guess we need to save the state of the game before this
@@ -251,6 +255,18 @@ namespace Medusa
             foreach (var go in GameObject.FindGameObjectsWithTag("ExitEndTurn"))
                 go.GetComponent<GUITexture>().enabled = false;
         }
+
+
+	    private void ShowInfoButton()
+	    {
+			GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = true;
+	    }
+
+
+		private void HideInfoButton()
+		{
+			GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
+		}
 
 
         private void DisplaySelectionOverlay(Position position)

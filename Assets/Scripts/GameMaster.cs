@@ -82,20 +82,24 @@ namespace Medusa
 
         private void SetUpButtons()
         {
+	        GameObject parentObject = new GameObject("Buttons");
+
             // Exit and EndTurn buttons
-			CreateButton("Textures/Buttons/ExitButton", "ExitEndTurn", "Exit");
-			CreateButton("Textures/Buttons/EndTurnButton","ExitEndTurn", "EndTurn");
+			CreateButton("Textures/Buttons/ExitButton", parentObject, "ExitEndTurn", "Exit");
+			CreateButton("Textures/Buttons/EndTurnButton", parentObject, "ExitEndTurn", "EndTurn");
 
             // Confirm and Cancel skill buttons
-			CreateButton("Textures/Buttons/ConfirmButton", "ConfirmCancel", "Confirm");
-			CreateButton("Textures/Buttons/CancelButton", "ConfirmCancel", "Cancel");
+			CreateButton("Textures/Buttons/ConfirmButton", parentObject, "ConfirmCancel", "Confirm");
+			CreateButton("Textures/Buttons/CancelButton", parentObject, "ConfirmCancel", "Cancel");
 
 			// Info button
-			CreateButton("Textures/Buttons/InfoButton", "Info", "Info");
+			CreateButton("Textures/Buttons/InfoButton", parentObject, "InfoButton", "Info");
 
-            // Hide the Confirm and Cancel skill buttons at first
+            // Hide the Confirm and Cancel skill and the Info buttons at first
 			foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
 				go.GetComponent<GUITexture>().enabled = false;
+
+			GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
         }
 
 
@@ -105,12 +109,13 @@ namespace Medusa
         }
 
 
-        public static void CreateButton(string texturePath, string tag, string id)
+        public static void CreateButton(string texturePath, GameObject parentObject, string tag, string id)
         {
             GameObject button = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
 			button.GetComponent<ClickableButton>().Id = id;
 			button.tag = tag;
-			button.name = id;
+			button.name = id + " Button";
+	        button.transform.parent = parentObject.transform;
 
 			GUITexture gui = button.GetComponent<GUITexture>();
 
@@ -131,8 +136,7 @@ namespace Medusa
 				gui.pixelInset = new Rect((Screen.width / 12) * 7, Screen.height / 24, width, height);
 
 			if (id == "Info")
-				gui.pixelInset = new Rect(Screen.width / 2 - width, Screen.height - height, width, height);
-
+				gui.pixelInset = new Rect(Screen.width / 2 - width / 2, Screen.height - height, width, height);
         }
 
 
