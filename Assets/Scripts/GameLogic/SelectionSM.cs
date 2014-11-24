@@ -26,6 +26,8 @@ namespace Medusa
             Nothing,
             Token,
             Skill,
+            ExitEndTurn,
+            ShowingInfo
         }
 
 
@@ -243,6 +245,10 @@ namespace Medusa
                 return;
             }
 
+            if (currentState == Selected.ExitEndTurn)
+            {
+            }
+
         }
 
 
@@ -251,6 +257,7 @@ namespace Medusa
             // Selected the Exit Button
             if (buttonId == "Exit")
             {
+
                 // I guess we need to save the state of the game before this
                 Application.Quit();
             }

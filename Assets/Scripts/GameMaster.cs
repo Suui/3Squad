@@ -49,6 +49,7 @@ namespace Medusa
 
             SetUpMasters();
             SetUpButtons();
+            SetUpBackground();
 
             turnManagement = new TurnManagement(players[0], players[1], seed);
 
@@ -63,6 +64,8 @@ namespace Medusa
             go.AddComponent<PlayerComponent>();
             go.GetComponent<PlayerComponent>().Player = players[0];
         }
+
+
 
 
         private void SetUpMasters()
@@ -100,6 +103,41 @@ namespace Medusa
 				go.GetComponent<GUITexture>().enabled = false;
 
 			GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
+
+        }
+
+
+        private void SetUpBackground()
+        {
+            GameObject parentObject = new GameObject("Background");
+
+            // GUI Collider
+            GameObject background = Instantiate(Resources.Load("Prefabs/Background_Prefab")) as GameObject;
+            background.name = "BackgroundCollider";
+            background.tag = "Background";
+            background.transform.parent = parentObject.transform;
+
+            background.transform.position = GameObject.FindGameObjectWithTag("MainCamera").transform.position * -1.0f;
+            background.transform.eulerAngles = GameObject.FindGameObjectWithTag("MainCamera").transform.eulerAngles;
+
+
+            // GUI Texture
+            GameObject backgroundGUI = new GameObject("Background");
+            backgroundGUI.name = "BackgroundGUI";
+            backgroundGUI.tag = "Background";
+            backgroundGUI.transform.parent = parentObject.transform;
+
+            backgroundGUI.AddComponent<GUITexture>();
+
+            GUITexture gui = backgroundGUI.GetComponent<GUITexture>();
+
+            gui.texture = Resources.Load("Textures/Background") as Texture2D;
+            int width = gui.texture.width;
+            int height = gui.texture.height;
+
+            gui.pixelInset = new Rect(0, 0, width, height);
+
+            GameObject.FindGameObjectWithTag("Background").GetComponent<GUITexture>().enabled = true;
         }
 
 
@@ -118,6 +156,8 @@ namespace Medusa
 			button.tag = tag;
 			button.name = id + " Button";
 	        button.transform.parent = parentObject.transform;
+
+            button.transform.position = new Vector3(0.0f, 0.0f, 0.1f);
 
 			GUITexture gui = button.GetComponent<GUITexture>();
 
