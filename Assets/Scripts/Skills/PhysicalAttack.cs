@@ -18,7 +18,12 @@ namespace Medusa
 		private Position playerPosition;
 		private GameObject player;
 		private Board board;
-		
+
+
+		void Start()
+		{
+			ActionPointCost = 1;
+		}
 		
 
 		public override void ShowUpSkill()

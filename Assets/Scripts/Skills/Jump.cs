@@ -21,9 +21,10 @@ namespace Medusa
 		
 		public void Start()
 		{
-			
+			ActionPointCost = 1;
 			doneThisTurn = false;
 		}
+
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;

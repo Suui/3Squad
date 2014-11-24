@@ -20,11 +20,11 @@ namespace Medusa
 				
 		public void Start()
 		{
-			playerPosition = (Position) this.transform.position;
+			ActionPointCost = 1;
+
+			playerPosition = (Position)this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
-					
-					
 		}
 			
 		public override void ShowUpSkill()
