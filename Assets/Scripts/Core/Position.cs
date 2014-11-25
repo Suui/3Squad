@@ -17,14 +17,17 @@ namespace Medusa
         }
 
 
-        // TODO: Test, possible mistakes
         public Direction GetDirectionTo(Position position)
         {
-            return new Direction(row + position.row, column + position.column);
+            return new Direction(position.row - row, position.column - column);
         }
 
+		public bool Outside(Layer layer)
+		{
+			return layer.Outside(this);
+		}
 
-        // TODO: Test, possible mistakes
+
         public int GetDistanceTo(Position position)
         {
             return GetDirectionTo(position).Magnitude;
@@ -137,7 +140,7 @@ namespace Medusa
 
         public override int GetHashCode()
         {
-            return row ^ column;
+            return 31 * (31 + row) + column;
         }
 
 
