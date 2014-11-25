@@ -13,6 +13,7 @@ namespace Medusa
 
 
         private Board board;
+	    private GameObject backgroundObject;
 
         private Player playingPlayer;
         private GameObject selectedToken;
@@ -52,6 +53,9 @@ namespace Medusa
         void Start()
         {
             board = GetComponent<GameMaster>().CurrentBoard;
+
+	        backgroundObject = GameObject.FindGameObjectWithTag("Background");
+	        ShowTransparentBackground(false);
 
             ClickEvents = new List<ClickInfo>();
 
@@ -131,6 +135,16 @@ namespace Medusa
                 {
                     ShowTransparentBackground(true);
                     ShowConfirmCancel(true);
+
+                    GameObject[] skillIcons = GameObject.FindGameObjectsWithTag("SkillIcon");
+
+	                if (skillIcons.Length > 0)
+	                {
+		                selectedToken = skillIcons[0].gameObject.transform.parent.gameObject;
+
+		                foreach (var go in skillIcons)
+			                Destroy(go);
+	                }
 
                     previousId = buttonId;
                     previousState = Selected.Token;
@@ -260,6 +274,7 @@ namespace Medusa
                 return;
             }
 
+			// EXITENDTURN
             if (currentState == Selected.ExitEndTurn)
             {
                 if (buttonId == null)
@@ -292,6 +307,20 @@ namespace Medusa
 
                 if (buttonId == "Cancel")
                 {
+	                ShowConfirmCancel(false);
+	                ShowTransparentBackground(false);
+
+	                if (previousState == Selected.Token && selectedToken != null && selectedToken.GetComponent<Skill>())
+	                {
+						Skill[] skills = selectedToken.GetComponents<Skill>();
+
+						foreach (Skill sk in skills)
+						{
+							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+								sk.ShowUpSkill();
+						}
+	                }
+
                     currentState = previousState;
                     return;
                 }
@@ -322,7 +351,7 @@ namespace Medusa
 
         private void ShowTransparentBackground(bool b)
         {
-			GameObject.FindGameObjectWithTag("Background").active = true;
+			backgroundObject.SetActive(b);
         }
 
 

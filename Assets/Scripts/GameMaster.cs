@@ -110,30 +110,12 @@ namespace Medusa
         private void SetUpBackground()
         {
             // GUI Collider
-            GameObject background = Instantiate(Resources.Load("Prefabs/BackgroundCollider")) as GameObject;
+            GameObject background = Instantiate(Resources.Load("Prefabs/Background")) as GameObject;
             background.name = "Transparent Background";
 
             background.transform.position = GameObject.FindGameObjectWithTag("MainCamera").transform.position
 				+ new Vector3(-0.5f, -0.5f, -0.5f);
             background.transform.eulerAngles = GameObject.FindGameObjectWithTag("MainCamera").transform.eulerAngles;
-
-
-            // GUI Texture
-			//GameObject backgroundGUI = new GameObject("Background");
-			//backgroundGUI.name = "BackgroundGUI";
-			//backgroundGUI.transform.parent = parentObject.transform;
-
-			//backgroundGUI.AddComponent<GUITexture>();
-
-			//GUITexture gui = backgroundGUI.GetComponent<GUITexture>();
-
-			//gui.texture = Resources.Load("Textures/Background") as Texture2D;
-			//int width = gui.texture.width;
-			//int height = gui.texture.height;
-
-			//gui.pixelInset = new Rect(0, 0, width, height);
-
-			//GameObject.FindGameObjectWithTag("Background").SetActive(true);
         }
 
 
