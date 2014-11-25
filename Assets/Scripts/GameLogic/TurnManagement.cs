@@ -24,6 +24,12 @@ namespace Medusa
         }
 
 
+		public override string ToString()
+		{
+			return currentPlayer == playerOne ? "Player 01" : "Player 02";
+		}
+
+
         public void ChangeTurn()
         {
             currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne;

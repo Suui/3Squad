@@ -62,87 +62,96 @@ namespace Medusa
 
             go.AddComponent<PlayerComponent>();
             go.GetComponent<PlayerComponent>().Player = players[0];
-        }
-
-
-        private void SetUpMasters()
-        {
-            GameObject master1 = Instantiate(masterOne) as GameObject;
-            master1.name = "Master 01";
-            master1.transform.position = MasterOnePos;
-            CurrentBoard["tokens"][MasterOnePos] = master1;
-
-
-            GameObject master2 = Instantiate(masterOne) as GameObject;
-            master2.name = "Master 02";
-            master2.transform.position = MasterTwoPos;
-            CurrentBoard["tokens"][MasterTwoPos] = master2;
-        }
-
-
-        private void SetUpButtons()
-        {
-	        GameObject parentObject = new GameObject("Buttons");
-
-            // Exit and EndTurn buttons
-			CreateButton("Textures/Buttons/ExitButton", parentObject, "ExitEndTurn", "Exit");
-			CreateButton("Textures/Buttons/EndTurnButton", parentObject, "ExitEndTurn", "EndTurn");
-
-            // Confirm and Cancel skill buttons
-			CreateButton("Textures/Buttons/ConfirmButton", parentObject, "ConfirmCancel", "Confirm");
-			CreateButton("Textures/Buttons/CancelButton", parentObject, "ConfirmCancel", "Cancel");
-
-			// Info button
-			CreateButton("Textures/Buttons/InfoButton", parentObject, "InfoButton", "Info");
-
-            // Hide the Confirm and Cancel skill and the Info buttons at first
-			foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
-				go.GetComponent<GUITexture>().enabled = false;
-
-			GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
 
         }
 
 
-        public void ChangeTurn(TurnEvents turnEvents)
-        {
-            
+	    void Start()
+	    {
+			GameObject.Find("Manager").GetComponent<Manager>().GroupNodes(turnManagement.ToString());
+	    }
 
 
-        }
+		public void ChangeTurn(TurnEvents turnEvents)
+		{
+
+		}
 
 
-        public static void CreateButton(string texturePath, GameObject parentObject, string tag, string id)
-        {
-            GameObject button = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
-			button.GetComponent<ClickableButton>().Id = id;
-			button.tag = tag;
-			button.name = id + " Button";
-	        button.transform.parent = parentObject.transform;
+	    #region Setup Functions
 
-            button.transform.position = new Vector3(0.0f, 0.0f, 0.1f);
+	    private void SetUpMasters()
+	    {
+		    GameObject master1 = Instantiate(masterOne) as GameObject;
+		    master1.name = "Master 01";
+		    master1.transform.position = MasterOnePos;
+		    CurrentBoard["tokens"][MasterOnePos] = master1;
 
-			GUITexture gui = button.GetComponent<GUITexture>();
 
-			gui.texture = Resources.Load(texturePath) as Texture2D;
-			int width = gui.texture.width;
-			int height = gui.texture.height;
+		    GameObject master2 = Instantiate(masterOne) as GameObject;
+		    master2.name = "Master 02";
+		    master2.transform.position = MasterTwoPos;
+		    CurrentBoard["tokens"][MasterTwoPos] = master2;
+	    }
 
-			if (id == "Exit")
-				gui.pixelInset = new Rect(Screen.width - width, Screen.height - height, width, height);
 
-			if (id == "EndTurn")
-				gui.pixelInset = new Rect(Screen.width - width, 0, width, height);
+	    private void SetUpButtons()
+	    {
+		    GameObject parentObject = new GameObject("Buttons");
 
-			if (id == "Confirm")
-				gui.pixelInset = new Rect((Screen.width / 12) * 5 - width, Screen.height / 24, width, height);
+		    // Exit and EndTurn buttons
+		    CreateButton("Textures/Buttons/ExitButton", parentObject, "ExitEndTurn", "Exit");
+		    CreateButton("Textures/Buttons/EndTurnButton", parentObject, "ExitEndTurn", "EndTurn");
 
-			if (id == "Cancel")
-				gui.pixelInset = new Rect((Screen.width / 12) * 7, Screen.height / 24, width, height);
+		    // Confirm and Cancel skill buttons
+		    CreateButton("Textures/Buttons/ConfirmButton", parentObject, "ConfirmCancel", "Confirm");
+		    CreateButton("Textures/Buttons/CancelButton", parentObject, "ConfirmCancel", "Cancel");
 
-			if (id == "Info")
-				gui.pixelInset = new Rect(Screen.width / 2 - width / 2, Screen.height - height, width, height);
-        }
+		    // Info button
+		    CreateButton("Textures/Buttons/InfoButton", parentObject, "InfoButton", "Info");
+
+		    // Hide the Confirm and Cancel skill and the Info buttons at first
+		    foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
+			    go.GetComponent<GUITexture>().enabled = false;
+
+		    GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
+
+	    }
+
+
+	    public static void CreateButton(string texturePath, GameObject parentObject, string tag, string id)
+	    {
+		    GameObject button = Instantiate(Resources.Load("Prefabs/Button_Template")) as GameObject;
+		    button.GetComponent<ClickableButton>().Id = id;
+		    button.tag = tag;
+		    button.name = id + " Button";
+		    button.transform.parent = parentObject.transform;
+
+		    button.transform.position = new Vector3(0.0f, 0.0f, 0.1f);
+
+		    GUITexture gui = button.GetComponent<GUITexture>();
+
+		    gui.texture = Resources.Load(texturePath) as Texture2D;
+		    int width = gui.texture.width;
+		    int height = gui.texture.height;
+
+		    if (id == "Exit")
+			    gui.pixelInset = new Rect(Screen.width - width, Screen.height - height, width, height);
+
+		    if (id == "EndTurn")
+			    gui.pixelInset = new Rect(Screen.width - width, 0, width, height);
+
+		    if (id == "Confirm")
+			    gui.pixelInset = new Rect((Screen.width / 12) * 5 - width, Screen.height / 24, width, height);
+
+		    if (id == "Cancel")
+			    gui.pixelInset = new Rect((Screen.width / 12) * 7, Screen.height / 24, width, height);
+
+		    if (id == "Info")
+			    gui.pixelInset = new Rect(Screen.width / 2 - width / 2, Screen.height - height, width, height);
+	    }
+
+	    #endregion
 
 
         #region Getters and Setters
