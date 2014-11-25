@@ -54,8 +54,7 @@ namespace Medusa
         {
             board = GetComponent<GameMaster>().CurrentBoard;
 
-	        backgroundObject = GameObject.FindGameObjectWithTag("Background");
-	        ShowTransparentBackground(false);
+	        SetUpBackground();
 
             ClickEvents = new List<ClickInfo>();
 
@@ -352,6 +351,12 @@ namespace Medusa
         private void ShowTransparentBackground(bool b)
         {
 			backgroundObject.SetActive(b);
+
+	        Vector3 pos = GameObject.FindGameObjectWithTag("MainCamera").transform.position;
+
+			backgroundObject.transform.position = 
+				pos + new Vector3(pos.x / Mathf.Abs(pos.x), pos.y / Mathf.Abs(pos.y), pos.z / Mathf.Abs(pos.z)) * -0.4f;
+			backgroundObject.transform.eulerAngles = GameObject.FindGameObjectWithTag("MainCamera").transform.eulerAngles;
         }
 
 
@@ -362,6 +367,16 @@ namespace Medusa
 
             previousSelectedPos = position;
         }
+
+
+		private void SetUpBackground()
+		{
+			GameObject background = Instantiate(Resources.Load("Prefabs/Background")) as GameObject;
+			background.name = "Transparent Background";
+
+			backgroundObject = background;
+			ShowTransparentBackground(false);
+		}
 
 
         public Player PlayingPlayer

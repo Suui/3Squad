@@ -49,7 +49,6 @@ namespace Medusa
 
             SetUpMasters();
             SetUpButtons();
-            SetUpBackground();
 
             turnManagement = new TurnManagement(players[0], players[1], seed);
 
@@ -64,8 +63,6 @@ namespace Medusa
             go.AddComponent<PlayerComponent>();
             go.GetComponent<PlayerComponent>().Player = players[0];
         }
-
-
 
 
         private void SetUpMasters()
@@ -104,18 +101,6 @@ namespace Medusa
 
 			GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
 
-        }
-
-
-        private void SetUpBackground()
-        {
-            // GUI Collider
-            GameObject background = Instantiate(Resources.Load("Prefabs/Background")) as GameObject;
-            background.name = "Transparent Background";
-
-            background.transform.position = GameObject.FindGameObjectWithTag("MainCamera").transform.position
-				+ new Vector3(-0.5f, -0.5f, -0.5f);
-            background.transform.eulerAngles = GameObject.FindGameObjectWithTag("MainCamera").transform.eulerAngles;
         }
 
 
