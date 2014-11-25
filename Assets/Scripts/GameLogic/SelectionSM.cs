@@ -19,6 +19,8 @@ namespace Medusa
         private Skill selectedSkill;
         private Position previousSelectedPos;
         private Selected currentState;
+        private Selected previousState;
+        private string previousId;
 
 
         public enum Selected
@@ -47,7 +49,7 @@ namespace Medusa
         }
 
 
-	    void Start()
+        void Start()
         {
             board = GetComponent<GameMaster>().CurrentBoard;
 
@@ -57,6 +59,7 @@ namespace Medusa
             selectedSkill = null;
             previousSelectedPos = new Position(0, 0);
             currentState = Selected.Nothing;
+            previousState = Selected.Nothing;
         }
 
 
@@ -82,7 +85,13 @@ namespace Medusa
                 // Selected a Button
                 if (buttonId != null)
                 {
-                    CheckButtons(buttonId);
+                    ShowTransparentBackground(true);
+                    ShowConfirmCancel(true);
+
+                    previousId = buttonId;
+                    previousState = Selected.Nothing;
+
+                    currentState = Selected.ExitEndTurn;
                     return;
                 }
 
@@ -93,18 +102,18 @@ namespace Medusa
                 {
                     // Display Info of the character getting the right components. David.
 
-	                ShowInfoButton();
+                    ShowInfoButton(true);
 
                     // Selected a Character || Master
                     if (board["tokens"][position].GetComponent<Skill>() != null)
                     {
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
 
-	                    foreach (Skill sk in skills)
-	                    {
-							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
-								sk.ShowUpSkill();
-	                    }
+                        foreach (Skill sk in skills)
+                        {
+                            if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+                                sk.ShowUpSkill();
+                        }
                     }
 
                     currentState = Selected.Token;
@@ -120,7 +129,13 @@ namespace Medusa
                 // Selected a Button
                 if (buttonId != null)
                 {
-                    CheckButtons(buttonId);
+                    ShowTransparentBackground(true);
+                    ShowConfirmCancel(true);
+
+                    previousId = buttonId;
+                    previousState = Selected.Token;
+
+                    currentState = Selected.ExitEndTurn;
                     return;
                 }
 
@@ -131,9 +146,9 @@ namespace Medusa
                 {
                     skill.Setup();
 
-                    ShowConfirmCancel();
-                    HideExitEndTurn();
-	                HideInfoButton();
+                    ShowConfirmCancel(true);
+                    ShowExitEndTurn(false);
+                    ShowInfoButton(false);
 
                     foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
                         Destroy(go);
@@ -160,10 +175,10 @@ namespace Medusa
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
 
                         foreach (Skill sk in skills)
-						{
-							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
-								sk.ShowUpSkill();
-						}
+                        {
+                            if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+                                sk.ShowUpSkill();
+                        }
                     }
 
                     return;
@@ -177,7 +192,7 @@ namespace Medusa
                 foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
                     Destroy(go);
 
-	            HideInfoButton();
+                ShowInfoButton(false);
 
                 currentState = Selected.Nothing;
                 return;
@@ -194,23 +209,23 @@ namespace Medusa
                         selectedSkill.Confirm();
                         selectedSkill.Clear();
 
-						// Manage Action Points
-	                    playingPlayer.ActionPoints -= selectedSkill.ActionPointCost;
+                        // Manage Action Points
+                        playingPlayer.ActionPoints -= selectedSkill.ActionPointCost;
 
-                        HideConfirmCancel();
-                        ShowExitEndTurn();
+                        ShowConfirmCancel(false);
+                        ShowExitEndTurn(true);
 
-						// Set the selection to the character again
-	                    Position pos = (Position) selectedToken.transform.position;
-						DisplaySelectionOverlay(pos);
+                        // Set the selection to the character again
+                        Position pos = (Position) selectedToken.transform.position;
+                        DisplaySelectionOverlay(pos);
 
-						Skill[] skills = board["tokens"][pos].GetComponents<Skill>();
+                        Skill[] skills = board["tokens"][pos].GetComponents<Skill>();
 
-						foreach (Skill sk in skills)
-						{
-							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
-								sk.ShowUpSkill();
-						}
+                        foreach (Skill sk in skills)
+                        {
+                            if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+                                sk.ShowUpSkill();
+                        }
 
                         currentState = Selected.Token;
                         return;
@@ -219,101 +234,96 @@ namespace Medusa
                     // Selected the Cancel Button
                     if (buttonId == "Cancel")
                     {
-	                    selectedSkill.Clear();
+                        selectedSkill.Clear();
 
-	                    HideConfirmCancel();
-	                    ShowExitEndTurn();
+                        ShowConfirmCancel(false);
+                        ShowExitEndTurn(true);
 
-						// Set the selection to the character again
-						Position pos = (Position)selectedToken.transform.position;
-						DisplaySelectionOverlay(pos);
-						
-						Skill[] skills = board["tokens"][pos].GetComponents<Skill>();
+                        // Set the selection to the character again
+                        Position pos = (Position)selectedToken.transform.position;
+                        DisplaySelectionOverlay(pos);
+                        
+                        Skill[] skills = board["tokens"][pos].GetComponents<Skill>();
 
-						foreach (Skill sk in skills)
-						{
-							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
-								sk.ShowUpSkill();
-						}
+                        foreach (Skill sk in skills)
+                        {
+                            if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+                                sk.ShowUpSkill();
+                        }
 
-	                    currentState = Selected.Token;
-	                    return;
+                        currentState = Selected.Token;
+                        return;
                     }
                 }
 
-	            selectedSkill.Click(position);
+                selectedSkill.Click(position);
                 return;
             }
 
             if (currentState == Selected.ExitEndTurn)
             {
-            }
-
-        }
-
-
-        private void CheckButtons(string buttonId)
-        {
-            // Selected the Exit Button
-            if (buttonId == "Exit")
-            {
-
-                // I guess we need to save the state of the game before this
-                Application.Quit();
-            }
-
-            // Selected the EndTurn Button
-            if (buttonId == "EndTurn")
-            {
-                if (OnChangingTurn != null)
+                if (buttonId == null)
+                    return;
+                
+                if (buttonId == "Confirm")
                 {
-                    OnChangingTurn(new TurnEvents(ClickEvents));
-                    ClickEvents.Clear();
+                    if (previousId == "Exit")
+                    {
+                        // TODO: Save game state and exit (need more stuff here)
+                        currentState = previousState;
 
-                    currentState = Selected.Nothing;
+                        Application.Quit();
+                        return;
+                    }
+
+                    if (previousId == "EndTurn")
+                    {
+                        if (OnChangingTurn != null)
+                        {
+                            OnChangingTurn(new TurnEvents(ClickEvents));
+                            ClickEvents.Clear();
+
+                            currentState = Selected.Nothing;
+                            return;
+                        }
+                            
+                    }
+                }
+
+                if (buttonId == "Cancel")
+                {
+                    currentState = previousState;
+                    return;
                 }
             }
+
         }
 
 
-        private void ShowConfirmCancel()
+        private void ShowConfirmCancel(bool b)
         {
             foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
-                go.GetComponent<GUITexture>().enabled = true;
+                go.GetComponent<GUITexture>().enabled = b;
         }
 
 
-        private void HideConfirmCancel()
-        {
-            foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
-                go.GetComponent<GUITexture>().enabled = false;
-        }
-
-
-        private void ShowExitEndTurn()
+        private void ShowExitEndTurn(bool b)
         {
             foreach (var go in GameObject.FindGameObjectsWithTag("ExitEndTurn"))
-                go.GetComponent<GUITexture>().enabled = true;
+                go.GetComponent<GUITexture>().enabled = b;
         }
 
 
-        private void HideExitEndTurn()
+        private void ShowInfoButton(bool b)
         {
-            foreach (var go in GameObject.FindGameObjectsWithTag("ExitEndTurn"))
-                go.GetComponent<GUITexture>().enabled = false;
+            GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = b;
         }
 
 
-	    private void ShowInfoButton()
-	    {
-			GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = true;
-	    }
-
-
-		private void HideInfoButton()
-		{
-			GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
-		}
+        private void ShowTransparentBackground(bool b)
+        {
+			GameObject.FindGameObjectWithTag("Background").active = true;
+        }
 
 
         private void DisplaySelectionOverlay(Position position)

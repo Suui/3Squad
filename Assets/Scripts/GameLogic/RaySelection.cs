@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace Medusa
@@ -10,6 +11,7 @@ namespace Medusa
         public delegate void Selection(ClickInfo clickInfo);
         public static event Selection OnSelection;
 
+	    public List<string> ignoredTags;
         private Position selectedPos;
 
         private Ray raySelection;
@@ -24,6 +26,9 @@ namespace Medusa
 
                 if (Physics.Raycast(raySelection, out rayHit))
                 {
+					if (ignoredTags.Contains(rayHit.collider.gameObject.tag))
+						return;
+
                     selectedPos = new Position((int)rayHit.transform.position.x, (int)rayHit.transform.position.z);
 
                     if (OnSelection != null)
