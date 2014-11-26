@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using System.Collections;
 
 namespace Medusa
 {
@@ -9,6 +9,10 @@ namespace Medusa
 
 		public delegate void ResetSM();
 		public static event ResetSM OnChangingTurn;
+
+        public delegate void PreviousTurnEvents(ClickInfo clickInfo);
+        public static event PreviousTurnEvents OnPreviousEvents;
+
 
         void OnEnable()
         {
@@ -134,10 +138,34 @@ namespace Medusa
 
 			GameObject.Find("Manager").GetComponent<Manager>().ActivatePlayer(turnManagement.EnemyPlayerThisTurn);
 
-
-
 			turnManagement.ChangeTurn();
+
+		    GameObject.Find("GameMaster").GetComponent<GameMaster>().StartCoroutine(PerformPreviousTurnActions(turnEvents));
 		}
+
+
+        IEnumerator PerformPreviousTurnActions(TurnEvents turnEvents)
+        {
+            RaySelection currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
+            SelectionSM currentSM = GameObject.Find("GameMaster").GetComponent<SelectionSM>();
+
+            currentRaySel.enabled = false;
+            currentSM.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
+
+            foreach (var clickInfo in turnEvents.ClickEvents)
+            {
+                if (OnPreviousEvents != null)
+                    OnPreviousEvents(clickInfo);
+
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            if (OnChangingTurn != null)
+                OnChangingTurn();
+
+            currentSM.PlayingPlayer = turnManagement.CurrentPlayer;
+            currentRaySel.enabled = true;
+        }
 
 
 	    #region Setup Functions

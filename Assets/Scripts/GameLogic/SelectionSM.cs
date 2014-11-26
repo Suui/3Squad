@@ -313,6 +313,7 @@ namespace Medusa
                         ShowInfoButton(false);
                         ShowConfirmCancel(false);
                         ShowTransparentBackground(false);
+                        ShowExitEndTurn(false);
                         DisplaySelectionOverlay(null);
 
                         if (OnChangingTurn != null)
