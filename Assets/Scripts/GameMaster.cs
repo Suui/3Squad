@@ -111,13 +111,14 @@ namespace Medusa
 		    else
 		    {
 			    GameObject.Find("Manager").GetComponent<Manager>().SetPlayerGOs();
+			    transform.parent.gameObject.SetActive(false);
 		    }
 	    }
 
 
 		public void ChangeTurn(TurnEvents turnEvents)
 		{
-
+			GameObject.Find("Manager").GetComponent<Manager>().ActivatePlayer(turnManagement.EnemyPlayerThisTurn);
 		}
 
 
