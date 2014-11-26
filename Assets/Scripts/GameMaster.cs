@@ -7,6 +7,9 @@ namespace Medusa
     public class GameMaster : MonoBehaviour
     {
 
+		public delegate void ResetSM();
+		public static event ResetSM OnChangingTurn;
+
         void OnEnable()
         {
 			SelectionSM.OnChangingTurn += ChangeTurn;
@@ -43,6 +46,8 @@ namespace Medusa
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
 
+			SetUpMasters();
+
 	        if (GameObject.FindGameObjectsWithTag("GameMaster").Length == 1)
 		        FirstGameMasterAwake();
 	        else
@@ -67,7 +72,6 @@ namespace Medusa
 			Player playerTwo = new Player("Player 02", startingActionPoints);
 			players = new[] { playerOne, playerTwo };
 
-			SetUpMasters();
 			SetUpButtons();
 
 			turnManagement = new TurnManagement(players[0], players[1], seed);
@@ -118,7 +122,12 @@ namespace Medusa
 
 		public void ChangeTurn(TurnEvents turnEvents)
 		{
+			if (OnChangingTurn != null)
+				OnChangingTurn();
+
 			GameObject.Find("Manager").GetComponent<Manager>().ActivatePlayer(turnManagement.EnemyPlayerThisTurn);
+
+			turnManagement.ChangeTurn();
 		}
 
 

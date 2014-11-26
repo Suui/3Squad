@@ -36,6 +36,8 @@ namespace Medusa
 
         void OnEnable()
         {
+            GameMaster.OnChangingTurn +=		RestoreSM;
+
             RaySelection.OnSelection +=         BreakDownClickInfo;
             ClickableSkill.OnSkillClick +=      BreakDownClickInfo;
             ClickableButton.OnButtonClick +=    BreakDownClickInfo;
@@ -44,6 +46,8 @@ namespace Medusa
 
         void OnDisable()
         {
+            GameMaster.OnChangingTurn -=			RestoreSM;
+
             RaySelection.OnSelection -=         BreakDownClickInfo;
             ClickableSkill.OnSkillClick -=      BreakDownClickInfo;
             ClickableButton.OnButtonClick -=    BreakDownClickInfo;
@@ -134,8 +138,8 @@ namespace Medusa
                 {
                     ShowTransparentBackground(true);
 
-					if (buttonId != "Info")
-						ShowConfirmCancel(true);
+                    if (buttonId != "Info")
+                        ShowConfirmCancel(true);
 
                     GameObject[] skillIcons = GameObject.FindGameObjectsWithTag("SkillIcon");
 
@@ -296,21 +300,13 @@ namespace Medusa
 
                     if (previousId == "EndTurn")
                     {
-						foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
-							Destroy(go);
-
-						ShowInfoButton(false);
-	                    DisplaySelectionOverlay(null);
+                        ShowInfoButton(false);
+                        ShowConfirmCancel(false);
+                        ShowTransparentBackground(false);
+                        DisplaySelectionOverlay(null);
 
                         if (OnChangingTurn != null)
-                        {
                             OnChangingTurn(new TurnEvents(ClickEvents));
-                            ClickEvents.Clear();
-
-                            currentState = Selected.Nothing;
-                            return;
-                        }
-                            
                     }
                 }
 
@@ -335,6 +331,13 @@ namespace Medusa
                 }
             }
 
+        }
+
+
+        private void RestoreSM()
+        {
+            ClickEvents.Clear();
+            currentState = Selected.Nothing;
         }
 
 
@@ -372,11 +375,11 @@ namespace Medusa
 
         private void DisplaySelectionOverlay(Position position)
         {
-	        if (position == null)
-	        {
-				board["overlays"][previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
-				return;
-	        }
+            if (position == null)
+            {
+                board["overlays"][previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
+                return;
+            }
 
             board["overlays"][previousSelectedPos].GetComponent<Selectable>().SetOverlayMaterial(0);
             board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(1);
