@@ -21,7 +21,8 @@ namespace Medusa
             this.columns = columns;
             positions = new List<Position>(rows * columns);
 
-            SceneNode = new GameObject("BoardNode");
+            SceneNode = new GameObject("BoardNode")
+			{ tag = "BoardNode" };
 
             layers = new Dictionary<string, Layer>();
             foreach (string name in names)

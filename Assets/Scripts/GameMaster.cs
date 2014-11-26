@@ -9,12 +9,12 @@ namespace Medusa
 
         void OnEnable()
         {
-            SelectionSM.OnChangingTurn += ChangeTurn;
-        }
+			SelectionSM.OnChangingTurn += ChangeTurn;
+		}
 
 
         void OnDisable()
-    {
+		{
             SelectionSM.OnChangingTurn -= ChangeTurn;
         }
 
@@ -43,32 +43,75 @@ namespace Medusa
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
 
-            Player playerOne = new Player("Player One!", startingActionPoints);
-            Player playerTwo = new Player("Player Two!", startingActionPoints);
-            players = new[] { playerOne, playerTwo};
-
-            SetUpMasters();
-            SetUpButtons();
-
-            turnManagement = new TurnManagement(players[0], players[1], seed);
+	        if (GameObject.FindGameObjectsWithTag("GameMaster").Length == 1)
+		        FirstGameMasterAwake();
+	        else
+		        SecondGameMasterAwake();
 
 
-            // TODO: Remove testing block when over
+			// TODO: Remove testing block when over
             // Test GUI
             GameObject go = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
             go.name = "Fox";
-            go.transform.position = new Position(0, 0);
+			go.transform.position = new Position(0, 0);
             CurrentBoard["tokens"][new Position(0, 0)] = go;
 
             go.AddComponent<PlayerComponent>();
             go.GetComponent<PlayerComponent>().Player = players[0];
-
         }
+
+
+		private void FirstGameMasterAwake()
+		{
+			Player playerOne = new Player("Player 01", startingActionPoints);
+			Player playerTwo = new Player("Player 02", startingActionPoints);
+			players = new[] { playerOne, playerTwo };
+
+			SetUpMasters();
+			SetUpButtons();
+
+			turnManagement = new TurnManagement(players[0], players[1], seed);
+
+			GameObject firstPlayer = new GameObject(turnManagement.CurrentPlayer.name) 
+			{ tag = turnManagement.CurrentPlayer.name };
+
+			transform.parent = firstPlayer.transform;
+			GameObject.Find("BoardNode").transform.parent = firstPlayer.transform;
+		}
+
+
+		private void SecondGameMasterAwake()
+		{
+			GameMaster firstMaster = GameObject.Find("GameMaster").GetComponent<GameMaster>();
+
+			players = new[] {firstMaster.GetPlayerOne, firstMaster.GetPlayerTwo};
+			turnManagement = firstMaster.TurnManagement;
+
+			GameObject secondPlayer = new GameObject(turnManagement.EnemyPlayerThisTurn.name) 
+			{tag = turnManagement.EnemyPlayerThisTurn.name };
+
+			transform.parent = secondPlayer.transform;
+
+			foreach (var go in GameObject.FindGameObjectsWithTag("BoardNode"))
+			{
+				if (go.transform.parent == null)
+					go.transform.parent = secondPlayer.transform;
+			}
+		}
 
 
 	    void Start()
 	    {
-			GameObject.Find("Manager").GetComponent<Manager>().GroupNodes(turnManagement.ToString());
+		    if (GameObject.FindGameObjectsWithTag("GameMaster").Length == 1)
+		    {
+			    GameObject gameMaster = Instantiate(Resources.Load("Prefabs/GameMaster")) as GameObject;
+			    gameMaster.name = "GameMaster";
+			    gameMaster.tag = "GameMaster";
+		    }
+		    else
+		    {
+			    GameObject.Find("Manager").GetComponent<Manager>().SetPlayerGOs();
+		    }
 	    }
 
 
@@ -100,8 +143,8 @@ namespace Medusa
 		    GameObject parentObject = new GameObject("Buttons");
 
 		    // Exit and EndTurn buttons
-		    CreateButton("Textures/Buttons/ExitButton", parentObject, "ExitEndTurn", "Exit");
-		    CreateButton("Textures/Buttons/EndTurnButton", parentObject, "ExitEndTurn", "EndTurn");
+		    CreateButton("Textures/Buttons/ExitButton", parentObject, "ExitButton", "Exit");
+		    CreateButton("Textures/Buttons/EndTurnButton", parentObject, "EndTurnButton", "EndTurn");
 
 		    // Confirm and Cancel skill buttons
 		    CreateButton("Textures/Buttons/ConfirmButton", parentObject, "ConfirmCancel", "Confirm");
@@ -115,7 +158,6 @@ namespace Medusa
 			    go.GetComponent<GUITexture>().enabled = false;
 
 		    GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
-
 	    }
 
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 
 namespace Medusa
@@ -6,6 +7,10 @@ namespace Medusa
 
 	public class Manager : MonoBehaviour
 	{
+
+		private GameObject playerOneGO;
+		private GameObject playerTwoGO;
+
 
 		void Start()
 		{
@@ -15,12 +20,25 @@ namespace Medusa
 		}
 
 
-		public void GroupNodes(string player)
+		public void SetPlayerGOs()
 		{
-			GameObject currentPlayer = new GameObject(player);
+			playerOneGO = GameObject.Find("Player 01");
+			playerTwoGO = GameObject.Find("Player 02");
+		}
 
-			GameObject.Find("GameMaster").transform.parent = currentPlayer.transform;
-			GameObject.Find("BoardNode").transform.parent = currentPlayer.transform;
+
+		public void ActivatePlayer(Player player)
+		{
+			if (player.name == "Player 01")
+			{
+				playerOneGO.SetActive(true);
+				playerTwoGO.SetActive(false);
+			}
+			else
+			{
+				playerOneGO.SetActive(false);
+				playerTwoGO.SetActive(true);
+			}
 		}
 
 	}

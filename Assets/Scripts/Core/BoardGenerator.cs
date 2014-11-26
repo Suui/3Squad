@@ -27,7 +27,7 @@ namespace Medusa
 
         public void CreateEmptyBoard(float boardYSize)
         {
-            board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays", "TurnManagement");
+            board = new Board(boardRows, boardColumns, "terrain", "tokens", "effects", "overlays");
 
             foreach (Position pos in board["terrain"].Positions)
             {

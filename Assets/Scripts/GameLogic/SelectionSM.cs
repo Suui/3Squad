@@ -13,7 +13,7 @@ namespace Medusa
 
 
         private Board board;
-	    private GameObject backgroundObject;
+        private GameObject backgroundObject;
 
         private Player playingPlayer;
         private GameObject selectedToken;
@@ -54,7 +54,7 @@ namespace Medusa
         {
             board = GetComponent<GameMaster>().CurrentBoard;
 
-	        SetUpBackground();
+            SetUpBackground();
 
             ClickEvents = new List<ClickInfo>();
 
@@ -137,13 +137,13 @@ namespace Medusa
 
                     GameObject[] skillIcons = GameObject.FindGameObjectsWithTag("SkillIcon");
 
-	                if (skillIcons.Length > 0)
-	                {
-		                selectedToken = skillIcons[0].gameObject.transform.parent.gameObject;
+                    if (skillIcons.Length > 0)
+                    {
+                        selectedToken = skillIcons[0].gameObject.transform.parent.gameObject;
 
-		                foreach (var go in skillIcons)
-			                Destroy(go);
-	                }
+                        foreach (var go in skillIcons)
+                            Destroy(go);
+                    }
 
                     previousId = buttonId;
                     previousState = Selected.Token;
@@ -227,6 +227,7 @@ namespace Medusa
 
                         ShowConfirmCancel(false);
                         ShowExitEndTurn(true);
+                        ShowInfoButton(true);
 
                         // Set the selection to the character again
                         Position pos = (Position) selectedToken.transform.position;
@@ -251,6 +252,7 @@ namespace Medusa
 
                         ShowConfirmCancel(false);
                         ShowExitEndTurn(true);
+                        ShowInfoButton(true);
 
                         // Set the selection to the character again
                         Position pos = (Position)selectedToken.transform.position;
@@ -273,7 +275,7 @@ namespace Medusa
                 return;
             }
 
-			// EXITENDTURN
+            // EXITENDTURN
             if (currentState == Selected.ExitEndTurn)
             {
                 if (buttonId == null)
@@ -306,19 +308,19 @@ namespace Medusa
 
                 if (buttonId == "Cancel")
                 {
-	                ShowConfirmCancel(false);
-	                ShowTransparentBackground(false);
+                    ShowConfirmCancel(false);
+                    ShowTransparentBackground(false);
 
-	                if (previousState == Selected.Token && selectedToken != null && selectedToken.GetComponent<Skill>())
-	                {
-						Skill[] skills = selectedToken.GetComponents<Skill>();
+                    if (previousState == Selected.Token && selectedToken != null && selectedToken.GetComponent<Skill>())
+                    {
+                        Skill[] skills = selectedToken.GetComponents<Skill>();
 
-						foreach (Skill sk in skills)
-						{
-							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
-								sk.ShowUpSkill();
-						}
-	                }
+                        foreach (Skill sk in skills)
+                        {
+                            if (sk.ActionPointCost <= playingPlayer.ActionPoints)
+                                sk.ShowUpSkill();
+                        }
+                    }
 
                     currentState = previousState;
                     return;
@@ -337,8 +339,8 @@ namespace Medusa
 
         private void ShowExitEndTurn(bool b)
         {
-            foreach (var go in GameObject.FindGameObjectsWithTag("ExitEndTurn"))
-                go.GetComponent<GUITexture>().enabled = b;
+            GameObject.FindGameObjectWithTag("ExitButton").GetComponent<GUITexture>().enabled = b;
+            GameObject.FindGameObjectWithTag("EndTurnButton").GetComponent<GUITexture>().enabled = b;
         }
 
 
@@ -350,13 +352,13 @@ namespace Medusa
 
         private void ShowTransparentBackground(bool b)
         {
-			backgroundObject.SetActive(b);
+            backgroundObject.SetActive(b);
 
-	        Vector3 pos = GameObject.FindGameObjectWithTag("MainCamera").transform.position;
+            Vector3 pos = GameObject.FindGameObjectWithTag("MainCamera").transform.position;
 
-			backgroundObject.transform.position = 
-				pos + new Vector3(pos.x / Mathf.Abs(pos.x), pos.y / Mathf.Abs(pos.y), pos.z / Mathf.Abs(pos.z)) * -0.4f;
-			backgroundObject.transform.eulerAngles = GameObject.FindGameObjectWithTag("MainCamera").transform.eulerAngles;
+            backgroundObject.transform.position = 
+                pos + new Vector3(pos.x / Mathf.Abs(pos.x), pos.y / Mathf.Abs(pos.y), pos.z / Mathf.Abs(pos.z)) * -0.4f;
+            backgroundObject.transform.eulerAngles = GameObject.FindGameObjectWithTag("MainCamera").transform.eulerAngles;
         }
 
 
@@ -369,14 +371,14 @@ namespace Medusa
         }
 
 
-		private void SetUpBackground()
-		{
-			GameObject background = Instantiate(Resources.Load("Prefabs/Background")) as GameObject;
-			background.name = "Transparent Background";
+        private void SetUpBackground()
+        {
+            GameObject background = Instantiate(Resources.Load("Prefabs/Background")) as GameObject;
+            background.name = "Transparent Background";
 
-			backgroundObject = background;
-			ShowTransparentBackground(false);
-		}
+            backgroundObject = background;
+            ShowTransparentBackground(false);
+        }
 
 
         public Player PlayingPlayer
