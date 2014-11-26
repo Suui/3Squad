@@ -114,6 +114,12 @@ namespace Medusa
                     // Selected a Character || Master
                     if (board["tokens"][position].GetComponent<Skill>() != null)
                     {
+                        if (board["tokens"][position].GetComponent<PlayerComponent>().Player != playingPlayer)
+                        {
+                            currentState = Selected.Token;
+                            return;
+                        }
+
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
 
                         foreach (Skill sk in skills)
@@ -191,6 +197,10 @@ namespace Medusa
                     // Selected another Token || Master
                     if (board["tokens"][position].GetComponent<Skill>() != null)
                     {
+
+                        if (board["tokens"][position].GetComponent<PlayerComponent>().Player != playingPlayer)
+                            return;
+
                         Skill[] skills = board["tokens"][position].GetComponents<Skill>();
 
                         foreach (Skill sk in skills)

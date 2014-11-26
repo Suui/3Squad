@@ -46,12 +46,12 @@ namespace Medusa
             boardGenerator.CreateEmptyBoard(boardYSize);
             boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
 
-			SetUpMasters();
-
 	        if (GameObject.FindGameObjectsWithTag("GameMaster").Length == 1)
 		        FirstGameMasterAwake();
 	        else
 		        SecondGameMasterAwake();
+
+			SetUpMasters();
 
 
 			// TODO: Remove testing block when over
@@ -59,10 +59,17 @@ namespace Medusa
             GameObject go = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
             go.name = "Fox";
 			go.transform.position = new Position(0, 0);
+            go.GetComponent<PlayerComponent>().Player = players[0];
+
             CurrentBoard["tokens"][new Position(0, 0)] = go;
 
-            go.AddComponent<PlayerComponent>();
-            go.GetComponent<PlayerComponent>().Player = players[0];
+
+            GameObject go2 = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
+            go2.name = "Fox2";
+            go2.transform.position = new Position(5, 13);
+            go2.GetComponent<PlayerComponent>().Player = players[1];
+
+            CurrentBoard["tokens"][new Position(5, 13)] = go2;
         }
 
 
@@ -127,6 +134,8 @@ namespace Medusa
 
 			GameObject.Find("Manager").GetComponent<Manager>().ActivatePlayer(turnManagement.EnemyPlayerThisTurn);
 
+
+
 			turnManagement.ChangeTurn();
 		}
 
@@ -138,13 +147,17 @@ namespace Medusa
 		    GameObject master1 = Instantiate(masterOne) as GameObject;
 		    master1.name = "Master 01";
 		    master1.transform.position = MasterOnePos;
+	        master1.GetComponent<PlayerComponent>().Player = players[0];
+
 		    CurrentBoard["tokens"][MasterOnePos] = master1;
 
 
 		    GameObject master2 = Instantiate(masterOne) as GameObject;
 		    master2.name = "Master 02";
 		    master2.transform.position = MasterTwoPos;
-		    CurrentBoard["tokens"][MasterTwoPos] = master2;
+            master2.GetComponent<PlayerComponent>().Player = players[1];
+
+            CurrentBoard["tokens"][MasterTwoPos] = master2;
 	    }
 
 

@@ -6,21 +6,13 @@ namespace Medusa
 
     class PlayerComponent : MonoBehaviour
     {
-
-        private Player player;
-
-
         public PlayerComponent(Player player)
         {
-            this.player = player;
+            Player = player;
         }
 
 
-        public Player Player
-        {
-            get { return player; }
-            set { player = value; }
-        }
+        public Player Player { get; set; }
     }
 
 }
