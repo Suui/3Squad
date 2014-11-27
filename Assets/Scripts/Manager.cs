@@ -11,6 +11,10 @@ namespace Medusa
 		private GameObject playerOneGO;
 		private GameObject playerTwoGO;
 
+		private SelectionSM currentSM;
+		private RaySelection currentRaySel;
+		private TurnManagement turnManagement;
+
 
 		void Start()
 		{
@@ -24,21 +28,68 @@ namespace Medusa
 		{
 			playerOneGO = GameObject.Find("Player 01");
 			playerTwoGO = GameObject.Find("Player 02");
+
+			turnManagement = GameObject.Find("GameMaster").GetComponent<GameMaster>().TurnManagement;
 		}
 
 
-		public void ActivatePlayer(Player player)
+		public void PerformTurnChangeActions(Player player, TurnEvents turnEvents)
 		{
 			if (player.name == "Player 01")
 			{
 				playerOneGO.SetActive(true);
 				playerTwoGO.SetActive(false);
+				//currentSM = GameObject.Find("GameMaster").GetComponent<SelectionSM>();
+				//currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
 			}
 			else
 			{
 				playerOneGO.SetActive(false);
 				playerTwoGO.SetActive(true);
+				//currentSM = GameObject.Find("GameMaster").GetComponent<SelectionSM>();
+				//currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
 			}
+
+			turnManagement.ChangeTurn();
+			//StartCoroutine(PerformPreviousTurnActions(turnEvents));
+			StartCoroutine(Wait(0.5f, turnEvents));
+		}
+
+
+		private void UpdateRaySelAndSM(TurnEvents turnEvents)
+		{
+			currentSM = GameObject.Find("GameMaster").GetComponent<SelectionSM>();
+			currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
+
+			Debug.Log("The current SM is: " + currentSM.DebuggingID);
+
+			StartCoroutine(PerformPreviousTurnActions(turnEvents));
+		}
+
+
+		IEnumerator PerformPreviousTurnActions(TurnEvents turnEvents)
+		{
+			currentRaySel.enabled = false;
+			currentSM.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
+
+			foreach (var clickInfo in turnEvents.ClickEvents)
+			{
+				currentSM.BreakDownClickInfo(clickInfo);
+				yield return new WaitForSeconds(0.5f);
+			}
+
+			currentSM.SetReady();
+
+			currentSM.PlayingPlayer = turnManagement.CurrentPlayer;
+			currentRaySel.enabled = true;
+		}
+
+
+		IEnumerator Wait(float time, TurnEvents turnEvents)
+		{
+			yield return new WaitForSeconds(time);
+
+			UpdateRaySelAndSM(turnEvents);
 		}
 
 	}

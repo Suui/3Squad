@@ -70,7 +70,7 @@ namespace Medusa
         }
 
 
-        private void BreakDownClickInfo(ClickInfo clickInfo)
+        public void BreakDownClickInfo(ClickInfo clickInfo)
         {
             // TODO: Function to process if clickInfo should be included can be set up here
             ClickEvents.Add(clickInfo);
@@ -314,7 +314,11 @@ namespace Medusa
                         ShowConfirmCancel(false);
                         ShowTransparentBackground(false);
                         ShowExitEndTurn(false);
-                        DisplaySelectionOverlay(null);
+	                    DisplaySelectionOverlay(null);
+
+						// Removing the clicks on ChangeTurn and Confirm
+						ClickEvents.RemoveAt(ClickEvents.Count - 1);
+						ClickEvents.RemoveAt(ClickEvents.Count - 1);
 
                         if (OnChangingTurn != null)
                             OnChangingTurn(new TurnEvents(ClickEvents));
@@ -347,9 +351,16 @@ namespace Medusa
 
         private void RestoreSM()
         {
-            ClickEvents.Clear();
+			//ClickEvents.Clear();
             currentState = Selected.Nothing;
         }
+
+
+	    public void SetReady()
+	    {
+			//ClickEvents.Clear();
+		    ShowExitEndTurn(true);
+	    }
 
 
         private void ShowConfirmCancel(bool b)
@@ -417,6 +428,19 @@ namespace Medusa
 
         public List<ClickInfo> ClickEvents { get; set; }
 
+	    public string DebuggingID
+	    {
+		    get
+		    {
+			    if (transform.parent.gameObject.name == "Player 01")
+				    return "Player 01 SM";
+
+			    if (transform.parent.gameObject.name == "Player 02")
+				    return "Player 02 SM";
+
+			    return "FAILURE";
+		    }
+	    }
 
     }
 

@@ -133,39 +133,11 @@ namespace Medusa
 
 		public void ChangeTurn(TurnEvents turnEvents)
 		{
+			GameObject.Find("Manager").GetComponent<Manager>().PerformTurnChangeActions(turnManagement.EnemyPlayerThisTurn, turnEvents);
+
 			if (OnChangingTurn != null)
 				OnChangingTurn();
-
-			GameObject.Find("Manager").GetComponent<Manager>().ActivatePlayer(turnManagement.EnemyPlayerThisTurn);
-
-			turnManagement.ChangeTurn();
-
-		    GameObject.Find("GameMaster").GetComponent<GameMaster>().StartCoroutine(PerformPreviousTurnActions(turnEvents));
 		}
-
-
-        IEnumerator PerformPreviousTurnActions(TurnEvents turnEvents)
-        {
-            RaySelection currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
-            SelectionSM currentSM = GameObject.Find("GameMaster").GetComponent<SelectionSM>();
-
-            currentRaySel.enabled = false;
-            currentSM.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
-
-            foreach (var clickInfo in turnEvents.ClickEvents)
-            {
-                if (OnPreviousEvents != null)
-                    OnPreviousEvents(clickInfo);
-
-                yield return new WaitForSeconds(0.5f);
-            }
-
-            if (OnChangingTurn != null)
-                OnChangingTurn();
-
-            currentSM.PlayingPlayer = turnManagement.CurrentPlayer;
-            currentRaySel.enabled = true;
-        }
 
 
 	    #region Setup Functions
