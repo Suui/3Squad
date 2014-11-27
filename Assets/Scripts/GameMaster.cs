@@ -61,7 +61,12 @@ namespace Medusa
 			// TODO: Remove testing block when over
             // Test GUI
             GameObject go = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
-            go.name = "Fox";
+	        
+			if (GameObject.Find("Fox"))
+		        go.name = "FOXTER";
+			else
+				go.name = "Fox";
+
 			go.transform.position = new Position(0, 0);
             go.GetComponent<PlayerComponent>().Player = players[0];
 

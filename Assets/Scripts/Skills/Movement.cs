@@ -39,7 +39,7 @@ namespace Medusa
 		//show posible movements marking the cells and creating an array of posible movements
 		public override void Setup()
 		{
-			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
+			board = GameObject.Find("GameMaster").GetComponent<GameMaster>().CurrentBoard;
 			playerPosition = (Position) this.transform.position;
 			player = this.gameObject;
 			SearchWay (posiblePositions, board ["tokens"], playerPosition, range);
@@ -113,8 +113,6 @@ namespace Medusa
 		//move to the last pos of array
 		public override void Confirm()
 		{
-			
-			
 			board["tokens"].MoveGameObject(player,stepList.Last.Value);
 			Clear();
 			doneThisTurn = true;

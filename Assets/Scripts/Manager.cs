@@ -75,7 +75,7 @@ namespace Medusa
 			foreach (var clickInfo in turnEvents.ClickEvents)
 			{
 				currentSM.BreakDownClickInfo(clickInfo);
-				yield return new WaitForSeconds(0.5f);
+				yield return new WaitForSeconds(2.0f);
 			}
 
 			currentSM.SetReady();

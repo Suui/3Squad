@@ -85,6 +85,9 @@ namespace Medusa
                 ". Parameter position was: " + position + 
                 ". Parameter Skill was: " + skill);
 
+	        if (skill != null)
+		        Debug.Log(skill.transform.parent.transform.parent.transform.parent.name);
+
             // NOTHING
             if (currentState == Selected.Nothing)
             {
@@ -171,12 +174,12 @@ namespace Medusa
                 {
                     skill.Setup();
 
+					foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
+						Destroy(go);
+
                     ShowConfirmCancel(true);
                     ShowExitEndTurn(false);
                     ShowInfoButton(false);
-
-                    foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
-                        Destroy(go);
 
                     selectedSkill = skill;
                     selectedToken = board["tokens"][previousSelectedPos].gameObject;
