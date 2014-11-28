@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 
@@ -32,23 +31,25 @@ namespace Medusa
 			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/correr") as Texture2D;
 			skillGUI.transform.position = SecondPos;
 			skillGUI.transform.parent = gameObject.transform;
-			
-			skillGUI.GetComponent<SkillToFire>().Skill = this;
+
+			// TODO: IUHBPIOUFBQPEIOFUBEPIOUBEGPIOU
+			Debug.Log("POS = " + gameObject.transform.position);
+
+			skillGUI.GetComponent<SkillToFire>().Skill = gameObject.GetComponent<Movement>();
 		}
 		
-		//show posible movements marking the cells and creating an array of posible movements
+		//show possible movements marking the cells and creating an array of possible movements
 		public override void Setup()
 		{
 			board = GameObject.Find("GameMaster").GetComponent<GameMaster>().CurrentBoard;
-			playerPosition = (Position) this.transform.position;
-			player = this.gameObject;
+			playerPosition = (Position) transform.position;
+			// TODO: IUEBGFOIWUEFBOWIUEGBOIWEGUBOP
+			Debug.Log("SETUP POS = " + transform.position);
+			player = gameObject;
 			SearchWay (posiblePositions, board ["tokens"], playerPosition, range);
 			
 			foreach(Position posi in posiblePositions)
-			{
 				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(2);
-				
-			}
 		}
 		
 		//add pos to array

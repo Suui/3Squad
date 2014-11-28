@@ -56,29 +56,6 @@ namespace Medusa
 		        SecondGameMasterAwake();
 
 			SetUpMasters();
-
-
-			// TODO: Remove testing block when over
-            // Test GUI
-            GameObject go = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
-	        
-			if (GameObject.Find("Fox"))
-		        go.name = "FOXTER";
-			else
-				go.name = "Fox";
-
-			go.transform.position = new Position(0, 0);
-            go.GetComponent<PlayerComponent>().Player = players[0];
-
-            CurrentBoard["tokens"][new Position(0, 0)] = go;
-
-
-            GameObject go2 = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
-            go2.name = "Fox2";
-            go2.transform.position = new Position(5, 13);
-            go2.GetComponent<PlayerComponent>().Player = players[1];
-
-            CurrentBoard["tokens"][new Position(5, 13)] = go2;
         }
 
 
