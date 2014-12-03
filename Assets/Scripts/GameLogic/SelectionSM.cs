@@ -74,19 +74,17 @@ namespace Medusa
         {
             // TODO: Function to process if clickInfo should be included can be set up here
             ClickEvents.Add(clickInfo);
-            CheckSelection(clickInfo.Position, clickInfo.Skill, clickInfo.ButtonId);
+            CheckSelection(clickInfo.Position, clickInfo.SkillName, clickInfo.ButtonId);
         }
 
 
-        private void CheckSelection(Position position, Skill skill, string buttonId)
+        private void CheckSelection(Position position, string skillName, string buttonId)
         {
             Debug.Log("Selection Performed! " + 
                 "Current SM State was: " + currentState +
                 ". Parameter position was: " + position + 
-                ". Parameter Skill was: " + skill);
-
-	        if (skill != null)
-		        Debug.Log(skill.transform.parent.transform.parent.transform.parent.name);
+                ". Parameter skillName was: " + skillName +
+				". Parameter buttonId was: " + buttonId);
 
             // NOTHING
             if (currentState == Selected.Nothing)
@@ -110,20 +108,22 @@ namespace Medusa
                 // Selected a Token
                 if (board["tokens"][position] != null)
                 {
+	                selectedToken = board["tokens"][position];
+
                     // Display Info of the character getting the right components. David.
 
                     ShowInfoButton(true);
 
                     // Selected a Character || Master
-                    if (board["tokens"][position].GetComponent<Skill>() != null)
+                    if (selectedToken.GetComponent<Skill>() != null)
                     {
-                        if (board["tokens"][position].GetComponent<PlayerComponent>().Player != playingPlayer)
+						if (selectedToken.GetComponent<PlayerComponent>().Player != playingPlayer)
                         {
                             currentState = Selected.Token;
                             return;
                         }
 
-                        Skill[] skills = board["tokens"][position].GetComponents<Skill>();
+						Skill[] skills = selectedToken.GetComponents<Skill>();
 
                         foreach (Skill sk in skills)
                         {
@@ -152,13 +152,8 @@ namespace Medusa
 
                     GameObject[] skillIcons = GameObject.FindGameObjectsWithTag("SkillIcon");
 
-                    if (skillIcons.Length > 0)
-                    {
-                        selectedToken = skillIcons[0].gameObject.transform.parent.gameObject;
-
-                        foreach (var go in skillIcons)
-                            Destroy(go);
-                    }
+					foreach (var go in skillIcons)
+						Destroy(go);
 
                     previousId = buttonId;
                     previousState = Selected.Token;
@@ -169,10 +164,11 @@ namespace Medusa
 
                 DisplaySelectionOverlay(position);
 
-                // Selected a Skill
-                if (skill != null)
+                // Selected a skillName
+                if (skillName != null)
                 {
-                    skill.Setup();
+	                selectedSkill = selectedToken.GetComponent(skillName) as Skill;
+					selectedSkill.Setup();
 
 					foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
 						Destroy(go);
@@ -181,30 +177,29 @@ namespace Medusa
                     ShowExitEndTurn(false);
                     ShowInfoButton(false);
 
-                    selectedSkill = skill;
-                    selectedToken = board["tokens"][previousSelectedPos].gameObject;
                     currentState = Selected.Skill;
-
                     return;
                 }
 
                 // Selected Token
                 if (board["tokens"][position] != null)
                 {
+	                selectedToken = board["tokens"][position];
+
                     // Delete Info of the token getting the right components. David.
                     // Display Info of the token getting the right components. David.
 
                     foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
                         Destroy(go);
 
-                    // Selected another Token || Master
-                    if (board["tokens"][position].GetComponent<Skill>() != null)
+                    // Selected another Character || Master
+                    if (selectedToken.GetComponent<Skill>() != null)
                     {
 
-                        if (board["tokens"][position].GetComponent<PlayerComponent>().Player != playingPlayer)
+						if (selectedToken.GetComponent<PlayerComponent>().Player != playingPlayer)
                             return;
 
-                        Skill[] skills = board["tokens"][position].GetComponents<Skill>();
+						Skill[] skills = selectedToken.GetComponents<Skill>();
 
                         foreach (Skill sk in skills)
                         {
@@ -252,7 +247,7 @@ namespace Medusa
                         Position pos = (Position) selectedToken.transform.position;
                         DisplaySelectionOverlay(pos);
 
-                        Skill[] skills = board["tokens"][pos].GetComponents<Skill>();
+                        Skill[] skills = selectedToken.GetComponents<Skill>();
 
                         foreach (Skill sk in skills)
                         {
@@ -277,7 +272,7 @@ namespace Medusa
                         Position pos = (Position)selectedToken.transform.position;
                         DisplaySelectionOverlay(pos);
                         
-                        Skill[] skills = board["tokens"][pos].GetComponents<Skill>();
+                        Skill[] skills = selectedToken.GetComponents<Skill>();
 
                         foreach (Skill sk in skills)
                         {
@@ -434,6 +429,7 @@ namespace Medusa
 
 
         public List<ClickInfo> ClickEvents { get; set; }
+
 
 	    public string DebuggingID
 	    {

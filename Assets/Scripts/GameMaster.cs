@@ -151,14 +151,14 @@ namespace Medusa
 		    CreateButton("Textures/Buttons/ExitButton", parentObject, "ExitButton", "Exit");
 		    CreateButton("Textures/Buttons/EndTurnButton", parentObject, "EndTurnButton", "EndTurn");
 
-		    // Confirm and Cancel skill buttons
+		    // Confirm and Cancel skillName buttons
 		    CreateButton("Textures/Buttons/ConfirmButton", parentObject, "ConfirmCancel", "Confirm");
 		    CreateButton("Textures/Buttons/CancelButton", parentObject, "ConfirmCancel", "Cancel");
 
 		    // Info button
 		    CreateButton("Textures/Buttons/InfoButton", parentObject, "InfoButton", "Info");
 
-		    // Hide the Confirm and Cancel skill and the Info buttons at first
+		    // Hide the Confirm and Cancel skillName and the Info buttons at first
 		    foreach (var go in GameObject.FindGameObjectsWithTag("ConfirmCancel"))
 			    go.GetComponent<GUITexture>().enabled = false;
 

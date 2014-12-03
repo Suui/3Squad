@@ -17,7 +17,7 @@ namespace Medusa
                 OnSkillClick(new ClickInfo
                     (
                         (Position)gameObject.transform.parent.gameObject.transform,
-                        GetComponent<SkillToFire>().Skill,
+                        GetComponent<SkillToFire>().Skill.GetSkillType(),
                         null
                     )
                 );
