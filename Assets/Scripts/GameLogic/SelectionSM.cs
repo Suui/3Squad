@@ -354,14 +354,18 @@ namespace Medusa
 
         private void RestoreSM()
         {
-			//ClickEvents.Clear();
             currentState = Selected.Nothing;
         }
 
 
 	    public void SetReady()
 	    {
-			//ClickEvents.Clear();
+			if (ClickEvents != null)
+				ClickEvents.Clear();
+
+		    foreach (var go in GameObject.FindGameObjectsWithTag("SkillIcon"))
+			    Destroy(go);
+
 		    ShowExitEndTurn(true);
 	    }
 

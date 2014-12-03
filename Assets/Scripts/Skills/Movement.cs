@@ -9,7 +9,15 @@ namespace Medusa
 	{
 		public int range;
 		private bool doneThisTurn;
-		
+
+		public string DebugID;
+
+		public string DebugId
+		{
+			get { return DebugID; }
+			set { DebugID = value; }
+		}
+
 		private HashSet<Position> posiblePositions = new HashSet<Position>();
 		private LinkedList<Position> stepList = new LinkedList<Position>();
 		
@@ -32,10 +40,7 @@ namespace Medusa
 			skillGUI.transform.position = SecondPos;
 			skillGUI.transform.parent = gameObject.transform;
 
-			// TODO: IUHBPIOUFBQPEIOFUBEPIOUBEGPIOU
-			Debug.Log("POS = " + gameObject.transform.position);
-
-			skillGUI.GetComponent<SkillToFire>().Skill = gameObject.GetComponent<Movement>();
+			skillGUI.GetComponent<SkillToFire>().Skill = gameObject.GetComponent(GetSkillType()) as Skill;
 		}
 		
 		//show possible movements marking the cells and creating an array of possible movements
@@ -43,8 +48,7 @@ namespace Medusa
 		{
 			board = GameObject.Find("GameMaster").GetComponent<GameMaster>().CurrentBoard;
 			playerPosition = (Position) transform.position;
-			// TODO: IUEBGFOIWUEFBOWIUEGBOIWEGUBOP
-			Debug.Log("SETUP POS = " + transform.position);
+
 			player = gameObject;
 			SearchWay (posiblePositions, board ["tokens"], playerPosition, range);
 			
@@ -153,5 +157,16 @@ namespace Medusa
 			}
 			inRange.Remove(playerPosition);
 		}
+
+
+		public override string GetSkillType()
+		{
+			return GetType().ToString();
+		}
+
+
 	}
+
+
+
 }

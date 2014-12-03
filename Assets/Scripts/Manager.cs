@@ -35,10 +35,10 @@ namespace Medusa
 
 				GameObject go = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
 				go.name = "Fox";
-				go.transform.position = new Position(0, 0);
+				go.transform.position = new Position(3, 0);
 				go.GetComponent<PlayerComponent>().Player = master.GetPlayerOne;
 
-				master.CurrentBoard["tokens"][new Position(0, 0)] = go;
+				master.CurrentBoard["tokens"][new Position(3, 0)] = go;
 
 
 				GameObject go2 = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;

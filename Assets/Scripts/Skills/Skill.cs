@@ -44,6 +44,12 @@ namespace Medusa
 
         }
 
+
+	    public virtual string GetSkillType()
+	    {
+		    return "";
+	    }
+
     }
 
 }
