@@ -32,21 +32,27 @@ namespace Medusa
 			foreach (var masterGO in GameObject.FindGameObjectsWithTag("GameMaster"))
 			{
 				var master = masterGO.GetComponent<GameMaster>();
+				SelectedCharacters characters = GameObject.Find("SelectedCharacters").GetComponent<SelectedCharacters>();
+				int pos = 5;
 
-				GameObject go = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
-				go.name = "Fox";
-				go.transform.position = new Position(3, 0);
-				go.GetComponent<PlayerComponent>().Player = master.GetPlayerOne;
+				foreach (var name in characters.selectedCharacters)
+				{
+					GameObject go = Instantiate(Resources.Load("Prefabs/" + name)) as GameObject;
+					go.name = name;
+					go.transform.position = new Position(pos, 0);
+					go.GetComponent<PlayerComponent>().Player = master.GetPlayerOne;
 
-				master.CurrentBoard["tokens"][new Position(3, 0)] = go;
+					master.CurrentBoard["tokens"][new Position(pos, 0)] = go;
 
+					GameObject go2 = Instantiate(Resources.Load("Prefabs/" + name)) as GameObject;
+					go2.name = name;
+					go2.transform.position = new Position(pos, 13);
+					go2.GetComponent<PlayerComponent>().Player = master.GetPlayerTwo;
 
-				GameObject go2 = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
-				go2.name = "Fox2";
-				go2.transform.position = new Position(5, 13);
-				go2.GetComponent<PlayerComponent>().Player = master.GetPlayerTwo;
+					master.CurrentBoard["tokens"][new Position(pos, 13)] = go2;
 
-				master.CurrentBoard["tokens"][new Position(5, 13)] = go2;
+					pos -= 2;
+				}
 			}
 
 			turnManagement = GameObject.Find("GameMaster").GetComponent<GameMaster>().TurnManagement;
