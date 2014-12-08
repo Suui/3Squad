@@ -17,8 +17,6 @@ namespace Medusa
 
 		void Awake()
 		{
-			DontDestroyOnLoad(this);
-
 			CalculateRatio();
 			SetUpAvailableCharacters();
 

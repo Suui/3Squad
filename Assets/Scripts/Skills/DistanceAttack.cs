@@ -26,8 +26,9 @@ namespace Medusa
 			playerPosition = (Position)this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
-		
 		}
+
+
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;

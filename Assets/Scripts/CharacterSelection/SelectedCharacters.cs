@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -8,7 +9,7 @@ namespace Medusa
 	public class SelectedCharacters : MonoBehaviour
 	{
 
-		private List<GameObject> selectedCharacters;
+		public List<string> selectedCharacters;
 
 
 		void OnEnable()
@@ -27,20 +28,28 @@ namespace Medusa
 		{
 			DontDestroyOnLoad(this);
 
-			selectedCharacters = new List<GameObject>();
+			selectedCharacters = new List<string>();
 		}
 
 
 		private void AddCharacter(string name)
 		{
-			GameObject character = Instantiate(Resources.Load("Prefabs/" + name)) as GameObject;
-			character.name = name;
+			if (name == "Empty") return;
+
+			if (selectedCharacters.Contains(name) == false)
+				selectedCharacters.Add(name);
+
+			if (selectedCharacters.Count == 3)
+				Application.LoadLevel("Scene_00");
 		}
 
 
 		private void RemoveCharacter(string name)
 		{
-			
+			if (name == "Empty") return;
+
+			if (selectedCharacters.Contains(name))
+				selectedCharacters.Remove(name);
 		}
 
 	}
