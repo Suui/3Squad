@@ -95,5 +95,11 @@ namespace Medusa
 			posibleAttacks.Clear();
 			targetPosition = null;
 		}
+
+
+		public override string GetSkillType()
+		{
+			return GetType().ToString();
+		}
 	}
 }

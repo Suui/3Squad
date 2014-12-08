@@ -123,5 +123,11 @@ namespace Medusa
 			}
 			inRange.Remove(playerPosition);
 		}
+
+
+		public override string GetSkillType()
+		{
+			return GetType().ToString();
+		}
 	}
 }

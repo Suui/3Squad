@@ -107,5 +107,11 @@ namespace Medusa
 			targetPosition = null;
 			
 		}
+
+
+		public override string GetSkillType()
+		{
+			return GetType().ToString();
+		}
 	}
 }
