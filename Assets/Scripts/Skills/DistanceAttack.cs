@@ -12,6 +12,7 @@ namespace Medusa
 		private bool doneThisTurn;
 		
 		private LinkedList<Position> posibleAttacks = new LinkedList<Position>();
+		private LinkedList<Position> posibleRange = new LinkedList<Position>();
 		private Position targetPosition;
 		
 		private Position playerPosition;
@@ -100,8 +101,14 @@ namespace Medusa
 				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
 				
 			}
+			foreach(Position posi in posibleRange)
+			{
+				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
+				
+			}
 			board["overlays"][playerPosition].GetComponent<Selectable>().SetOverlayMaterial(0);
 			posibleAttacks.Clear();
+			posibleRange.Clear();
 			targetPosition = null;
 			
 		}

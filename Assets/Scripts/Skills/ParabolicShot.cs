@@ -13,6 +13,7 @@ namespace Medusa
 		private bool doneThisTurn;
 		
 		private LinkedList<Position> posibleAttacks = new LinkedList<Position>();
+		private LinkedList<Position> posibleRange = new LinkedList<Position>();
 		private Position targetPosition;
 		
 		private Position playerPosition;
@@ -45,9 +46,14 @@ namespace Medusa
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			Layer terrain = board["tokens"];
 
-			SearchWay (posibleAttacks, board ["tokens"], playerPosition, range);
+			SearchWay (posibleAttacks,posibleRange, board ["tokens"], playerPosition, range);
 			
 			foreach(Position posi in posibleAttacks)
+			{
+				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(4);
+				
+			}
+			foreach(Position posi in posibleRange)
 			{
 				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(2);
 				
@@ -68,7 +74,7 @@ namespace Medusa
 				if(board["tokens"][pos].GetComponent<Life>() != null)
 				{
 					targetPosition = pos;
-					board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(4);
+					board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(3);
 					return true;
 				}
 				Clear ();
@@ -95,14 +101,20 @@ namespace Medusa
 				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
 				
 			}
+			foreach(Position posi in posibleRange)
+			{
+				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
+				
+			}
 			board["overlays"][playerPosition].GetComponent<Selectable>().SetOverlayMaterial(0);
 			if(targetPosition != null) board["overlays"][targetPosition].GetComponent<Selectable>().SetOverlayMaterial(0);
 			posibleAttacks.Clear();
+			posibleRange.Clear();
 			targetPosition = null;
 			
 		}
 
-		public void SearchWay (LinkedList<Position> inRange, Layer layer, Position startingPosition, int stepCount)
+		public void SearchWay (LinkedList<Position> inRange,LinkedList<Position> posibleRange, Layer layer, Position startingPosition, int stepCount)
 		{
 			if (stepCount-- == 0)
 				return;
@@ -113,11 +125,17 @@ namespace Medusa
 				
 				if (position.Outside(layer))
 					continue;
-				if (layer[position] != null && layer [position].GetComponent<Life>() != null) 
+				if (layer[position] != null) 
 				{
-					inRange.AddLast (position);
+					if(layer [position].GetComponent<Life>() != null)
+					{
+						inRange.AddLast (position);
+					}
+				}else
+				{
+					posibleRange.AddLast (position);
 				}
-				SearchWay (inRange, layer, position, stepCount);
+				SearchWay (inRange,posibleRange, layer, position, stepCount);
 			}
 			inRange.Remove(playerPosition);
 		}
