@@ -8,8 +8,7 @@ namespace Medusa
 	public class Manager : MonoBehaviour
 	{
 
-		private GameObject playerOneGO;
-		private GameObject playerTwoGO;
+		private GameObject gameMaster;
 
 		private SelectionStateMachine currentStateMachine;
 		private RaySelection currentRaySel;
@@ -18,57 +17,27 @@ namespace Medusa
 
 		void Start()
 		{
-			GameObject gameMaster = Instantiate(Resources.Load("Prefabs/GameMaster")) as GameObject;
+			gameMaster = Instantiate(Resources.Load("Prefabs/GameMaster")) as GameObject;
 			gameMaster.name = "GameMaster";
 			gameMaster.tag = "GameMaster";
-		}
 
 
-		public void SetPlayerGOs()
-		{
-			playerOneGO = GameObject.Find("Player 01");
-			playerTwoGO = GameObject.Find("Player 02");
-
-			turnManagement = GameObject.Find("GameMaster").GetComponent<GameMaster>().TurnManagement;
+			turnManagement = gameMaster.GetComponent<GameMaster>().TurnManagement;
 		}
 
 
 		public void PerformTurnChangeActions(Player player, TurnActions turnActions)
 		{
-			if (player.name == "Player 01")
-			{
-				playerOneGO.SetActive(true);
-				playerTwoGO.SetActive(false);
-				//currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
-				//currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
-			}
-			else
-			{
-				playerOneGO.SetActive(false);
-				playerTwoGO.SetActive(true);
-				//currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
-				//currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
-			}
-
 			turnManagement.ChangeTurn();
-			//StartCoroutine(PerformPreviousTurnActions(TurnActions));
-			StartCoroutine(Wait(0.5f, turnActions));
-		}
-
-
-		private void UpdateRaySelAndSM(TurnActions turnActions)
-		{
-			currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
-			currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
-
-			Debug.Log("The current SM is: " + currentStateMachine.DebuggingID);
-
 			StartCoroutine(PerformPreviousTurnActions(turnActions));
 		}
 
 
 		IEnumerator PerformPreviousTurnActions(TurnActions turnActions)
 		{
+			currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
+			currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
+
 			currentRaySel.enabled = false;
 			currentStateMachine.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
 
@@ -82,14 +51,6 @@ namespace Medusa
 
 			currentStateMachine.PlayingPlayer = turnManagement.CurrentPlayer;
 			currentRaySel.enabled = true;
-		}
-
-
-		IEnumerator Wait(float time, TurnActions turnActions)
-		{
-			yield return new WaitForSeconds(time);
-
-			UpdateRaySelAndSM(turnActions);
 		}
 
 	}

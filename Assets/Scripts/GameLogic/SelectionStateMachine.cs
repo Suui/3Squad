@@ -318,10 +318,6 @@ namespace Medusa
                         ShowExitEndTurn(false);
 	                    DisplaySelectionOverlay(null);
 
-						// Removing the clicks on ChangeTurn and Confirm
-						Actions.RemoveAt(Actions.Count - 1);
-						Actions.RemoveAt(Actions.Count - 1);
-
                         if (OnChangingTurn != null)
                             OnChangingTurn(new TurnActions(Actions));
                     }
