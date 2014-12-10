@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 
@@ -81,11 +80,13 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public override void Confirm()
+		public override List<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
 			Clear();
 			doneThisTurn = true;
+
+			return new List<Position> { targetPosition };
 		}
 		
 		//deselect the cells and empty the array

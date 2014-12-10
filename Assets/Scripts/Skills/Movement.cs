@@ -116,11 +116,13 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public override void Confirm()
+		public override List<Position> Confirm()
 		{
 			board["tokens"].MoveGameObject(player,stepList.Last.Value);
 			Clear();
 			doneThisTurn = true;
+
+			return new List<Position>(stepList);
 		}
 		
 		//deselect the cells and empty the array

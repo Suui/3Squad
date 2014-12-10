@@ -60,7 +60,7 @@ namespace Medusa
 
             SetUpBackground();
 
-            ClickEvents = new List<ClickInfo>();
+            Actions = new List<Action>();
 
             playingPlayer = GameObject.Find("GameMaster").GetComponent<GameMaster>().TurnManagement.CurrentPlayer;
             selectedSkill = null;
@@ -231,7 +231,13 @@ namespace Medusa
                     // Selected the Confirm Button
                     if (buttonId == "Confirm")
                     {
-                        selectedSkill.Confirm();
+						Actions.Add(new Action
+							(
+								(Position) selectedToken.transform.position, 
+								selectedSkill.GetSkillType(), 
+								selectedSkill.Confirm()
+							));
+
                         selectedSkill.Clear();
 
                         // Manage Action Points
@@ -313,11 +319,11 @@ namespace Medusa
 	                    DisplaySelectionOverlay(null);
 
 						// Removing the clicks on ChangeTurn and Confirm
-						ClickEvents.RemoveAt(ClickEvents.Count - 1);
-						ClickEvents.RemoveAt(ClickEvents.Count - 1);
+						Actions.RemoveAt(Actions.Count - 1);
+						Actions.RemoveAt(Actions.Count - 1);
 
                         if (OnChangingTurn != null)
-                            OnChangingTurn(new TurnActions(ClickEvents));
+                            OnChangingTurn(new TurnActions(Actions));
                     }
                 }
 
@@ -353,8 +359,8 @@ namespace Medusa
 
 	    public void SetReady()
 	    {
-			if (ClickEvents != null)
-				ClickEvents.Clear();
+			if (Actions != null)
+				Actions.Clear();
 
 		    foreach (var go in GameObject.FindGameObjectsWithTag("SkillIcon"))
 			    Destroy(go);
@@ -426,7 +432,7 @@ namespace Medusa
         }
 
 
-        public List<ClickInfo> ClickEvents { get; set; }
+        public List<Action> Actions { get; set; }
 
 
 	    public string DebuggingID

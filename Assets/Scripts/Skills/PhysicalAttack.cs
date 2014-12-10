@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 
@@ -75,12 +74,14 @@ namespace Medusa
 			Clear ();
 			return false;
 		}
-		
-		public override void Confirm()
+
+		public override List<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
 			Clear();
 			doneThisTurn = true;
+
+			return new List<Position> { targetPosition };
 		}
 		
 		public override void Clear()

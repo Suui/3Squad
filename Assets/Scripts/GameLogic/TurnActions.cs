@@ -18,8 +18,11 @@ namespace Medusa
             // set up JSON...
         }
 
-        //public JSON auto property...
+
         public List<Action> Actions { get; private set; }
+
+
+		//public JSON auto property...
     }
 
 }

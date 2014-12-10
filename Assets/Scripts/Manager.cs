@@ -11,7 +11,7 @@ namespace Medusa
 		private GameObject playerOneGO;
 		private GameObject playerTwoGO;
 
-		private SelectionStateMachine _currentStateMachine;
+		private SelectionStateMachine currentStateMachine;
 		private RaySelection currentRaySel;
 		private TurnManagement turnManagement;
 
@@ -65,14 +65,14 @@ namespace Medusa
 			{
 				playerOneGO.SetActive(true);
 				playerTwoGO.SetActive(false);
-				//_currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
+				//currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
 				//currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
 			}
 			else
 			{
 				playerOneGO.SetActive(false);
 				playerTwoGO.SetActive(true);
-				//_currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
+				//currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
 				//currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
 			}
 
@@ -84,10 +84,10 @@ namespace Medusa
 
 		private void UpdateRaySelAndSM(TurnActions turnActions)
 		{
-			_currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
+			currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
 			currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
 
-			Debug.Log("The current SM is: " + _currentStateMachine.DebuggingID);
+			Debug.Log("The current SM is: " + currentStateMachine.DebuggingID);
 
 			StartCoroutine(PerformPreviousTurnActions(turnActions));
 		}
@@ -96,17 +96,17 @@ namespace Medusa
 		IEnumerator PerformPreviousTurnActions(TurnActions turnActions)
 		{
 			currentRaySel.enabled = false;
-			_currentStateMachine.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
+			currentStateMachine.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
 
-			foreach (var clickInfo in turnActions.ClickEvents)
+			foreach (var action in turnActions.Actions)
 			{
-				_currentStateMachine.BreakDownClickInfo(clickInfo);
+				//currentStateMachine.BreakDownClickInfo(clickInfo);
 				yield return new WaitForSeconds(0.6f);
 			}
 
-			_currentStateMachine.SetReady();
+			currentStateMachine.SetReady();
 
-			_currentStateMachine.PlayingPlayer = turnManagement.CurrentPlayer;
+			currentStateMachine.PlayingPlayer = turnManagement.CurrentPlayer;
 			currentRaySel.enabled = true;
 		}
 

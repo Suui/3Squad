@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 
@@ -86,11 +85,13 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public override void Confirm()
+		public override List<Position> Confirm()
 		{
 			board["tokens"].MoveGameObject(player,jumpPosition);
 			Clear();
 			doneThisTurn = true;
+
+			return new List<Position> { jumpPosition };
 		}
 		
 		//deselect the cells and empty the array

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -39,9 +40,9 @@ namespace Medusa
         }
 
 
-        public virtual void Confirm()
+        public virtual List<Position> Confirm()
         {
-
+	        throw new NotImplementedException();
         }
 
 
