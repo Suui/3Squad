@@ -75,10 +75,13 @@ namespace Medusa
 		public override List<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
+
+			List<Position> targetPositions = new List<Position> { targetPosition };
+
 			Clear();
 			doneThisTurn = true;
 
-			return new List<Position> { targetPosition };
+			return targetPositions;
 		}
 		
 		public override void Clear()

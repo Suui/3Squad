@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace Medusa
@@ -12,6 +13,11 @@ namespace Medusa
 			CharacterPos = characterPos;
 			SkillName = skillName;
 			TargetPositions = targetPositions;
+
+			foreach (var pos in TargetPositions)
+			{
+				Debug.Log(pos);
+			}
 		}
 
 

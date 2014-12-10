@@ -181,7 +181,7 @@ namespace Medusa
 
 		public void ChangeTurn(TurnActions turnActions)
 		{
-			GameObject.Find("Manager").GetComponent<Manager>().PerformTurnChangeActions(turnManagement.EnemyPlayerThisTurn, turnActions);
+			GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(turnManagement.EnemyPlayerThisTurn, turnActions);
 
 			if (OnChangingTurn != null)
 				OnChangingTurn();

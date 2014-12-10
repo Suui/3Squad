@@ -119,10 +119,13 @@ namespace Medusa
 		public override List<Position> Confirm()
 		{
 			board["tokens"].MoveGameObject(player,stepList.Last.Value);
+
+			List<Position> targetPositions = new List<Position>(stepList);
+
 			Clear();
 			doneThisTurn = true;
 
-			return new List<Position>(stepList);
+			return targetPositions;
 		}
 		
 		//deselect the cells and empty the array
