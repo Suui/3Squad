@@ -26,124 +26,66 @@ namespace Medusa
         }
 
 
-        public GameObject masterOne;
-        public GameObject masterTwo;
+	    #region Variables
 
-        public int startingActionPoints = 5;
-        public GameObject boardCellPrefab;
-        public GameObject[] obstaclePrefabs;
-        public int obstaclesLimit;
-        public int boardRows;
-        public int boardColumns;
-        public float boardYSize;
-        public int seed;
+	    public GameObject masterOne;
+	    public GameObject masterTwo;
 
-        private Player[] players;
+	    public int startingActionPoints = 5;
+	    public GameObject boardCellPrefab;
+	    public GameObject[] obstaclePrefabs;
+	    public int obstaclesLimit;
+	    public int boardRows;
+	    public int boardColumns;
+	    public float boardYSize;
+	    public int seed;
 
-        private BoardGenerator boardGenerator;
-        private TurnManagement turnManagement;
+	    private Player[] players;
+
+	    private BoardGenerator boardGenerator;
+	    private TurnManagement turnManagement;
+
+	    #endregion
 
 
         void Awake()
         {
-            boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
-            boardGenerator.CreateEmptyBoard(boardYSize);
-            boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
+	        BoardSetup();
+	        
+			PlayersSetup();
 
-	        if (GameObject.FindGameObjectsWithTag("GameMaster").Length == 1)
-		        FirstGameMasterAwake();
-	        else
-		        SecondGameMasterAwake();
+			ButtonsSetup();
 
-			SetUpMasters();
+			MastersSetup();
         }
-
-
-		private void FirstGameMasterAwake()
-		{
-			Player playerOne = new Player("Player 01", startingActionPoints);
-			Player playerTwo = new Player("Player 02", startingActionPoints);
-			players = new[] { playerOne, playerTwo };
-
-			SetUpButtons();
-
-			turnManagement = new TurnManagement(players[0], players[1], seed);
-
-			GameObject firstPlayer = new GameObject(turnManagement.CurrentPlayer.name) 
-			{ tag = turnManagement.CurrentPlayer.name };
-
-			transform.parent = firstPlayer.transform;
-			GameObject.Find("BoardNode").transform.parent = firstPlayer.transform;
-		}
-
-
-		private void SecondGameMasterAwake()
-		{
-			GameMaster firstMaster = GameObject.Find("GameMaster").GetComponent<GameMaster>();
-
-			players = new[] {firstMaster.GetPlayerOne, firstMaster.GetPlayerTwo};
-			turnManagement = firstMaster.TurnManagement;
-
-			GameObject secondPlayer = new GameObject(turnManagement.EnemyPlayerThisTurn.name) 
-			{tag = turnManagement.EnemyPlayerThisTurn.name };
-
-			transform.parent = secondPlayer.transform;
-
-			foreach (var go in GameObject.FindGameObjectsWithTag("BoardNode"))
-			{
-				if (go.transform.parent == null)
-					go.transform.parent = secondPlayer.transform;
-			}
-		}
-
-
-	    void Start()
-	    {
-		    if (GameObject.FindGameObjectsWithTag("GameMaster").Length == 1)
-		    {
-			    GameObject gameMaster = Instantiate(Resources.Load("Prefabs/GameMaster")) as GameObject;
-			    gameMaster.name = "GameMaster";
-			    gameMaster.tag = "GameMaster";
-		    }
-		    else
-		    {
-			    GameObject.Find("Manager").GetComponent<Manager>().SetPlayerGOs();
-			    transform.parent.gameObject.SetActive(false);
-		    }
-	    }
-
-
-		public void ChangeTurn(TurnActions turnActions)
-		{
-			GameObject.Find("Manager").GetComponent<Manager>().PerformTurnChangeActions(turnManagement.EnemyPlayerThisTurn, turnActions);
-
-			if (OnChangingTurn != null)
-				OnChangingTurn();
-		}
 
 
 	    #region Setup Functions
 
-	    private void SetUpMasters()
+	    private void BoardSetup()
 	    {
-		    GameObject master1 = Instantiate(masterOne) as GameObject;
-		    master1.name = "Master 01";
-		    master1.transform.position = MasterOnePos;
-	        master1.GetComponent<PlayerComponent>().Player = players[0];
-
-		    CurrentBoard["tokens"][MasterOnePos] = master1;
-
-
-		    GameObject master2 = Instantiate(masterOne) as GameObject;
-		    master2.name = "Master 02";
-		    master2.transform.position = MasterTwoPos;
-            master2.GetComponent<PlayerComponent>().Player = players[1];
-
-            CurrentBoard["tokens"][MasterTwoPos] = master2;
+		    boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
+		    boardGenerator.CreateEmptyBoard(boardYSize);
+		    boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
 	    }
 
 
-	    private void SetUpButtons()
+	    private void PlayersSetup()
+	    {
+		    Player playerOne = new Player("Player 01", startingActionPoints);
+		    Player playerTwo = new Player("Player 02", startingActionPoints);
+		    players = new[] {playerOne, playerTwo};
+
+		    turnManagement = new TurnManagement(players[0], players[1], seed);
+
+		    GameObject player = new GameObject(turnManagement.CurrentPlayer.name) {tag = turnManagement.CurrentPlayer.name};
+
+		    transform.parent = player.transform;
+		    GameObject.Find("BoardNode").transform.parent = player.transform;
+	    }
+
+
+	    private void ButtonsSetup()
 	    {
 		    GameObject parentObject = new GameObject("Buttons");
 
@@ -165,6 +107,29 @@ namespace Medusa
 		    GameObject.FindGameObjectWithTag("InfoButton").GetComponent<GUITexture>().enabled = false;
 	    }
 
+
+	    private void MastersSetup()
+	    {
+		    GameObject master1 = Instantiate(masterOne) as GameObject;
+		    master1.name = "Master 01";
+		    master1.transform.position = MasterOnePos;
+		    master1.GetComponent<PlayerComponent>().Player = players[0];
+
+		    CurrentBoard["tokens"][MasterOnePos] = master1;
+
+
+		    GameObject master2 = Instantiate(masterOne) as GameObject;
+		    master2.name = "Master 02";
+		    master2.transform.position = MasterTwoPos;
+		    master2.GetComponent<PlayerComponent>().Player = players[1];
+
+		    CurrentBoard["tokens"][MasterTwoPos] = master2;
+	    }
+
+	    #endregion
+
+
+	    #region CreateButtons Function
 
 	    public static void CreateButton(string texturePath, GameObject parentObject, string tag, string id)
 	    {
@@ -199,6 +164,15 @@ namespace Medusa
 	    }
 
 	    #endregion
+
+
+		public void ChangeTurn(TurnActions turnActions)
+		{
+			GameObject.Find("Manager").GetComponent<Manager>().PerformTurnChangeActions(turnManagement.EnemyPlayerThisTurn, turnActions);
+
+			if (OnChangingTurn != null)
+				OnChangingTurn();
+		}
 
 
         #region Getters and Setters

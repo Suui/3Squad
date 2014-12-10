@@ -44,13 +44,6 @@ namespace Medusa
 
 					master.CurrentBoard["tokens"][new Position(pos, 0)] = go;
 
-					GameObject go2 = Instantiate(Resources.Load("Prefabs/" + name)) as GameObject;
-					go2.name = name;
-					go2.transform.position = new Position(pos, 13);
-					go2.GetComponent<PlayerComponent>().Player = master.GetPlayerTwo;
-
-					master.CurrentBoard["tokens"][new Position(pos, 13)] = go2;
-
 					pos -= 2;
 				}
 			}
