@@ -56,7 +56,9 @@ namespace Medusa
 
 			ButtonsSetup();
 
-			MastersSetup();
+			SpawnSelfMaster();
+
+	        SpawnSelfCharacters();
         }
 
 
@@ -108,7 +110,7 @@ namespace Medusa
 	    }
 
 
-	    private void MastersSetup()
+	    private void SpawnSelfMaster()
 	    {
 		    GameObject master1 = Instantiate(masterOne) as GameObject;
 		    master1.name = "Master 01";
@@ -116,14 +118,25 @@ namespace Medusa
 		    master1.GetComponent<PlayerComponent>().Player = players[0];
 
 		    CurrentBoard["tokens"][MasterOnePos] = master1;
+	    }
 
 
-		    GameObject master2 = Instantiate(masterOne) as GameObject;
-		    master2.name = "Master 02";
-		    master2.transform.position = MasterTwoPos;
-		    master2.GetComponent<PlayerComponent>().Player = players[1];
+	    private void SpawnSelfCharacters()
+	    {
+			SelectedCharacters characters = GameObject.Find("SelectedCharacters").GetComponent<SelectedCharacters>();
+			int pos = 5;
 
-		    CurrentBoard["tokens"][MasterTwoPos] = master2;
+			foreach (var name in characters.selectedCharacters)
+			{
+				GameObject go = Instantiate(Resources.Load("Prefabs/" + name)) as GameObject;
+				go.name = name;
+				go.transform.position = new Position(pos, 0);
+				go.GetComponent<PlayerComponent>().Player = GetPlayerOne;
+
+				CurrentBoard["tokens"][new Position(pos, 0)] = go;
+
+				pos -= 2;
+			}
 	    }
 
 	    #endregion
