@@ -5,10 +5,10 @@ using UnityEngine;
 namespace Medusa
 {
 
-    public class SelectionSM : MonoBehaviour
+    public class SelectionStateMachine : MonoBehaviour
     {
 
-        public delegate void ChangingTurn(TurnEvents turnEvents);
+        public delegate void ChangingTurn(TurnActions turnActions);
         public static event ChangingTurn OnChangingTurn;
 
 
@@ -72,8 +72,6 @@ namespace Medusa
 
         public void BreakDownClickInfo(ClickInfo clickInfo)
         {
-            // TODO: Function to process if clickInfo should be included can be set up here
-            ClickEvents.Add(clickInfo);
             CheckSelection(clickInfo.Position, clickInfo.SkillName, clickInfo.ButtonId);
         }
 
@@ -319,7 +317,7 @@ namespace Medusa
 						ClickEvents.RemoveAt(ClickEvents.Count - 1);
 
                         if (OnChangingTurn != null)
-                            OnChangingTurn(new TurnEvents(ClickEvents));
+                            OnChangingTurn(new TurnActions(ClickEvents));
                     }
                 }
 

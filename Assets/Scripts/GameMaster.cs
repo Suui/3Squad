@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+
 
 namespace Medusa
 {
@@ -16,13 +16,13 @@ namespace Medusa
 
         void OnEnable()
         {
-			SelectionSM.OnChangingTurn += ChangeTurn;
+			SelectionStateMachine.OnChangingTurn += ChangeTurn;
 		}
 
 
         void OnDisable()
 		{
-            SelectionSM.OnChangingTurn -= ChangeTurn;
+            SelectionStateMachine.OnChangingTurn -= ChangeTurn;
         }
 
 
@@ -113,9 +113,9 @@ namespace Medusa
 	    }
 
 
-		public void ChangeTurn(TurnEvents turnEvents)
+		public void ChangeTurn(TurnActions turnActions)
 		{
-			GameObject.Find("Manager").GetComponent<Manager>().PerformTurnChangeActions(turnManagement.EnemyPlayerThisTurn, turnEvents);
+			GameObject.Find("Manager").GetComponent<Manager>().PerformTurnChangeActions(turnManagement.EnemyPlayerThisTurn, turnActions);
 
 			if (OnChangingTurn != null)
 				OnChangingTurn();

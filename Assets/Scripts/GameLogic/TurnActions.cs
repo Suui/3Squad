@@ -4,12 +4,12 @@
 namespace Medusa
 {
 
-    public class TurnEvents
+    public class TurnActions
     {
 
-        public TurnEvents(List<ClickInfo> clickEvents)
+        public TurnActions(List<Action> actions)
         {
-            ClickEvents = clickEvents;
+	        Actions = actions;
         }
 
 
@@ -19,7 +19,7 @@ namespace Medusa
         }
 
         //public JSON auto property...
-        public List<ClickInfo> ClickEvents { get; private set; }
+        public List<Action> Actions { get; private set; }
     }
 
 }

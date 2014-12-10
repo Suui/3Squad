@@ -26,11 +26,7 @@ namespace Medusa
 
 		private void SetUpAvailableCharacters()
 		{
-			availableCharacters = new List<string>();
-
-			availableCharacters.Add("Fox");
-			availableCharacters.Add("Frog");
-			availableCharacters.Add("Ram");
+			availableCharacters = new List<string> {"Fox", "Frog", "Ram"};
 		}
 
 

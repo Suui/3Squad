@@ -11,7 +11,7 @@ namespace Medusa
 		private GameObject playerOneGO;
 		private GameObject playerTwoGO;
 
-		private SelectionSM currentSM;
+		private SelectionStateMachine _currentStateMachine;
 		private RaySelection currentRaySel;
 		private TurnManagement turnManagement;
 
@@ -59,63 +59,63 @@ namespace Medusa
 		}
 
 
-		public void PerformTurnChangeActions(Player player, TurnEvents turnEvents)
+		public void PerformTurnChangeActions(Player player, TurnActions turnActions)
 		{
 			if (player.name == "Player 01")
 			{
 				playerOneGO.SetActive(true);
 				playerTwoGO.SetActive(false);
-				//currentSM = GameObject.Find("GameMaster").GetComponent<SelectionSM>();
+				//_currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
 				//currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
 			}
 			else
 			{
 				playerOneGO.SetActive(false);
 				playerTwoGO.SetActive(true);
-				//currentSM = GameObject.Find("GameMaster").GetComponent<SelectionSM>();
+				//_currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
 				//currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
 			}
 
 			turnManagement.ChangeTurn();
-			//StartCoroutine(PerformPreviousTurnActions(turnEvents));
-			StartCoroutine(Wait(0.5f, turnEvents));
+			//StartCoroutine(PerformPreviousTurnActions(TurnActions));
+			StartCoroutine(Wait(0.5f, turnActions));
 		}
 
 
-		private void UpdateRaySelAndSM(TurnEvents turnEvents)
+		private void UpdateRaySelAndSM(TurnActions turnActions)
 		{
-			currentSM = GameObject.Find("GameMaster").GetComponent<SelectionSM>();
+			_currentStateMachine = GameObject.Find("GameMaster").GetComponent<SelectionStateMachine>();
 			currentRaySel = GameObject.Find("GameMaster").GetComponent<RaySelection>();
 
-			Debug.Log("The current SM is: " + currentSM.DebuggingID);
+			Debug.Log("The current SM is: " + _currentStateMachine.DebuggingID);
 
-			StartCoroutine(PerformPreviousTurnActions(turnEvents));
+			StartCoroutine(PerformPreviousTurnActions(turnActions));
 		}
 
 
-		IEnumerator PerformPreviousTurnActions(TurnEvents turnEvents)
+		IEnumerator PerformPreviousTurnActions(TurnActions turnActions)
 		{
 			currentRaySel.enabled = false;
-			currentSM.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
+			_currentStateMachine.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
 
-			foreach (var clickInfo in turnEvents.ClickEvents)
+			foreach (var clickInfo in turnActions.ClickEvents)
 			{
-				currentSM.BreakDownClickInfo(clickInfo);
+				_currentStateMachine.BreakDownClickInfo(clickInfo);
 				yield return new WaitForSeconds(0.6f);
 			}
 
-			currentSM.SetReady();
+			_currentStateMachine.SetReady();
 
-			currentSM.PlayingPlayer = turnManagement.CurrentPlayer;
+			_currentStateMachine.PlayingPlayer = turnManagement.CurrentPlayer;
 			currentRaySel.enabled = true;
 		}
 
 
-		IEnumerator Wait(float time, TurnEvents turnEvents)
+		IEnumerator Wait(float time, TurnActions turnActions)
 		{
 			yield return new WaitForSeconds(time);
 
-			UpdateRaySelAndSM(turnEvents);
+			UpdateRaySelAndSM(turnActions);
 		}
 
 	}
