@@ -430,21 +430,6 @@ namespace Medusa
 
         public List<Action> Actions { get; set; }
 
-
-	    public string DebuggingID
-	    {
-		    get
-		    {
-			    if (transform.parent.gameObject.name == "Player 01")
-				    return "Player 01 SM";
-
-			    if (transform.parent.gameObject.name == "Player 02")
-				    return "Player 02 SM";
-
-			    return "FAILURE";
-		    }
-	    }
-
     }
 
 }
