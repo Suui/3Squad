@@ -12,9 +12,8 @@ namespace Medusa
         public static event Selection OnSelection;
 
 	    public List<string> ignoredTags;
-        private Position selectedPos;
 
-        private Ray raySelection;
+	    private Ray raySelection;
         private RaycastHit rayHit;
 
 
@@ -29,19 +28,16 @@ namespace Medusa
 					if (ignoredTags.Contains(rayHit.collider.gameObject.tag))
 						return;
 
-                    selectedPos = new Position((int)rayHit.transform.position.x, (int)rayHit.transform.position.z);
+                    SelectedPos = new Position((int)rayHit.transform.position.x, (int)rayHit.transform.position.z);
 
                     if (OnSelection != null)
-                        OnSelection(new ClickInfo(selectedPos, null, null));
+                        OnSelection(new ClickInfo(SelectedPos, null, null));
                 }
             }
         }
 
 
-        public Position SelectedPos
-        {
-            get { return selectedPos; }
-        }
+	    public Position SelectedPos { get; private set; }
     }
 
 }
