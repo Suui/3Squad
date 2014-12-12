@@ -39,6 +39,8 @@ namespace Medusa
 
 					if (OnChangingTurn != null)
 						OnChangingTurn(new TurnActions(sm.Actions));
+
+					return sm.PreviousState;
 				}
 			}
 
