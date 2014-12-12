@@ -85,6 +85,7 @@ namespace Medusa
 				". Parameter buttonID was: " + buttonID);
 
 
+			// This is needed as it is used in some State functions
 			prevState = curState;
 
 			if (buttonID != null)
@@ -93,6 +94,7 @@ namespace Medusa
 				return;
 			}
 
+			// If we are on those States, we should always display the selection overlay now
 			if (curState.GetType() == typeof(NothingSelectedState) || curState.GetType() == typeof(TokenSelectedState))
 				DisplaySelectionOverlay(position);
 
@@ -102,16 +104,25 @@ namespace Medusa
 				return;
 			}
 
+			// We should not check the position if we are using a Skill,
+			// as the Skill is responsible for how to process the selected position
+			if (curState.GetType() == typeof(SkillSelectedState))
+			{
+				selectedSkill.Click(position);
+				return;
+			}
+			
 			if (board["tokens"][position] != null)
 			{
 				curState = curState.ClickPosition(position);
 				return;
 			}
 
+			// If we have a Token selected, and select a NULL position, 
+			// we must go back to the NothingSelectedState
 			if (curState.GetType() == typeof (TokenSelectedState))
 			{
-				// Selected the DisplayInfoAboutToken Button
-
+				// Selected the DisplayInfoAboutToken Buttond
 
 				// Selected Nothing
 				// Delete Info of the token getting the right components. David.
@@ -124,175 +135,7 @@ namespace Medusa
 				return;
 			}
 
-			// NOTHING
-			if (currentState == Selected.Nothing)
-			{
-				if (nothingSelected.ButtonSelection(buttonID))
-					return;
 
-				DisplaySelectionOverlay(position);
-
-				nothingSelected.TokenSelection(position);
-
-				return;
-			}
-
-			// CHARACTER
-			if (currentState == Selected.Token)
-			{
-
-				// Selected a Button
-				if (buttonID != null)
-				{
-					ShowTransparentBackground(true);
-
-					if (buttonID != "Info")
-						ShowConfirmCancel(true);
-
-					GameObject[] skillIcons = GameObject.FindGameObjectsWithTag("SkillIcon");
-
-					foreach (var go in skillIcons)
-						Destroy(go);
-
-					previousId = buttonID;
-					previousState = Selected.Token;
-
-					currentState = Selected.ExitEndTurn;
-					return;
-				}
-
-				DisplaySelectionOverlay(position);
-
-				// Selected a skillName
-				if (skillName != null)
-				{
-					selectedSkill = selectedToken.GetComponent(skillName) as Skill;
-					selectedSkill.Setup();
-
-					foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
-						Destroy(go);
-
-					ShowConfirmCancel(true);
-					ShowExitEndTurn(false);
-					ShowInfoButton(false);
-
-					currentState = Selected.Skill;
-					return;
-				}
-
-				// Selected Token
-				if (board["tokens"][position] != null)
-				{
-					selectedToken = board["tokens"][position];
-
-					// Delete Info of the token getting the right components. David.
-					// Display Info of the token getting the right components. David.
-
-					foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
-						Destroy(go);
-
-					// Selected another Character || Master
-					if (selectedToken.GetComponent<Skill>() != null)
-					{
-
-						if (selectedToken.GetComponent<PlayerComponent>().Player != playingPlayer)
-							return;
-
-						Skill[] skills = selectedToken.GetComponents<Skill>();
-
-						foreach (Skill sk in skills)
-						{
-							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
-								sk.ShowUpSkill();
-						}
-					}
-
-					return;
-				}
-
-				// Selected the DisplayInfoAboutToken Button
-
-
-				// Selected Nothing
-				// Delete Info of the token getting the right components. David.
-				foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
-					Destroy(go);
-
-				ShowInfoButton(false);
-
-				currentState = Selected.Nothing;
-				return;
-			}
-
-			// SKILL
-			if (currentState == Selected.Skill)
-			{
-				if (buttonID != null)
-				{
-					// Selected the Confirm Button
-					if (buttonID == "Confirm")
-					{
-						Actions.Add(new Action
-							(
-								(Position) selectedToken.transform.position, 
-								selectedSkill.GetSkillType(), 
-								selectedSkill.Confirm()
-							));
-
-						selectedSkill.Clear();
-
-						// Manage Action Points
-						playingPlayer.ActionPoints -= selectedSkill.ActionPointCost;
-
-						ShowConfirmCancel(false);
-						ShowExitEndTurn(true);
-						ShowInfoButton(true);
-
-						// Set the selection to the character again
-						Position pos = (Position) selectedToken.transform.position;
-						DisplaySelectionOverlay(pos);
-
-						Skill[] skills = selectedToken.GetComponents<Skill>();
-
-						foreach (Skill sk in skills)
-						{
-							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
-								sk.ShowUpSkill();
-						}
-
-						currentState = Selected.Token;
-						return;
-					}
-
-					// Selected the Cancel Button
-					if (buttonID == "Cancel")
-					{
-						selectedSkill.Clear();
-
-						ShowConfirmCancel(false);
-						ShowExitEndTurn(true);
-						ShowInfoButton(true);
-
-						// Set the selection to the character again
-						Position pos = (Position)selectedToken.transform.position;
-						DisplaySelectionOverlay(pos);
-						
-						Skill[] skills = selectedToken.GetComponents<Skill>();
-
-						foreach (Skill sk in skills)
-						{
-							if (sk.ActionPointCost <= playingPlayer.ActionPoints)
-								sk.ShowUpSkill();
-						}
-
-						currentState = Selected.Token;
-						return;
-					}
-				}
-
-				selectedSkill.Click(position);
-				return;
-			}
 
 			// EXITENDTURN
 			if (currentState == Selected.ExitEndTurn)

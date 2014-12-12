@@ -44,7 +44,7 @@ namespace Medusa
 		}
 
 
-		public void CharacterSelection()
+		private void CharacterSelection()
 		{
 			if (sm.SelectedToken.GetComponent<Skill>() == null) return;
 

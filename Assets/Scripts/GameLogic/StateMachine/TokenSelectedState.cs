@@ -75,7 +75,6 @@ namespace Medusa
 				foreach (Skill sk in skills.Where(sk => sk.ActionPointCost <= sm.PlayingPlayer.ActionPoints))
 					sk.ShowUpSkill();
 			}
-
 		}
 
 
