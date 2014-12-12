@@ -31,7 +31,7 @@ namespace Medusa
         }
 
 
-        public string ButtonId
+        public string ButtonID
         {
             get { return buttonId; }
         }
