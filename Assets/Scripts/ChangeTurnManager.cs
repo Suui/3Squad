@@ -10,7 +10,7 @@ namespace Medusa
 
 		private GameObject gameMaster;
 
-		private SelectionStateMachine stateMachine;
+		private StateMachine stateMachine;
 		private RaySelection raySelection;
 		private TurnManagement turnManagement;
 		private Board board;
@@ -25,7 +25,7 @@ namespace Medusa
 			board = gameMaster.GetComponent<GameMaster>().CurrentBoard;
 			turnManagement = gameMaster.GetComponent<GameMaster>().TurnManagement;
 
-			stateMachine = gameMaster.GetComponent<SelectionStateMachine>();
+			stateMachine = gameMaster.GetComponent<StateMachine>();
 			raySelection = gameMaster.GetComponent<RaySelection>();
 		}
 

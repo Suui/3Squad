@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Medusa
 {
 
-	public class SelectionStateMachine : MonoBehaviour
+	public class StateMachine : MonoBehaviour
 	{
 
 		public delegate void ChangingTurn(TurnActions turnActions);
@@ -24,6 +24,9 @@ namespace Medusa
 		private string previousId;
 
 		private NothingSelected nothingSelected;
+
+		public State curState;
+		public State prevState;
 
 
 
@@ -62,6 +65,8 @@ namespace Medusa
 			previousState = Selected.Nothing;
 
 			nothingSelected = new NothingSelected(this);
+			curState = new NothingSelectedState(this);
+			prevState = curState;
 		}
 
 
@@ -78,6 +83,30 @@ namespace Medusa
 				". Parameter position was: " + position + 
 				". Parameter skillName was: " + skillName +
 				". Parameter buttonID was: " + buttonID);
+
+
+			prevState = curState;
+
+			if (buttonID != null)
+			{
+				curState = curState.ClickButton(buttonID);
+				return;
+			}
+
+			if (curState.GetType() == typeof(NothingSelectedState) || curState.GetType() == typeof(TokenSelectedState))
+				DisplaySelectionOverlay(position);
+
+			if (skillName != null)
+			{
+				curState.ClickSkill(skillName);
+				return;
+			}
+
+			if (board["tokens"][position] != null)
+			{
+				curState.ClickPosition(position);
+				return;
+			}
 
 			// NOTHING
 			if (currentState == Selected.Nothing)

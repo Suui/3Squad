@@ -16,13 +16,13 @@ namespace Medusa
 
         void OnEnable()
         {
-			SelectionStateMachine.OnChangingTurn += ChangeTurn;
+			StateMachine.OnChangingTurn += ChangeTurn;
 		}
 
 
         void OnDisable()
 		{
-            SelectionStateMachine.OnChangingTurn -= ChangeTurn;
+            StateMachine.OnChangingTurn -= ChangeTurn;
         }
 
 

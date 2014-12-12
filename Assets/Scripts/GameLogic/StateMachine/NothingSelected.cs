@@ -7,10 +7,10 @@ namespace Medusa
 	public class NothingSelected
 	{
 
-		private readonly SelectionStateMachine sm;
+		private readonly StateMachine sm;
 
 
-		public NothingSelected(SelectionStateMachine sm)
+		public NothingSelected(StateMachine sm)
 		{
 			this.sm = sm;
 		}
