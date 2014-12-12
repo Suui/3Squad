@@ -1,6 +1,5 @@
-﻿
+﻿using System.Linq;
 
-using System.Linq;
 
 namespace Medusa
 {
@@ -50,16 +49,15 @@ namespace Medusa
 
 			return new TokenSelectedState(sm);
 		}
-		
-		
-		
-		public override State ClickPosition(Position position)
+
+
+		public override State ClickSkill(string skillName)
 		{
 			return this;
 		}
 
 
-		public override State ClickSkill(string skillName)
+		public override State ClickPosition(Position position)
 		{
 			return this;
 		}

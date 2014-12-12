@@ -26,6 +26,7 @@ namespace Medusa
 				Object.Destroy(go);
 
 			sm.PreviousId = buttonID;
+			sm.PreviousState = this;
 
 			return new ExitEndTurnState(sm);
 		}
@@ -76,7 +77,6 @@ namespace Medusa
 					sk.ShowUpSkill();
 			}
 		}
-
 
 	}
 

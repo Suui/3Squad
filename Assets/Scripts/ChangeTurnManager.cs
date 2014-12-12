@@ -45,6 +45,7 @@ namespace Medusa
 			foreach (var action in turnActions.Actions)
 			{
 				board["overlays"][action.CharacterPos].GetComponent<Selectable>().SetOverlayMaterial(1);
+				yield return new WaitForSeconds(1.0f);
 
 				Skill skill = board["tokens"][action.CharacterPos].GetComponent(action.SkillName) as Skill;
 				skill.Setup();

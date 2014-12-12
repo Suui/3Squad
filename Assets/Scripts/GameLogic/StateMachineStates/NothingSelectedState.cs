@@ -12,6 +12,24 @@ namespace Medusa
 		}
 
 
+		public override State ClickButton(string buttonID)
+		{
+			sm.ShowTransparentBackground(true);
+			sm.ShowConfirmCancel(true);
+
+			sm.PreviousId = buttonID;
+			sm.PreviousState = this;
+
+			return new ExitEndTurnState(sm);
+		}
+
+
+		public override State ClickSkill(string skillName)
+		{
+			return this;
+		}
+
+
 		public override State ClickPosition(Position position)
 		{
 			sm.SelectedToken = sm.Board["tokens"][position];
@@ -24,23 +42,6 @@ namespace Medusa
 			CharacterSelection();
 
 			return new TokenSelectedState(sm);
-		}
-
-
-		public override State ClickButton(string buttonID)
-		{
-			sm.ShowTransparentBackground(true);
-			sm.ShowConfirmCancel(true);
-
-			sm.PreviousId = buttonID;
-
-			return new ExitEndTurnState(sm);
-		}
-
-
-		public override State ClickSkill(string skillName)
-		{
-			return this;
 		}
 
 
