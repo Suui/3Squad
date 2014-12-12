@@ -79,7 +79,7 @@ namespace Medusa
 		private void CheckSelection(Position position, string skillName, string buttonID)
 		{
 			Debug.Log("Selection Performed! " + 
-				"Current SM State was: " + currentState +
+				"Current SM State was: " + curState.GetType() +
 				". Parameter position was: " + position + 
 				". Parameter skillName was: " + skillName +
 				". Parameter buttonID was: " + buttonID);
@@ -98,13 +98,29 @@ namespace Medusa
 
 			if (skillName != null)
 			{
-				curState.ClickSkill(skillName);
+				curState = curState.ClickSkill(skillName);
 				return;
 			}
 
 			if (board["tokens"][position] != null)
 			{
-				curState.ClickPosition(position);
+				curState = curState.ClickPosition(position);
+				return;
+			}
+
+			if (curState.GetType() == typeof (TokenSelectedState))
+			{
+				// Selected the DisplayInfoAboutToken Button
+
+
+				// Selected Nothing
+				// Delete Info of the token getting the right components. David.
+				foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
+					Destroy(go);
+
+				ShowInfoButton(false);
+
+				curState = new NothingSelectedState(this);
 				return;
 			}
 

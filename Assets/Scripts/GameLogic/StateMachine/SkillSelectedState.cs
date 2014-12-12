@@ -11,7 +11,7 @@ namespace Medusa
 		}
 
 
-		public override State ClickPosition(Position pos)
+		public override State ClickPosition(Position position)
 		{
 			throw new System.NotImplementedException();
 		}

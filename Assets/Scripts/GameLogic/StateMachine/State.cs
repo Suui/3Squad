@@ -16,13 +16,13 @@ namespace Medusa
 		}
 
 
-		public abstract State ClickPosition(Position pos);
-
-
 		public abstract State ClickButton(string buttonID);
-
-
+		
+		
 		public abstract State ClickSkill(string skillName);
+		
+		
+		public abstract State ClickPosition(Position position);
 
 	}
 
