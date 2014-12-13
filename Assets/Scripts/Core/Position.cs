@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SimpleJSON;
+using UnityEngine;
 
 
 namespace Medusa
@@ -32,6 +33,24 @@ namespace Medusa
         {
             return GetDirectionTo(position).Magnitude;
         }
+
+
+	    public JSONNode ToJSON()
+	    {
+			JSONNode json = new JSONClass();
+
+		    json["row"] = row.ToString();
+		    json["column"] = column.ToString();
+
+			return json;
+	    }
+
+
+		public static Position FromJSON(JSONNode json)
+	    {
+		    var parsed = JSON.Parse(json);
+		    return new Position(parsed["row"].AsInt, parsed["column"].AsInt);
+	    }
 
 
         #region Operators
