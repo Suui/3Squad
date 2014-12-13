@@ -48,8 +48,7 @@ namespace Medusa
 
 		public static Position FromJSON(JSONNode json)
 	    {
-		    var parsed = JSON.Parse(json);
-		    return new Position(parsed["row"].AsInt, parsed["column"].AsInt);
+		    return new Position(json["row"].AsInt, json["column"].AsInt);
 	    }
 
 
