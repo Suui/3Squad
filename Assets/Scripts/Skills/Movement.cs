@@ -34,6 +34,7 @@ namespace Medusa
 			skillGUI.transform.parent = gameObject.transform;
 			
 			skillGUI.GetComponent<SkillToFire>().Skill = this;
+			this.GetComponent<BaseInfo>().ShowUpSkill();
 		}
 		
 		//show posible movements marking the cells and creating an array of posible movements
@@ -111,23 +112,30 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public override void Confirm()
+		public override LinkedList<Position> Confirm()
 		{
 			
 			
 			board["tokens"].MoveGameObject(player,stepList.Last.Value);
-			Clear();
+			LinkedList<Position> copy = new LinkedList<Position>();
+			copy = stepList;
+
 			doneThisTurn = true;
+			foreach(Position posi in stepList)
+			{
+				Debug.Log(posi);
+				
+			}
+			return stepList;
+			Clear();
 		}
 		
 		//deselect the cells and empty the array
 		public override void Clear()
 		{
-
 			foreach(Position posi in posiblePositions)
 			{
 				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(0);
-				
 			}
 			board["overlays"][playerPosition].GetComponent<Selectable>().SetOverlayMaterial(0);
 			posiblePositions.Clear();

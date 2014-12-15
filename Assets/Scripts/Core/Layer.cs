@@ -85,6 +85,7 @@ namespace Medusa
         public void AddGameObjectAt(GameObject gameObject, Position position)
         {
             this[position] = gameObject;
+			gameObject.transform.position = position;
         }
 
 
@@ -95,7 +96,6 @@ namespace Medusa
 
             gameObject.transform.position = to;
         }
-
 
         public bool IsEmpty(Position position)
         {

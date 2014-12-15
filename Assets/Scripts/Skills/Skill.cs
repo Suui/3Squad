@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 
 namespace Medusa
@@ -37,9 +39,9 @@ namespace Medusa
         }
 
 
-        public virtual void Confirm()
+        public virtual LinkedList<Position> Confirm()
         {
-
+			return new LinkedList<Position>();
         }
 
     }

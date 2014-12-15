@@ -7,12 +7,7 @@ public class Life : BaseInfo {
 	
 	public int maximumLife = 20;
 	public int currentLife = 20;
-	
-	protected override string GetInfo()
-	{
-		if(isDead) return "K.O.";
-		return "HP: "+currentLife+"/"+maximumLife;
-	}
+
 	
 	public bool isDead {
 		get { return currentLife <= 0; }

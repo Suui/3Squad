@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Medusa
 {
 	
-	public class DistanceAttack : Skill
+	public class Shell : Skill
 	{
 		public int damage;
 		private bool doneThisTurn;
@@ -25,13 +25,13 @@ namespace Medusa
 			playerPosition = (Position) this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
-		
+			
 		}
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;
-			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/arco") as Texture2D;
-			skillGUI.transform.position = FirstPos;
+			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/shell") as Texture2D;
+			skillGUI.transform.position = ThirdPos;
 			skillGUI.transform.parent = gameObject.transform;
 			
 			skillGUI.GetComponent<SkillToFire>().Skill = this;
@@ -44,22 +44,22 @@ namespace Medusa
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			Layer terrain = board["tokens"];
-
+			
 			foreach (Direction direction in Direction.AllStaticDirections) 
 			{
 				Position position = playerPosition + direction;
-
+				
 				while(!position.Outside(terrain) && board["tokens"][position] == null)
 				{
 					board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(2);
 					posibleRange.AddLast(position);	
 					position += direction;
-
+					
 				}
-				//Position posiblePosition = position + direction;
-				if(!position.Outside(terrain) && terrain[position] != null && terrain[position].GetComponent<Life>() != null) {
-					board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(4);
-					posibleAttacks.AddLast(position);
+				if(position-direction != playerPosition)
+				{
+					board["overlays"][position-direction].GetComponent<Selectable>().SetOverlayMaterial(4);
+					posibleAttacks.AddLast(position-direction);
 				}
 			}
 		}
@@ -67,21 +67,15 @@ namespace Medusa
 		//add pos to array
 		public override bool Click(Position pos)
 		{
-
-
+			
+			
 			if(posibleAttacks.Contains(pos))
 			{
-				if(board["tokens"][pos].GetComponent<Life>() != null)
-				{
-					targetPosition = pos;
-					board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(3);
-					return true;
-				}
-				Clear ();
-				return false;
-
+				targetPosition = pos;
+				board["overlays"][pos].GetComponent<Selectable>().SetOverlayMaterial(3);
+				return true;	
 			}
-
+			
 			Clear ();
 			return false;
 		}
@@ -89,7 +83,16 @@ namespace Medusa
 		//move to the last pos of array
 		public override LinkedList<Position> Confirm()
 		{
-			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
+			board["tokens"].MoveGameObject(player,targetPosition);
+			playerPosition= targetPosition;
+			foreach (Direction direction in Direction.AllStaticDirections) 
+			{
+				Position position = playerPosition + direction;
+				if(!position.Outside(board["tokens"]) && board["tokens"][position] != null && board["tokens"][position].GetComponent<Life>() != null) {
+					board["tokens"][position].GetComponent<Life>().Damage(damage);
+				}
+			}
+
 			Clear();
 			doneThisTurn = true;
 			return null;
@@ -117,3 +120,4 @@ namespace Medusa
 		}
 	}
 }
+

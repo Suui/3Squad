@@ -85,11 +85,12 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public override void Confirm()
+		public override LinkedList<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
 			Clear();
 			doneThisTurn = true;
+			return null;
 		}
 		
 		//deselect the cells and empty the array

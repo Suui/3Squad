@@ -50,13 +50,13 @@ namespace Medusa
 
             // TODO: Remove testing block when over
             // Test GUI
-            GameObject go = Instantiate(Resources.Load("Prefabs/Fox")) as GameObject;
-            go.name = "Fox";
+            GameObject go = Instantiate(Resources.Load("Prefabs/Eagle")) as GameObject;
+            go.name = "Eagle";
             go.transform.position = new Position(0, 0);
             CurrentBoard["tokens"][new Position(0, 0)] = go;
 
-			GameObject go2 = Instantiate(Resources.Load("Prefabs/Ram")) as GameObject;
-			go2.name = "Ram";
+			GameObject go2 = Instantiate(Resources.Load("Prefabs/Turtle")) as GameObject;
+			go2.name = "Turtle";
 			go2.transform.position = new Position(3, 4);
 			CurrentBoard["tokens"][new Position(3, 4)] = go2;
 

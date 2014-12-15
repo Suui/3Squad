@@ -71,11 +71,12 @@ namespace Medusa
 			return false;
 		}
 		
-		public override void Confirm()
+		public override LinkedList<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
 			Clear();
 			doneThisTurn = true;
+			return null;
 		}
 		
 		public override void Clear()
