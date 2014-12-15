@@ -39,7 +39,7 @@ namespace Medusa
 				selectedCharacters.Add(name);
 
 			if (selectedCharacters.Count == 3)
-				Application.LoadLevel("Scene_00");
+				Application.LoadLevel("WaitingForMatchScene");
 		}
 
 
