@@ -31,8 +31,8 @@ namespace Medusa
 			form.AddField("name", "TestPlayer");
 			form.AddField("numberOfPlayers", 2);
 
-			var userIDRequest = new WWW("178.62.230.225:80/api/ticket", form);
-			StartCoroutine(RequestUserID(userIDRequest));
+			var request = new WWW("178.62.230.225:80/api/ticket", form);
+			StartCoroutine(RequestUserID(request));
 		}
 
 
@@ -40,41 +40,41 @@ namespace Medusa
 		{
 			var form = new WWWForm();
 
-			form.AddField("playerId", PlayerID);
+			form.AddField("superFail", PlayerID);
 
-			var matchIDRequest = new WWW("178.62.230.225:80/api/match", form);
-			StartCoroutine(RquestMatchID(matchIDRequest));
+			var request = new WWW("178.62.230.225:80/api/match", form);
+			StartCoroutine(RquestMatchID(request));
 		}
 
 
-		IEnumerator RequestUserID(WWW userIDRequest)
+		IEnumerator RequestUserID(WWW request)
 		{
 			Debug.Log("Waiting for PlayerID");
-			yield return userIDRequest;
+			yield return request;
 
-			if (userIDRequest.error == null)
+			if (request.error == null)
 			{
-				Debug.Log("PlayerID OK: " + userIDRequest.text);
-				PlayerID = userIDRequest.text;
+				Debug.Log("PlayerID OK: " + request.text);
+				PlayerID = request.text;
 				RequestMatch();
 			}
 			else
-				Debug.Log("PlayerID Error: " + userIDRequest.error);
+				Debug.Log("PlayerID Error: " + request.error);
 		}
 
 
-		IEnumerator RquestMatchID(WWW matchIDRequest)
+		IEnumerator RquestMatchID(WWW request)
 		{
 			Debug.Log("Waiting for MatchID");
-			yield return matchIDRequest;
+			yield return request;
 
-			if (matchIDRequest.error == null)
+			if (request.error == null)
 			{
-				Debug.Log("MatchID OK: " + matchIDRequest.text);
-				MatchID = matchIDRequest.text;
+				Debug.Log("MatchID OK: " + request.text);
+				MatchID = request.text;
 			}
 			else
-				Debug.Log("MatchID Error: " + matchIDRequest.error);
+				Debug.Log("MatchID Error: " + request.error);
 		}
 
 	}
