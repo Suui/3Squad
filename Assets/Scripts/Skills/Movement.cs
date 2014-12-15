@@ -23,6 +23,7 @@ namespace Medusa
 		{
 
 			doneThisTurn = false;
+			Clear ();
 		}
 		
 		
@@ -127,7 +128,6 @@ namespace Medusa
 				
 			}
 			return stepList;
-			Clear();
 		}
 		
 		//deselect the cells and empty the array

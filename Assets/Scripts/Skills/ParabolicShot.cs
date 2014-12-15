@@ -23,6 +23,7 @@ namespace Medusa
 		
 		public void Start()
 		{
+			Clear();
 			playerPosition = (Position) this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
@@ -88,9 +89,10 @@ namespace Medusa
 		public override LinkedList<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
-			Clear();
+			LinkedList<Position> returnValue = new LinkedList<Position>();
+			returnValue.AddLast(targetPosition);
 			doneThisTurn = true;
-			return null;
+			return returnValue;
 		}
 		
 		//deselect the cells and empty the array

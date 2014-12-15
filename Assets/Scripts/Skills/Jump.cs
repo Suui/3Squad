@@ -21,7 +21,7 @@ namespace Medusa
 		
 		public void Start()
 		{
-			
+			Clear();
 			doneThisTurn = false;
 		}
 		public override void ShowUpSkill()
@@ -88,9 +88,10 @@ namespace Medusa
 		public override LinkedList<Position> Confirm()
 		{
 			board["tokens"].MoveGameObject(player,jumpPosition);
-			Clear();
+			LinkedList<Position> returnValue = new LinkedList<Position>();
+			returnValue.AddLast(jumpPosition);
 			doneThisTurn = true;
-			return null;
+			return returnValue;
 		}
 		
 		//deselect the cells and empty the array
