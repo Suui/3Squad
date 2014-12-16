@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SimpleJSON;
+using UnityEngine;
 
 
 namespace Medusa
@@ -138,6 +139,7 @@ namespace Medusa
 			int xPos = 5, yPos = 0;
 
 		    Server server = GameObject.Find("Server").GetComponent<Server>();
+		    JSONNode charactersJSON = new JSONClass();
 
 		    if (server.PlayerNumber == 2)
 			    yPos = CurrentBoard.Columns - 1;
@@ -152,10 +154,14 @@ namespace Medusa
 				if (yPos != 0)
 					go.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
 
-				CurrentBoard["tokens"][new Position(xPos, yPos)] = go;
-
+				Position goPos = new Position(xPos, yPos);
+				CurrentBoard["tokens"][goPos] = go;
 				xPos -= 2;
+
+				charactersJSON["characters"][name] = goPos.ToJSON();
 			}
+
+			server.SubmitCharactersJSON(charactersJSON);
 	    }
 
 	    #endregion

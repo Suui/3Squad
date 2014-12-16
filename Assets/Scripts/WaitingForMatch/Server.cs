@@ -197,7 +197,15 @@ namespace Medusa
 
 			PlayerNumber = players[0]["enemy"].AsBool == false ? 1 : 2;
 
-			Application.LoadLevel("Scene_00");
+			RequestWait();
+
+			//Application.LoadLevel("Scene_00");
+		}
+
+
+		public void SubmitCharactersJSON(JSONNode charactersJSON)
+		{
+			
 		}
 
 

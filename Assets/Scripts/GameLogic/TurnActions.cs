@@ -41,7 +41,6 @@ namespace Medusa
 
 		private List<Action> ParseJSON(JSONClass json)
 	    {
-			//var json = JSON.Parse(json.ToString());
 
 			return (from JSONNode action in json["actions"].AsArray 
 					let charPos = Position.FromJSON(action["charpos"]) 
