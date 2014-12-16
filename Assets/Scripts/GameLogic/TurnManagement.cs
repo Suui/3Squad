@@ -10,15 +10,12 @@ namespace Medusa
         private readonly Player playerTwo;
 
 
-	    public TurnManagement(Player playerOne, Player playerTwo, int seed)
+	    public TurnManagement(Player playerOne, Player playerTwo)
         {
             this.playerOne = playerOne;
             this.playerTwo = playerTwo;
 
-            System.Random randStarter = new System.Random(seed);
-            int starter = randStarter.Next(0, 1000) % 2;
-
-            CurrentPlayer = starter == 0 ? playerOne : playerTwo;
+            CurrentPlayer = playerOne;
         }
 
 

@@ -78,7 +78,7 @@ namespace Medusa
 		    Player playerTwo = new Player("Player 02", startingActionPoints);
 		    players = new[] {playerOne, playerTwo};
 
-		    turnManagement = new TurnManagement(players[0], players[1], seed);
+		    turnManagement = new TurnManagement(players[0], players[1]);
 
 		    GameObject player = new GameObject(turnManagement.CurrentPlayer.name) {tag = turnManagement.CurrentPlayer.name};
 
@@ -112,30 +112,49 @@ namespace Medusa
 
 	    private void SpawnSelfMaster()
 	    {
-		    GameObject master1 = Instantiate(masterOne) as GameObject;
-		    master1.name = "Master 01";
-		    master1.transform.position = MasterOnePos;
-		    master1.GetComponent<PlayerComponent>().Player = players[0];
+			Server server = GameObject.Find("Server").GetComponent<Server>();
 
-		    CurrentBoard["tokens"][MasterOnePos] = master1;
+		    GameObject master = Instantiate(masterOne) as GameObject;
+		    master.name = "Master 01";
+		    master.GetComponent<PlayerComponent>().Player = players[0];
+
+		    if (server.PlayerNumber == 1)
+		    {
+			    master.transform.position = MasterOnePos;
+				CurrentBoard["tokens"][MasterOnePos] = master;
+		    }
+			else
+		    {
+				master.transform.position = MasterTwoPos;
+			    master.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+				CurrentBoard["tokens"][MasterTwoPos] = master;
+		    }
 	    }
 
 
 	    private void SpawnSelfCharacters()
 	    {
 			SelectedCharacters characters = GameObject.Find("SelectedCharacters").GetComponent<SelectedCharacters>();
-			int pos = 5;
+			int xPos = 5, yPos = 0;
+
+		    Server server = GameObject.Find("Server").GetComponent<Server>();
+
+		    if (server.PlayerNumber == 2)
+			    yPos = CurrentBoard.Columns - 1;
 
 			foreach (var name in characters.selectedCharacters)
 			{
 				GameObject go = Instantiate(Resources.Load("Prefabs/" + name)) as GameObject;
 				go.name = name;
-				go.transform.position = new Position(pos, 0);
+				go.transform.position = new Position(xPos, yPos);
 				go.GetComponent<PlayerComponent>().Player = GetPlayerOne;
 
-				CurrentBoard["tokens"][new Position(pos, 0)] = go;
+				if (yPos != 0)
+					go.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
 
-				pos -= 2;
+				CurrentBoard["tokens"][new Position(xPos, yPos)] = go;
+
+				xPos -= 2;
 			}
 	    }
 
