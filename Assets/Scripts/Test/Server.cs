@@ -5,22 +5,17 @@ using System.Collections;
 namespace Medusa
 {
 
-	public class ServerAPI : MonoBehaviour
+	public class Server : MonoBehaviour
 	{
 
 		private string PlayerID;
 		private string MatchID;
 
 
-		void Start()
+		void Awake()
 		{
+			DontDestroyOnLoad(this);
 			RequestUserID();
-		}
-
-
-		void Update()
-		{
-
 		}
 
 
@@ -40,10 +35,21 @@ namespace Medusa
 		{
 			var form = new WWWForm();
 
-			form.AddField("superFail", PlayerID);
+			form.AddField("playerId", PlayerID);
 
 			var request = new WWW("178.62.230.225:80/api/match", form);
-			StartCoroutine(RquestMatchID(request));
+			StartCoroutine(RequestMatchID(request));
+		}
+
+
+		private void RequestCancel()
+		{
+			var form = new WWWForm();
+
+			form.AddField("playerId", PlayerID);
+
+			var request = new WWW("178.62.230.225:80/api/cancel", form);
+			StartCoroutine(WaitForCancel(request));
 		}
 
 
@@ -56,6 +62,12 @@ namespace Medusa
 			{
 				Debug.Log("PlayerID OK: " + request.text);
 				PlayerID = request.text;
+
+				PlayerID = PlayerID.Remove(0, 1);
+				PlayerID = PlayerID.Remove(PlayerID.Length - 1, 1);
+
+				Debug.Log(PlayerID);
+
 				RequestMatch();
 			}
 			else
@@ -63,7 +75,7 @@ namespace Medusa
 		}
 
 
-		IEnumerator RquestMatchID(WWW request)
+		IEnumerator RequestMatchID(WWW request)
 		{
 			Debug.Log("Waiting for MatchID");
 			yield return request;
@@ -75,6 +87,21 @@ namespace Medusa
 			}
 			else
 				Debug.Log("MatchID Error: " + request.error);
+		}
+
+
+		IEnumerator WaitForCancel(WWW request)
+		{
+			Debug.Log("Waiting for Cancel");
+			yield return request;
+
+			if (request.error == null)
+			{
+				Debug.Log("Cancel OK: " + request.text);
+				// TODO: Exit game;
+			}
+			else
+				Debug.Log("Cancel Error: " + request.error);
 		}
 
 	}
