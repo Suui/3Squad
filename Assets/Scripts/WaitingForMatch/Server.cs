@@ -22,6 +22,14 @@ namespace Medusa
 
 		private void RequestUserID()
 		{
+            SelectedCharacters characters = GameObject.Find("SelectedCharacters").GetComponent<SelectedCharacters>();
+            JSONNode charactersJSON = new JSONClass();
+
+		    foreach (var name in characters.selectedCharacters)
+		    {
+		        
+		    }
+
 			var form = new WWWForm();
 
 			form.AddField("name", "TestPlayer");
