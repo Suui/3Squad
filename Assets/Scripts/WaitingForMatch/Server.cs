@@ -28,7 +28,7 @@ namespace Medusa
 			form.AddField("numberOfPlayers", 2);
 
 			var request = new WWW("178.62.230.225:80/api/ticket", form);
-			StartCoroutine(RequestUserID(request));
+			StartCoroutine(WaitForUserID(request));
 		}
 
 
@@ -91,7 +91,7 @@ namespace Medusa
 		}
 
 
-		IEnumerator RequestUserID(WWW request)
+		IEnumerator WaitForUserID(WWW request)
 		{
 			Debug.Log("Waiting for playerID");
 			yield return request;
@@ -191,31 +191,6 @@ namespace Medusa
 		}
 
 
-	    IEnumerator WaitForFirstWait(WWW request, JSONNode charactersJSON)
-	    {
-            Debug.Log("Waiting for WaitFirstTurn");
-	        yield return request;
-
-	        if (request.error == null)
-	            ParseFirstTurnJSON(request, request.text, charactersJSON);
-	    }
-
-
-	    private void ParseFirstTurnJSON(WWW request, string text, string charactersJSON)
-	    {
-            //JSONNode remoteJSON = JSON.Parse(text);
-
-            //if (remoteJSON["next"].AsBool)
-            //{
-            //    Debug.Log("WaitFirstTurn OK AND next = me: " + text);
-
-            //    if (remoteJSON["turns"]["characters"] != null)
-
-            //}
-
-	    }
-
-
 	    private void ProcessPlayerNumber(string playersInfo)
 		{
 			JSONNode players = JSON.Parse(playersInfo);
@@ -223,18 +198,6 @@ namespace Medusa
 			PlayerNumber = players[0]["enemy"].AsBool == false ? 1 : 2;
 
 			Application.LoadLevel("Scene_00");
-		}
-
-
-		public void SubmitCharactersJSON(JSONNode charactersJSON)
-		{
-		    var form = new WWWForm();
-
-            form.AddField("matchId", matchID);
-            form.AddField("playerId", playerID);
-
-		    var request = new WWW("178.62.230.225:80/api/wait", form);
-		    StartCoroutine(WaitForFirstWait(request, charactersJSON));
 		}
 
 

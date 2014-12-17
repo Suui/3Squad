@@ -139,7 +139,6 @@ namespace Medusa
 			int xPos = 5, yPos = 0;
 
 		    Server server = GameObject.Find("Server").GetComponent<Server>();
-		    JSONNode charactersJSON = new JSONClass();
 
 		    if (server.PlayerNumber == 2)
 			    yPos = CurrentBoard.Columns - 1;
@@ -157,11 +156,7 @@ namespace Medusa
 				Position goPos = new Position(xPos, yPos);
 				CurrentBoard["tokens"][goPos] = go;
 				xPos -= 2;
-
-				charactersJSON["characters"][name] = goPos.ToJSON();
 			}
-
-			server.SubmitCharactersJSON(charactersJSON);
 	    }
 
 	    #endregion
