@@ -16,11 +16,11 @@ namespace Medusa
 		void Awake()
 		{
 			DontDestroyOnLoad(this);
-			WaitForUserID();
+			RequestUserID();
 		}
 
 
-		private void WaitForUserID()
+		private void RequestUserID()
 		{
 			var form = new WWWForm();
 
@@ -28,7 +28,7 @@ namespace Medusa
 			form.AddField("numberOfPlayers", 2);
 
 			var request = new WWW("178.62.230.225:80/api/ticket", form);
-			StartCoroutine(WaitForUserID(request));
+			StartCoroutine(RequestUserID(request));
 		}
 
 
@@ -91,7 +91,7 @@ namespace Medusa
 		}
 
 
-		IEnumerator WaitForUserID(WWW request)
+		IEnumerator RequestUserID(WWW request)
 		{
 			Debug.Log("Waiting for playerID");
 			yield return request;
@@ -191,21 +191,50 @@ namespace Medusa
 		}
 
 
-		private void ProcessPlayerNumber(string playersInfo)
+	    IEnumerator WaitForFirstWait(WWW request, JSONNode charactersJSON)
+	    {
+            Debug.Log("Waiting for WaitFirstTurn");
+	        yield return request;
+
+	        if (request.error == null)
+	            ParseFirstTurnJSON(request, request.text, charactersJSON);
+	    }
+
+
+	    private void ParseFirstTurnJSON(WWW request, string text, string charactersJSON)
+	    {
+            //JSONNode remoteJSON = JSON.Parse(text);
+
+            //if (remoteJSON["next"].AsBool)
+            //{
+            //    Debug.Log("WaitFirstTurn OK AND next = me: " + text);
+
+            //    if (remoteJSON["turns"]["characters"] != null)
+
+            //}
+
+	    }
+
+
+	    private void ProcessPlayerNumber(string playersInfo)
 		{
 			JSONNode players = JSON.Parse(playersInfo);
 
 			PlayerNumber = players[0]["enemy"].AsBool == false ? 1 : 2;
 
-			RequestWait();
-
-			//Application.LoadLevel("Scene_00");
+			Application.LoadLevel("Scene_00");
 		}
 
 
 		public void SubmitCharactersJSON(JSONNode charactersJSON)
 		{
-			
+		    var form = new WWWForm();
+
+            form.AddField("matchId", matchID);
+            form.AddField("playerId", playerID);
+
+		    var request = new WWW("178.62.230.225:80/api/wait", form);
+		    StartCoroutine(WaitForFirstWait(request, charactersJSON));
 		}
 
 
