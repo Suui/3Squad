@@ -1,4 +1,5 @@
-﻿using SimpleJSON;
+﻿using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
 using System.Collections;
 
@@ -11,11 +12,13 @@ namespace Medusa
 
 		private string playerID;
 		private string matchID;
+		private readonly string serverURL = "178.62.230.225:80/api/";
 
 
 		void Awake()
 		{
 			DontDestroyOnLoad(this);
+			EnemyCharacters = new List<string>();
 			RequestUserID();
 		}
 
@@ -24,18 +27,23 @@ namespace Medusa
 		{
             SelectedCharacters characters = GameObject.Find("SelectedCharacters").GetComponent<SelectedCharacters>();
             JSONNode charactersJSON = new JSONClass();
+			int c = 0;
 
-		    foreach (var name in characters.selectedCharacters)
+		    foreach (var characterName in characters.selectedCharacters)
 		    {
-		        
+				charactersJSON["characters"][c] = characterName;
+			    c++;
 		    }
+
+			Debug.Log(charactersJSON.ToString());
 
 			var form = new WWWForm();
 
-			form.AddField("name", "TestPlayer");
+			form.AddField("name", "APlayer");
 			form.AddField("numberOfPlayers", 2);
+			form.AddField("setup", charactersJSON.ToString());
 
-			var request = new WWW("178.62.230.225:80/api/ticket", form);
+			var request = new WWW(serverURL + "ticket", form);
 			StartCoroutine(WaitForUserID(request));
 		}
 
@@ -46,7 +54,7 @@ namespace Medusa
 
 			form.AddField("playerId", playerID);
 
-			var request = new WWW("178.62.230.225:80/api/match", form);
+			var request = new WWW(serverURL + "match", form);
 			StartCoroutine(WaitForMatchID(request));
 		}
 
@@ -57,7 +65,7 @@ namespace Medusa
 
 			form.AddField("playerId", playerID);
 
-			var request = new WWW("178.62.230.225:80/api/cancel", form);
+			var request = new WWW(serverURL + "cancel", form);
 			StartCoroutine(WaitForCancel(request));
 		}
 
@@ -69,7 +77,7 @@ namespace Medusa
 			form.AddField("matchId", matchID);
 			form.AddField("playerId", playerID);
 
-			var request = new WWW("178.62.230.225:80/api/wait", form);
+			var request = new WWW(serverURL + "wait", form);
 			StartCoroutine(WaitForWait(request));
 		}
 
@@ -80,9 +88,9 @@ namespace Medusa
 
 			form.AddField("matchId", matchID);
 			form.AddField("playerId", playerID);
-			form.AddField("turn", turnJSON);
+			form.AddField("turn", turnJSON.ToString());
 
-			var request = new WWW("178.62.230.225:80/api/submit", form);
+			var request = new WWW(serverURL + "submit", form);
 			StartCoroutine(WaitForSubmit(request));
 		}
 
@@ -94,7 +102,7 @@ namespace Medusa
 			form.AddField("matchId", matchID);
 			form.AddField("playerId", playerID);
 
-			var request = new WWW("178.62.230.225:80/api/players", form);
+			var request = new WWW(serverURL + "players", form);
 			StartCoroutine(WaitForPlayers(request));
 		}
 
@@ -110,7 +118,6 @@ namespace Medusa
 				playerID = request.text;
 
 				playerID = playerID.Substring(1, playerID.Length - 2);
-				Debug.Log("playerID = " + playerID);
 
 				RequestMatch();
 			}
@@ -130,7 +137,6 @@ namespace Medusa
 				matchID = request.text;
 
 				matchID = matchID.Substring(1, matchID.Length - 2);
-				Debug.Log("matchID = " + matchID);
 
 				RequestPlayers();
 			}
@@ -203,13 +209,25 @@ namespace Medusa
 		{
 			JSONNode players = JSON.Parse(playersInfo);
 
-			PlayerNumber = players[0]["enemy"].AsBool == false ? 1 : 2;
+		    for (int i = 0; i < players.AsArray.Count; i++)
+		    {
+			    if (players[i]["enemy"].AsBool == false)
+				    PlayerNumber = i + 1;
+			    else
+			    {
+				    JSONNode setup = JSON.Parse(players[i]["setup"]);
+				    for (int j = 0; j < setup["characters"].AsArray.Count; j++)
+					    EnemyCharacters.Add(setup["characters"][j]);
+			    }
+		    }
 
 			Application.LoadLevel("Scene_00");
 		}
 
 
 		public int PlayerNumber { get; private set; }
+
+		public List<string> EnemyCharacters { get; private set; }
 
 	}
 

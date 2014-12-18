@@ -1,4 +1,5 @@
-﻿using SimpleJSON;
+﻿using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
 
 
@@ -59,7 +60,7 @@ namespace Medusa
 
 			SpawnSelfMaster();
 
-	        SpawnSelfCharacters();
+	        SpawnCharacters();
         }
 
 
@@ -133,31 +134,41 @@ namespace Medusa
 	    }
 
 
-	    private void SpawnSelfCharacters()
+	    private void SpawnCharacters()
 	    {
-			SelectedCharacters characters = GameObject.Find("SelectedCharacters").GetComponent<SelectedCharacters>();
-			int xPos = 5, yPos = 0;
-
 		    Server server = GameObject.Find("Server").GetComponent<Server>();
+			SelectedCharacters selChar = GameObject.Find("SelectedCharacters").GetComponent<SelectedCharacters>();
 
-		    if (server.PlayerNumber == 2)
-			    yPos = CurrentBoard.Columns - 1;
+			int row = 5, selfCol = 0, enemyCol = 0;
 
-			foreach (var name in characters.selectedCharacters)
+		    if (server.PlayerNumber == 1)
+				enemyCol = CurrentBoard.Columns - 1;
+		    else
+			    selfCol = CurrentBoard.Columns - 1;
+
+			SpawnCharacters(selChar.selectedCharacters, GetPlayerOne, row, selfCol);
+			SpawnCharacters(server.EnemyCharacters, GetPlayerTwo, row, enemyCol);
+	    }
+
+
+	    private void SpawnCharacters(List<string> characters, Player player, int row, int col)
+	    {
+			foreach (var name in characters)
 			{
 				GameObject go = Instantiate(Resources.Load("Prefabs/" + name)) as GameObject;
 				go.name = name;
-				go.transform.position = new Position(xPos, yPos);
-				go.GetComponent<PlayerComponent>().Player = GetPlayerOne;
+				go.transform.position = new Position(row, col);
+				go.GetComponent<PlayerComponent>().Player = player;
 
-				if (yPos != 0)
+				if (col != 0)
 					go.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
 
-				Position goPos = new Position(xPos, yPos);
+				Position goPos = new Position(row, col);
 				CurrentBoard["tokens"][goPos] = go;
-				xPos -= 2;
+				row -= 2;
 			}
 	    }
+
 
 	    #endregion
 
