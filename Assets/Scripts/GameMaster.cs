@@ -58,7 +58,7 @@ namespace Medusa
 
 			ButtonsSetup();
 
-			SpawnSelfMaster();
+			SpawnMasters();
 
 	        SpawnCharacters();
         }
@@ -112,25 +112,34 @@ namespace Medusa
 	    }
 
 
-	    private void SpawnSelfMaster()
+	    private void SpawnMasters()
 	    {
 			Server server = GameObject.Find("Server").GetComponent<Server>();
 
-		    GameObject master = Instantiate(masterOne) as GameObject;
-		    master.name = "Master 01";
-		    master.GetComponent<PlayerComponent>().Player = players[0];
-
 		    if (server.PlayerNumber == 1)
 		    {
-			    master.transform.position = MasterOnePos;
-				CurrentBoard["tokens"][MasterOnePos] = master;
+			    SpawnMaster(masterOne, players[0], MasterOnePos, "Master 01");	// Local master
+			    SpawnMaster(masterTwo, players[1], MasterTwoPos, "Master 02");	// Remote master
 		    }
-			else
+		    else
 		    {
-				master.transform.position = MasterTwoPos;
-			    master.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-				CurrentBoard["tokens"][MasterTwoPos] = master;
+				SpawnMaster(masterOne, players[0], MasterTwoPos, "Master 01");	// Local master
+			    SpawnMaster(masterTwo, players[1], MasterOnePos, "Master 02");	// Remote master
 		    }
+	    }
+
+
+	    private void SpawnMaster(GameObject masterPrefab, Player player, Position masterPos, string masterName)
+	    {
+			GameObject master = Instantiate(masterPrefab) as GameObject;
+			master.name = masterName;
+			master.GetComponent<PlayerComponent>().Player = player;
+
+			if (masterPos == MasterTwoPos)
+				master.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+
+			master.transform.position = masterPos;
+			CurrentBoard["tokens"][masterPos] = master;
 	    }
 
 
@@ -146,8 +155,8 @@ namespace Medusa
 		    else
 			    selfCol = CurrentBoard.Columns - 1;
 
-			SpawnCharacters(selChar.selectedCharacters, GetPlayerOne, row, selfCol);
-			SpawnCharacters(server.EnemyCharacters, GetPlayerTwo, row, enemyCol);
+			SpawnCharacters(selChar.selectedCharacters, GetPlayerOne, row, selfCol);	// Local characters
+			SpawnCharacters(server.EnemyCharacters, GetPlayerTwo, row, enemyCol);		// Remote characters
 	    }
 
 
