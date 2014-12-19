@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using SimpleJSON;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -61,10 +61,30 @@ namespace Medusa
 			SpawnMasters();
 
 	        SpawnCharacters();
+
+            // We set the initial turn to the enemy after initialization because the initial player is
+            // determined by the server. We are asking for the actual player in the WaitForTurn() Coroutine.
+            SetTurnToEnemy();
+            StartCoroutine(GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().WaitForTurn());
         }
 
 
-	    #region Setup Functions
+        private void SetTurnToEnemy()
+        {
+            TurnManagement.ChangeTurn();
+        }
+
+
+        public void ChangeTurn(TurnActions turnActions)
+        {
+            GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(turnActions);
+
+            if (OnChangingTurn != null)
+                OnChangingTurn();
+        }
+
+
+        #region Setup Functions
 
 	    private void BoardSetup()
 	    {
@@ -217,15 +237,6 @@ namespace Medusa
 	    }
 
 	    #endregion
-
-
-		public void ChangeTurn(TurnActions turnActions)
-		{
-			GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(turnManagement.EnemyPlayerThisTurn, turnActions);
-
-			if (OnChangingTurn != null)
-				OnChangingTurn();
-		}
 
 
         #region Getters and Setters

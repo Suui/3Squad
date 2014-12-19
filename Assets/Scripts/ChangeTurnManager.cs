@@ -30,11 +30,23 @@ namespace Medusa
 		}
 
 
-		public void PerformTurnChangeActions(Player player, TurnActions turnActions)
+		public void PerformTurnChangeActions(TurnActions turnActions)
 		{
 			turnManagement.ChangeTurn();
 			StartCoroutine(PerformPreviousTurnActions(turnActions));
 		}
+
+
+        public IEnumerator WaitForTurn()
+        {
+            Server server = GameObject.Find("Server").GetComponent<Server>();
+
+            while (server.MyTurn != true)
+            {
+                server.RequestWait();
+                yield return new WaitForSeconds(2.0f);
+            }
+        }
 
 
 		IEnumerator PerformPreviousTurnActions(TurnActions turnActions)
@@ -42,7 +54,7 @@ namespace Medusa
 			raySelection.enabled = false;
 			stateMachine.PlayingPlayer = turnManagement.EnemyPlayerThisTurn;
 
-			foreach (var action in turnActions.Actions)
+			foreach (var action in turnActions.ActionList)
 			{
 				board["overlays"][action.CharacterPos].GetComponent<Selectable>().SetOverlayMaterial(1);
 				yield return new WaitForSeconds(1.0f);

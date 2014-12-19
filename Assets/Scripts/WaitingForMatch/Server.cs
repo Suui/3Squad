@@ -18,7 +18,10 @@ namespace Medusa
 		void Awake()
 		{
 			DontDestroyOnLoad(this);
+
 			EnemyCharacters = new List<string>();
+		    MyTurn = false;
+
 			RequestUserID();
 		}
 
@@ -70,7 +73,7 @@ namespace Medusa
 		}
 
 
-		private void RequestWait()
+		public void RequestWait()
 		{
 			var form = new WWWForm();
 
@@ -166,16 +169,13 @@ namespace Medusa
 			yield return request;
 
 			if (request.error == null)
-			{
-				Debug.Log("Wait OK: " + request.text);
-				// TODO: Returns the turns, next, and activePlayers
-			}
+                ParseWaitJSON(request.text);
 			else
 				Debug.Log("Wait Error: " + request.error);
 		}
 
 
-		IEnumerator WaitForSubmit(WWW request)
+	    IEnumerator WaitForSubmit(WWW request)
 		{
 			Debug.Log("Waiting for Submit");
 			yield return request;
@@ -225,9 +225,31 @@ namespace Medusa
 		}
 
 
+        private void ParseWaitJSON(string text)
+        {
+            JSONNode json = JSON.Parse(text);
+
+            // TODO: CHANGE TO TRUE, ONLY FOR TESTING PURPOSES
+            if (json["next"].AsBool == true)
+                MyTurn = true;
+            else
+                return;
+
+            Debug.Log("Wait OK: " + text);
+
+            JSONNode turns = json["turns"];
+            Debug.Log("Previous turns JSON: " + turns);
+
+            TurnActions actions = new TurnActions(turns);
+            GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(actions);
+        }
+
+
 		public int PlayerNumber { get; private set; }
 
 		public List<string> EnemyCharacters { get; private set; }
+
+	    public bool MyTurn { get; set; }
 
 	}
 

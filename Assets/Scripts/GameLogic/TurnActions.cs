@@ -11,8 +11,15 @@ namespace Medusa
 
         public TurnActions(List<Action> actions)
         {
-			JSONClass json = GenerateJSON(actions);
-	        Actions = ParseJSON(json);
+            ActionList = actions;
+			ActionJSON = GenerateJSON(actions);
+        }
+
+
+        public TurnActions(JSONNode json)
+        {
+            ActionList = ParseJSON(json);
+            ActionJSON = json;
         }
 
 
@@ -39,7 +46,7 @@ namespace Medusa
         }
 
 
-		private List<Action> ParseJSON(JSONClass json)
+		private List<Action> ParseJSON(JSONNode json)
 	    {
 
 			return (from JSONNode action in json["actions"].AsArray 
@@ -52,10 +59,10 @@ namespace Medusa
 	    }
 
 
-        public List<Action> Actions { get; private set; }
+        public List<Action> ActionList { get; private set; }
 
+        public JSONNode ActionJSON { get; private set; }
 
-		//public JSON auto property...
     }
 
 }

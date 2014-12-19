@@ -7,7 +7,7 @@ namespace Medusa
 			
 	public class Horns : Skill
 	{
-				
+
 		public int damage;
 		private bool doneThisTurn;
 		
