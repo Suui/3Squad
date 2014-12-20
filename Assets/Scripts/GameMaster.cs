@@ -17,13 +17,13 @@ namespace Medusa
 
         void OnEnable()
         {
-			ExitEndTurnState.OnChangingTurn += ChangeTurn;
+			ExitEndTurnState.OnChangingTurn += SubmitTurn;
 		}
 
 
         void OnDisable()
 		{
-			ExitEndTurnState.OnChangingTurn -= ChangeTurn;
+			ExitEndTurnState.OnChangingTurn -= SubmitTurn;
         }
 
 
@@ -74,9 +74,12 @@ namespace Medusa
         }
 
 
-        public void ChangeTurn(TurnActions turnActions)
+        public void SubmitTurn(TurnActions turnActions)
         {
-            GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(turnActions);
+	        Server server = GameObject.Find("Server").GetComponent<Server>();
+	        server.RequestSubmit(turnActions.ActionJSON);
+
+	        SetTurnToEnemy();
 
             if (OnChangingTurn != null)
                 OnChangingTurn();

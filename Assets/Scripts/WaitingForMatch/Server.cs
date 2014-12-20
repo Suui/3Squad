@@ -85,7 +85,7 @@ namespace Medusa
 		}
 
 
-		private void RequestSubmit(JSONNode turnJSON)	// OR turnString?
+		public void RequestSubmit(JSONNode turnJSON)
 		{
 			var form = new WWWForm();
 
@@ -144,7 +144,11 @@ namespace Medusa
 				RequestPlayers();
 			}
 			else
+			{
 				Debug.Log("matchID Error: " + request.error);
+				yield return new WaitForSeconds(0.5f);
+				StartCoroutine(WaitForMatchID(request));
+			}
 		}
 
 
@@ -183,7 +187,8 @@ namespace Medusa
 			if (request.error == null)
 			{
 				Debug.Log("Submit OK: " + request.text);
-				// TODO: Set the player to the other one so we can't play this turn
+				MyTurn = false;
+				StartCoroutine(GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().WaitForTurn());
 			}
 			else
 				Debug.Log("Submit Error: " + request.error);
