@@ -236,13 +236,18 @@ namespace Medusa
                 return;
 
             Debug.Log("Wait OK: " + text);
-
-            JSONNode turns = json["turns"];
-            Debug.Log("Previous turns JSON: " + turns);
-
-            TurnActions actions = new TurnActions(turns);
-            GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(actions);
+	        PerformReceivedActions(json);
         }
+
+
+		private void PerformReceivedActions(JSONNode json)
+		{
+			JSONNode turns = json["turns"];
+			Debug.Log("Previous turns JSON: " + turns);
+
+			TurnActions actions = new TurnActions(turns);
+			GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(actions);
+		}
 
 
 		public int PlayerNumber { get; private set; }
