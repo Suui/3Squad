@@ -16,7 +16,7 @@ namespace Medusa
 
 
         void OnEnable()
-    {
+        {
 			ExitEndTurnState.OnChangingTurn += SubmitTurn;
 		}
 
@@ -33,17 +33,17 @@ namespace Medusa
 	    public GameObject masterTwo;
 
 	    public int startingActionPoints = 5;
-        public GameObject boardCellPrefab;
-        public GameObject[] obstaclePrefabs;
-        public int obstaclesLimit;
-        public int boardRows;
-        public int boardColumns;
-        public float boardYSize;
-        public int seed;
+	    public GameObject boardCellPrefab;
+	    public GameObject[] obstaclePrefabs;
+	    public int obstaclesLimit;
+	    public int boardRows;
+	    public int boardColumns;
+	    public float boardYSize;
+	    public int seed;
 
 	    private Player[] players;
 
-        private BoardGenerator boardGenerator;
+	    private BoardGenerator boardGenerator;
 	    private TurnManagement turnManagement;
 
 	    #endregion
@@ -52,11 +52,12 @@ namespace Medusa
         void Awake()
         {
 	        BoardSetup();
-
+	        
 			PlayersSetup();
 
 			ButtonsSetup();
 
+<<<<<<< HEAD
 			SpawnMasters();
 
 	        SpawnCharacters();
@@ -66,6 +67,19 @@ namespace Medusa
             SetTurnToEnemy();
             StartCoroutine(GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().WaitForTurn());
         }
+=======
+            // TODO: Remove testing block when over
+            // Test GUI
+            GameObject go = Instantiate(Resources.Load("Prefabs/Eagle")) as GameObject;
+            go.name = "Eagle";
+            go.transform.position = new Position(0, 0);
+            CurrentBoard["tokens"][new Position(0, 0)] = go;
+
+			GameObject go2 = Instantiate(Resources.Load("Prefabs/Turtle")) as GameObject;
+			go2.name = "Turtle";
+			go2.transform.position = new Position(3, 4);
+			CurrentBoard["tokens"][new Position(3, 4)] = go2;
+>>>>>>> Skills
 
 
         private void SetTurnToEnemy()
@@ -75,7 +89,7 @@ namespace Medusa
 
 
         public void SubmitTurn(TurnActions turnActions)
-            {
+        {
 	        Server server = GameObject.Find("Server").GetComponent<Server>();
 	        server.RequestSubmit(turnActions.ActionJSON);
 
@@ -89,10 +103,10 @@ namespace Medusa
         #region Setup Functions
 
 	    private void BoardSetup()
-        {
-            boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
-            boardGenerator.CreateEmptyBoard(boardYSize);
-            boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
+	    {
+		    boardGenerator = new BoardGenerator(boardCellPrefab, boardRows, boardColumns);
+		    boardGenerator.CreateEmptyBoard(boardYSize);
+		    boardGenerator.SpawnObstacles(obstaclePrefabs, obstaclesLimit, seed);
 	    }
 
 
@@ -236,7 +250,7 @@ namespace Medusa
 
 		    if (id == "Info")
 			    gui.pixelInset = new Rect(Screen.width / 2 - width / 2, Screen.height - height, width, height);
-        }
+	    }
 
 	    #endregion
 

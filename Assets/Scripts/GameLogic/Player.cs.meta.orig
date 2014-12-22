@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: eb263728954d12e4286c9ccdb198e9a1
+<<<<<<< HEAD
+guid: 606341ac5f5dd8843949ba02f7211e37
+=======
+guid: 3af325c883622774392df6288373d226
+>>>>>>> Skills
 MonoImporter:
   serializedVersion: 2
   defaultReferences: []

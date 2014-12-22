@@ -9,7 +9,7 @@ namespace Medusa
 	{
 		public int range;
 		private bool doneThisTurn;
-		
+
 		public string DebugID;
 
 		public string DebugId
@@ -30,6 +30,7 @@ namespace Medusa
 		{
 			ActionPointCost = 1;
 			doneThisTurn = false;
+			Clear ();
 		}
 		
 		
@@ -39,7 +40,7 @@ namespace Medusa
 			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/correr") as Texture2D;
 			skillGUI.transform.position = SecondPos;
 			skillGUI.transform.parent = gameObject.transform;
-			
+
 			skillGUI.GetComponent<SkillToFire>().Skill = gameObject.GetComponent(GetSkillType()) as Skill;
 		}
 		
@@ -116,16 +117,33 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
+<<<<<<< HEAD
 		public override List<Position> Confirm()
+=======
+		public override LinkedList<Position> Confirm()
+>>>>>>> Skills
 		{
 			board["tokens"].MoveGameObject(player,stepList.Last.Value);
-			
+<<<<<<< HEAD
+
 			List<Position> targetPositions = new List<Position>(stepList);
-			
+
 			Clear();
 			doneThisTurn = true;
 
 			return targetPositions;
+=======
+			LinkedList<Position> copy = new LinkedList<Position>();
+			copy = stepList;
+
+			doneThisTurn = true;
+			foreach(Position posi in stepList)
+			{
+				Debug.Log(posi);
+				
+			}
+			return stepList;
+>>>>>>> Skills
 		}
 		
 		//deselect the cells and empty the array

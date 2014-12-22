@@ -5,10 +5,9 @@ using System.Collections.Generic;
 namespace Medusa
 {
 	
-	public class ParabolicShot : Skill
+	public class DistanceAttack : Skill
 	{
 		public int damage;
-		public int range;
 		private bool doneThisTurn;
 		
 		private LinkedList<Position> posibleAttacks = new LinkedList<Position>();
@@ -22,18 +21,24 @@ namespace Medusa
 		
 		public void Start()
 		{
+<<<<<<< HEAD
 			ActionPointCost = 1;
 
 			playerPosition = (Position)this.transform.position;
+=======
+			Clear ();
+			playerPosition = (Position) this.transform.position;
+>>>>>>> Skills
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
-			
 		}
+
+
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;
-			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/parabolic") as Texture2D;
-			skillGUI.transform.position = ThirdPos;
+			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/arco") as Texture2D;
+			skillGUI.transform.position = FirstPos;
 			skillGUI.transform.parent = gameObject.transform;
 			
 			skillGUI.GetComponent<SkillToFire>().Skill = this;
@@ -47,29 +52,30 @@ namespace Medusa
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			Layer terrain = board["tokens"];
 
-			SearchWay (posibleAttacks,posibleRange, board ["tokens"], playerPosition, range);
-			
-			foreach(Position posi in posibleAttacks)
+			foreach (Direction direction in Direction.AllStaticDirections) 
 			{
-				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(4);
-				
-			}
-			foreach(Position posi in posibleRange)
-			{
-				board["overlays"][posi].GetComponent<Selectable>().SetOverlayMaterial(2);
-				
+				Position position = playerPosition + direction;
+
+				while(!position.Outside(terrain) && board["tokens"][position] == null)
+				{
+					board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(2);
+					posibleRange.AddLast(position);	
+					position += direction;
+
+				}
+				//Position posiblePosition = position + direction;
+				if(!position.Outside(terrain) && terrain[position] != null && terrain[position].GetComponent<Life>() != null) {
+					board["overlays"][position].GetComponent<Selectable>().SetOverlayMaterial(4);
+					posibleAttacks.AddLast(position);
+				}
 			}
 		}
 		
 		//add pos to array
 		public override bool Click(Position pos)
 		{
-			if(targetPosition != null)
-			{
-				board["overlays"][targetPosition].GetComponent<Selectable>().SetOverlayMaterial(2);
-				targetPosition = null;
-			}
-			
+
+
 			if(posibleAttacks.Contains(pos))
 			{
 				if(board["tokens"][pos].GetComponent<Life>() != null)
@@ -80,22 +86,34 @@ namespace Medusa
 				}
 				Clear ();
 				return false;
+
 			}
+
 			Clear ();
 			return false;
 		}
 		
 		//move to the last pos of array
+<<<<<<< HEAD
 		public override List<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
 
-			List<Position> targetPositions = new List<Position> { targetPosition };
+			List<Position> targetPositions = new List<Position> {targetPosition};
 
 			Clear();
 			doneThisTurn = true;
 
 			return targetPositions;
+=======
+		public override LinkedList<Position> Confirm()
+		{
+			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
+			LinkedList<Position> returnValue = new LinkedList<Position>();
+			returnValue.AddLast(targetPosition);
+			doneThisTurn = true;
+			return returnValue;
+>>>>>>> Skills
 		}
 		
 		//deselect the cells and empty the array
@@ -113,37 +131,10 @@ namespace Medusa
 				
 			}
 			board["overlays"][playerPosition].GetComponent<Selectable>().SetOverlayMaterial(0);
-			if(targetPosition != null) board["overlays"][targetPosition].GetComponent<Selectable>().SetOverlayMaterial(0);
 			posibleAttacks.Clear();
 			posibleRange.Clear();
 			targetPosition = null;
 			
-		}
-
-		public void SearchWay (LinkedList<Position> inRange,LinkedList<Position> posibleRange, Layer layer, Position startingPosition, int stepCount)
-		{
-			if (stepCount-- == 0)
-				return;
-			Position position;
-			foreach (Direction dir in Direction.AllStaticDirections) 
-			{
-				position = startingPosition + dir;
-				
-				if (position.Outside(layer))
-					continue;
-				if (layer[position] != null) 
-				{
-					if(layer [position].GetComponent<Life>() != null)
-				{
-					inRange.AddLast (position);
-				}
-				}else
-				{
-					posibleRange.AddLast (position);
-				}
-				SearchWay (inRange,posibleRange, layer, position, stepCount);
-			}
-			inRange.Remove(playerPosition);
 		}
 
 

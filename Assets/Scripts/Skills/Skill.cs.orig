@@ -42,16 +42,22 @@ namespace Medusa
         }
 
 
+<<<<<<< HEAD
         public virtual List<Position> Confirm()
         {
 	        throw new NotImplementedException();
+=======
+        public virtual LinkedList<Position> Confirm()
+        {
+			return new LinkedList<Position>();
+>>>>>>> Skills
         }
 
 
 	    public virtual string GetSkillType()
 	    {
 		    return "";
-        }
+	    }
 
     }
 

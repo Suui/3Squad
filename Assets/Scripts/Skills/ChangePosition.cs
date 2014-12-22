@@ -1,30 +1,31 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 
 namespace Medusa
 {
 	
-	public class ParabolicShot : Skill
+	public class ChangePosition : Skill
 	{
-		public int damage;
 		public int range;
 		private bool doneThisTurn;
 		
 		private LinkedList<Position> posibleAttacks = new LinkedList<Position>();
 		private LinkedList<Position> posibleRange = new LinkedList<Position>();
 		private Position targetPosition;
+		private GameObject target;
 		
 		private Position playerPosition;
 		private GameObject player;
 		private Board board;
+		private Position aux;
 		
 		
 		public void Start()
 		{
-			ActionPointCost = 1;
-
-			playerPosition = (Position)this.transform.position;
+			Clear();
+			playerPosition = (Position) this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			
@@ -32,7 +33,7 @@ namespace Medusa
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;
-			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/parabolic") as Texture2D;
+			skillGUI.GetComponent<GUITexture>().texture = Resources.Load("Textures/intercambio") as Texture2D;
 			skillGUI.transform.position = ThirdPos;
 			skillGUI.transform.parent = gameObject.transform;
 			
@@ -46,7 +47,7 @@ namespace Medusa
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			Layer terrain = board["tokens"];
-
+			
 			SearchWay (posibleAttacks,posibleRange, board ["tokens"], playerPosition, range);
 			
 			foreach(Position posi in posibleAttacks)
@@ -86,16 +87,13 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public override List<Position> Confirm()
+		public override LinkedList<Position> Confirm()
 		{
-			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
-
-			List<Position> targetPositions = new List<Position> { targetPosition };
-
-			Clear();
+			LinkedList<Position> returnPosition = new LinkedList<Position>();
+			returnPosition.AddLast(targetPosition);
+			board["tokens"].SwitchGameObjects(player,board["tokens"][targetPosition]);
 			doneThisTurn = true;
-
-			return targetPositions;
+			return returnPosition;
 		}
 		
 		//deselect the cells and empty the array
@@ -117,9 +115,9 @@ namespace Medusa
 			posibleAttacks.Clear();
 			posibleRange.Clear();
 			targetPosition = null;
-			
+			target = null;
 		}
-
+		
 		public void SearchWay (LinkedList<Position> inRange,LinkedList<Position> posibleRange, Layer layer, Position startingPosition, int stepCount)
 		{
 			if (stepCount-- == 0)
@@ -134,9 +132,10 @@ namespace Medusa
 				if (layer[position] != null) 
 				{
 					if(layer [position].GetComponent<Life>() != null)
-				{
-					inRange.AddLast (position);
-				}
+					{
+						if(board["tokens"][position].GetComponent<PlayerComponent>() != null)
+						inRange.AddLast (position);
+					}
 				}else
 				{
 					posibleRange.AddLast (position);
@@ -144,12 +143,6 @@ namespace Medusa
 				SearchWay (inRange,posibleRange, layer, position, stepCount);
 			}
 			inRange.Remove(playerPosition);
-		}
-
-
-		public override string GetSkillType()
-		{
-			return GetType().ToString();
 		}
 	}
 }

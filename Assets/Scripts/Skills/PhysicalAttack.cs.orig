@@ -17,13 +17,17 @@ namespace Medusa
 		private Position playerPosition;
 		private GameObject player;
 		private Board board;
-		
-		
+
+
 		void Start()
 		{
 			ActionPointCost = 1;
 		}
-
+		
+		public void Start()
+		{
+			Clear ();
+		}
 
 		public override void ShowUpSkill()
 		{
@@ -74,7 +78,8 @@ namespace Medusa
 			Clear ();
 			return false;
 		}
-		
+<<<<<<< HEAD
+
 		public override List<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
@@ -85,6 +90,16 @@ namespace Medusa
 			doneThisTurn = true;
 
 			return targetPositions;
+=======
+		
+		public override LinkedList<Position> Confirm()
+		{
+			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
+			LinkedList<Position> returnValue = new LinkedList<Position>();
+			returnValue.AddLast(targetPosition);
+			doneThisTurn = true;
+			return returnValue;
+>>>>>>> Skills
 		}
 		
 		public override void Clear()

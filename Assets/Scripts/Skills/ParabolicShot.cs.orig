@@ -22,9 +22,14 @@ namespace Medusa
 		
 		public void Start()
 		{
+<<<<<<< HEAD
 			ActionPointCost = 1;
 
 			playerPosition = (Position)this.transform.position;
+=======
+			Clear();
+			playerPosition = (Position) this.transform.position;
+>>>>>>> Skills
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			
@@ -86,6 +91,7 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
+<<<<<<< HEAD
 		public override List<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
@@ -96,6 +102,15 @@ namespace Medusa
 			doneThisTurn = true;
 
 			return targetPositions;
+=======
+		public override LinkedList<Position> Confirm()
+		{
+			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
+			LinkedList<Position> returnValue = new LinkedList<Position>();
+			returnValue.AddLast(targetPosition);
+			doneThisTurn = true;
+			return returnValue;
+>>>>>>> Skills
 		}
 		
 		//deselect the cells and empty the array
@@ -134,9 +149,9 @@ namespace Medusa
 				if (layer[position] != null) 
 				{
 					if(layer [position].GetComponent<Life>() != null)
-				{
-					inRange.AddLast (position);
-				}
+					{
+						inRange.AddLast (position);
+					}
 				}else
 				{
 					posibleRange.AddLast (position);

@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+		
 		
 namespace Medusa
 {
 			
 	public class Horns : Skill
 	{
-
+				
 		public int damage;
 		private bool doneThisTurn;
 		
@@ -71,7 +71,7 @@ namespace Medusa
 			Clear ();
 			return false;
 		}
-
+		
 		public override List<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
