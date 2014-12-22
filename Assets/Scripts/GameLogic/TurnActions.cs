@@ -25,6 +25,9 @@ namespace Medusa
 
 		private JSONClass GenerateJSON(List<Action> actions)
         {
+			if (actions.Count == 0)
+				return null;
+
 	        JSONClass json = new JSONClass();
 	        int c = 0, count = 0;
 

@@ -42,7 +42,7 @@ namespace Medusa
 
 			var form = new WWWForm();
 
-			form.AddField("name", "APlayer");
+			form.AddField("name", "TestPlayer");
 			form.AddField("numberOfPlayers", 2);
 			form.AddField("setup", charactersJSON.ToString());
 
@@ -79,6 +79,7 @@ namespace Medusa
 
 			form.AddField("matchId", matchID);
 			form.AddField("playerId", playerID);
+			Debug.Log(playerID + "is waiting for its turn");
 
 			var request = new WWW(serverURL + "wait", form);
 			StartCoroutine(WaitForWait(request));
@@ -91,7 +92,9 @@ namespace Medusa
 
 			form.AddField("matchId", matchID);
 			form.AddField("playerId", playerID);
-			form.AddField("turn", turnJSON.ToString());
+
+			if (turnJSON != null)
+				form.AddField("turn", turnJSON.ToString());
 
 			var request = new WWW(serverURL + "submit", form);
 			StartCoroutine(WaitForSubmit(request));
@@ -147,7 +150,7 @@ namespace Medusa
 			{
 				Debug.Log("matchID Error: " + request.error);
 				yield return new WaitForSeconds(0.5f);
-				StartCoroutine(WaitForMatchID(request));
+				RequestMatch();
 			}
 		}
 
@@ -234,23 +237,20 @@ namespace Medusa
         {
             JSONNode json = JSON.Parse(text);
 
-            // TODO: CHANGE TO TRUE, ONLY FOR TESTING PURPOSES
             if (json["next"].AsBool == true)
                 MyTurn = true;
             else
                 return;
 
-            Debug.Log("Wait OK: " + text);
-	        PerformReceivedActions(json);
+	        Debug.Log("Wait OK, text: " + text);
+            Debug.Log("Wait OK, turns JSON: " + json);
+	        PerformReceivedActions(json["turns"]);
         }
 
 
 		private void PerformReceivedActions(JSONNode json)
 		{
-			JSONNode turns = json["turns"];
-			Debug.Log("Previous turns JSON: " + turns);
-
-			TurnActions actions = new TurnActions(turns);
+			TurnActions actions = new TurnActions(json["turns"][0]);
 			GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(actions);
 		}
 

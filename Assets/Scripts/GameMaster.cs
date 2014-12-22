@@ -104,10 +104,10 @@ namespace Medusa
 
 		    turnManagement = new TurnManagement(players[0], players[1]);
 
-		    GameObject player = new GameObject(turnManagement.CurrentPlayer.name) {tag = turnManagement.CurrentPlayer.name};
+		    GameObject playerGO = new GameObject(turnManagement.CurrentPlayer.name) {tag = turnManagement.CurrentPlayer.name};
 
-		    transform.parent = player.transform;
-		    GameObject.Find("BoardNode").transform.parent = player.transform;
+		    transform.parent = playerGO.transform;
+		    GameObject.Find("BoardNode").transform.parent = playerGO.transform;
 	    }
 
 
@@ -140,13 +140,13 @@ namespace Medusa
 
 		    if (server.PlayerNumber == 1)
 		    {
-			    SpawnMaster(masterOne, players[0], MasterOnePos, "Master 01");	// Local master
-			    SpawnMaster(masterTwo, players[1], MasterTwoPos, "Master 02");	// Remote master
+			    SpawnMaster(masterOne, PlayerOne, MasterOnePos, "Master 01");	// Local master
+			    SpawnMaster(masterTwo, PlayerTwo, MasterTwoPos, "Master 02");	// Remote master
 		    }
 		    else
 		    {
-				SpawnMaster(masterOne, players[0], MasterTwoPos, "Master 01");	// Local master
-			    SpawnMaster(masterTwo, players[1], MasterOnePos, "Master 02");	// Remote master
+				SpawnMaster(masterOne, PlayerOne, MasterTwoPos, "Master 01");	// Local master
+			    SpawnMaster(masterTwo, PlayerTwo, MasterOnePos, "Master 02");	// Remote master
 		    }
 	    }
 
@@ -177,8 +177,8 @@ namespace Medusa
 		    else
 			    selfCol = CurrentBoard.Columns - 1;
 
-			SpawnCharacters(selChar.selectedCharacters, GetPlayerOne, row, selfCol);	// Local characters
-			SpawnCharacters(server.EnemyCharacters, GetPlayerTwo, row, enemyCol);		// Remote characters
+			SpawnCharacters(selChar.selectedCharacters, PlayerOne, row, selfCol);	// Local characters
+			SpawnCharacters(server.EnemyCharacters, PlayerTwo, row, enemyCol);		// Remote characters
 	    }
 
 
@@ -255,13 +255,13 @@ namespace Medusa
         }
 
 
-        public Player GetPlayerOne
+        public Player PlayerOne
         {
             get { return players[0]; }
         }
 
 
-        public Player GetPlayerTwo
+        public Player PlayerTwo
         {
             get { return players[1]; }
         }

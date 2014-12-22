@@ -30,13 +30,13 @@ namespace Medusa
 
 		void Start()
 		{
+			PlayingPlayer = GameObject.Find("GameMaster").GetComponent<GameMaster>().PlayerOne;
 			Board = GetComponent<GameMaster>().CurrentBoard;
 
 			SetUpBackground();
 
 			Actions = new List<Action>();
 
-			PlayingPlayer = GameObject.Find("GameMaster").GetComponent<GameMaster>().TurnManagement.CurrentPlayer;
 			SelectedSkill = null;
 			PreviousSelectedPos = new Position(0, 0);
 
