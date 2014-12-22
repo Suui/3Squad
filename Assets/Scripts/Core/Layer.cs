@@ -114,19 +114,6 @@ namespace Medusa
 			first.transform.position = secondPos;
 		}
 
-        public void SwitchGameObjects(GameObject first, GameObject second)
-        {
-            GameObject one = first;
-            Position secondPos = (Position) second.transform;
-
-            this[(Position) one.transform] = null;
-
-            MoveGameObject(second, (Position) first.transform);
-
-            this[secondPos] = first;
-            first.transform.position = secondPos;
-        }
-
 
         public bool IsEmpty(Position position)
         {

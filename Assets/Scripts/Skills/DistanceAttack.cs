@@ -89,7 +89,6 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public override LinkedList<Position> Confirm()
 		public override List<Position> Confirm()
 		{
 			board["tokens"][targetPosition].GetComponent<Life>().Damage(damage);
@@ -98,7 +97,6 @@ namespace Medusa
 
 			Clear();
 			doneThisTurn = true;
-			return returnValue;
 
 			return targetPositions;
 		}

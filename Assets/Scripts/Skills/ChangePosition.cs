@@ -87,13 +87,16 @@ namespace Medusa
 		}
 		
 		//move to the last pos of array
-		public override LinkedList<Position> Confirm()
+		public override List<Position> Confirm()
 		{
-			LinkedList<Position> returnPosition = new LinkedList<Position>();
-			returnPosition.AddLast(targetPosition);
 			board["tokens"].SwitchGameObjects(player,board["tokens"][targetPosition]);
+
+			List<Position> targetPositions = new List<Position> { targetPosition };
+
+			Clear();
 			doneThisTurn = true;
-			return returnPosition;
+
+			return targetPositions;
 		}
 		
 		//deselect the cells and empty the array

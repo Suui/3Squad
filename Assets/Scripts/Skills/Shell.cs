@@ -27,6 +27,8 @@ namespace Medusa
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			
 		}
+
+
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;
@@ -37,6 +39,7 @@ namespace Medusa
 			skillGUI.GetComponent<SkillToFire>().Skill = this;
 		}
 		
+
 		//show posible movements marking the cells and creating an array of posible movements
 		public override void Setup()
 		{
@@ -63,6 +66,7 @@ namespace Medusa
 				}
 			}
 		}
+
 		
 		//add pos to array
 		public override bool Click(Position pos)
@@ -80,11 +84,10 @@ namespace Medusa
 			return false;
 		}
 		
+
 		//move to the last pos of array
-		public override LinkedList<Position> Confirm()
+		public override List<Position> Confirm()
 		{
-			LinkedList<Position> returnPosition = new LinkedList<Position>();
-			returnPosition.AddLast(targetPosition);
 			board["tokens"].MoveGameObject(player,targetPosition);
 			playerPosition= targetPosition;
 			foreach (Direction direction in Direction.AllStaticDirections) 
@@ -95,11 +98,14 @@ namespace Medusa
 				}
 			}
 
+			List<Position> returnPosition = new List<Position> {targetPosition};
+
 			Clear();
 			doneThisTurn = true;
 			return returnPosition;
 		}
 		
+
 		//deselect the cells and empty the array
 		public override void Clear()
 		{
