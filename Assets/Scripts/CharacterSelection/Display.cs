@@ -26,7 +26,7 @@ namespace Medusa
 
 		private void SetUpAvailableCharacters()
 		{
-			availableCharacters = new List<string> {"Fox", "Frog", "Ram"};
+			availableCharacters = new List<string> {"Fox", "Frog", "Ram", "Eagle", "Turtle"};
 		}
 
 
