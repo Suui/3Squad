@@ -24,6 +24,7 @@ namespace Medusa
 		
 		public void Start()
 		{
+			Clear();
 			playerPosition = (Position) this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
@@ -88,26 +89,11 @@ namespace Medusa
 		//move to the last pos of array
 		public override LinkedList<Position> Confirm()
 		{
-			target = board["tokens"][targetPosition];
-			Position startingPosition = new Position(5,5); //sorry for this. 
-			Position pos; //sorry for this. 
-			foreach (Direction dir in Direction.AllStaticDirections) //sorry for this. 
-			{
-				pos = startingPosition + dir; //sorry for this. 
-				if(board["tokens"][pos] == null) //sorry for this. 
-				{
-					aux = pos; //sorry for this. 
-					break; //sorry for this. 
-				}
-			}
-			board["tokens"].MoveGameObject(player,aux); //sorry for this. 
-			board["tokens"].MoveGameObject(target,playerPosition);
-			board["tokens"].MoveGameObject(player,targetPosition);
-
-
-			Clear();
+			LinkedList<Position> returnPosition = new LinkedList<Position>();
+			returnPosition.AddLast(targetPosition);
+			board["tokens"].SwitchGameObjects(player,board["tokens"][targetPosition]);
 			doneThisTurn = true;
-			return null;
+			return returnPosition;
 		}
 		
 		//deselect the cells and empty the array
@@ -130,7 +116,6 @@ namespace Medusa
 			posibleRange.Clear();
 			targetPosition = null;
 			target = null;
-			
 		}
 		
 		public void SearchWay (LinkedList<Position> inRange,LinkedList<Position> posibleRange, Layer layer, Position startingPosition, int stepCount)
@@ -148,6 +133,7 @@ namespace Medusa
 				{
 					if(layer [position].GetComponent<Life>() != null)
 					{
+						if(board["tokens"][position].GetComponent<PlayerComponent>() != null)
 						inRange.AddLast (position);
 					}
 				}else

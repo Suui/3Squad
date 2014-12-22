@@ -35,7 +35,6 @@ namespace Medusa
 			skillGUI.transform.parent = gameObject.transform;
 			
 			skillGUI.GetComponent<SkillToFire>().Skill = this;
-			this.GetComponent<BaseInfo>().ShowUpSkill();
 		}
 		
 		//show posible movements marking the cells and creating an array of posible movements
