@@ -94,7 +94,11 @@ namespace Medusa
 			form.AddField("playerId", playerID);
 
 			if (turnJSON != null)
+			{
 				form.AddField("turn", turnJSON.ToString());
+				Debug.Log("Form JSON: " + turnJSON);
+				Debug.Log("Form JSON ToString(): " + turnJSON.ToString());
+			}
 
 			var request = new WWW(serverURL + "submit", form);
 			StartCoroutine(WaitForSubmit(request));
@@ -243,14 +247,20 @@ namespace Medusa
                 return;
 
 	        Debug.Log("Wait OK, text: " + text);
-            Debug.Log("Wait OK, turns JSON: " + json);
-	        PerformReceivedActions(json["turns"]);
+            Debug.Log("Wait OK, turns JSON: " + json.ToString());
+	        PerformReceivedActions(json);
         }
 
 
 		private void PerformReceivedActions(JSONNode json)
 		{
-			TurnActions actions = new TurnActions(json["turns"][0]);
+			if (json["turns"].AsArray.Count == 0)
+				return;
+
+			JSONNode actionsJSON = JSON.Parse(json["turns"][0]);
+			Debug.Log("Actions JSON: " + actionsJSON.ToString());
+
+			TurnActions actions = new TurnActions(actionsJSON);
 			GameObject.Find("ChangeTurnManager").GetComponent<ChangeTurnManager>().PerformTurnChangeActions(actions);
 		}
 

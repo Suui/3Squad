@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SimpleJSON;
+using UnityEngine;
 
 
 namespace Medusa
@@ -50,7 +51,8 @@ namespace Medusa
 
 
 		private List<Action> ParseJSON(JSONNode json)
-	    {
+		{
+			Debug.Log("At ParseJSON: " + json.ToString());
 
 			return (from JSONNode action in json["actions"].AsArray 
 					let charPos = Position.FromJSON(action["charpos"]) 
