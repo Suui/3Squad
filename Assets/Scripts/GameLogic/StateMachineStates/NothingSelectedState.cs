@@ -35,9 +35,10 @@ namespace Medusa
 			sm.SelectedToken = sm.Board["tokens"][position];
 
 			// Display Info of the character getting the right components. David.
-            //sm.SelectedToken.GetComponent<BaseInfo>().ShowUpInfo();
+            sm.SelectedToken.GetComponent<BaseInfo>().ShowUpInfo();
 
-			sm.ShowInfoButton(true);
+			// TODO: Disabled until we add this feature
+			//sm.ShowInfoButton(true);
 
 			// Selected a Character || Master
 			CharacterSelection();

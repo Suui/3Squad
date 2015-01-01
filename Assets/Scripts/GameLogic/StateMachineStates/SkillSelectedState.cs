@@ -45,7 +45,8 @@ namespace Medusa
 
 			sm.ShowConfirmCancel(false);
 			sm.ShowExitEndTurn(true);
-			sm.ShowInfoButton(true);
+			// TODO: Disabled until we add this feature
+			//sm.ShowInfoButton(true);
 
 			return new TokenSelectedState(sm);
 		}

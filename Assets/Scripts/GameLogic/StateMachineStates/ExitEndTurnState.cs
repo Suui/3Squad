@@ -31,7 +31,8 @@ namespace Medusa
 
 				if (sm.PreviousId == "EndTurn")
 				{
-					sm.ShowInfoButton(false);
+					// TODO: Disabled until we add this feature
+					// sm.ShowInfoButton(false);
 					sm.ShowConfirmCancel(false);
 					sm.ShowTransparentBackground(false);
 					sm.ShowExitEndTurn(false);

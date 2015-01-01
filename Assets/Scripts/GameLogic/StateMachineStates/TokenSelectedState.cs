@@ -52,11 +52,11 @@ namespace Medusa
 		{
 			sm.SelectedToken = sm.Board["tokens"][position];
 
-			// Delete Info of the token getting the right components. David.
-			// Display Info of the token getting the right components. David.
-
+			// We are also deleting the BaseInfo GUI within this foreach, as it is tagged as SkillIcon
 			foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
 				Object.Destroy(go);
+
+			sm.SelectedToken.GetComponent<BaseInfo>().ShowUpInfo();
 
 			// Selected another Character || Master
 			CharacterSelection();

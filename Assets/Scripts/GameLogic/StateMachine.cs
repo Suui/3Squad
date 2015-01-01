@@ -42,6 +42,8 @@ namespace Medusa
 
 			CurrentState = new NothingSelectedState(this);
 			PreviousState = CurrentState;
+
+			ShowExitEndTurn(false);
 		}
 
 
@@ -94,14 +96,15 @@ namespace Medusa
 			// we must go back to the NothingSelectedState
 			if (CurrentState.GetType() == typeof (TokenSelectedState))
 			{
-				// Selected the DisplayInfoAboutToken Buttond
+				// Selected the DisplayInfoAboutToken Button
 
 				// Selected Nothing
-				// Delete Info of the token getting the right components. David.
+				// We are also deleting the BaseInfo GUI within this foreach, as it is tagged as SkillIcon
 				foreach (GameObject go in GameObject.FindGameObjectsWithTag("SkillIcon"))
 					Destroy(go);
 
-				ShowInfoButton(false);
+				// TODO: Disabled until we add this feature
+				// ShowInfoButton(false);
 
 				CurrentState = new NothingSelectedState(this);
 			}
