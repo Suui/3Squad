@@ -57,21 +57,21 @@ namespace Medusa
 			foreach (var action in turnActions.ActionList)
 			{
 				board["overlays"][action.CharacterPos].GetComponent<Selectable>().SetOverlayMaterial(1);
-				yield return new WaitForSeconds(1.0f);
+				yield return new WaitForSeconds(0.7f);
 
 				Skill skill = board["tokens"][action.CharacterPos].GetComponent(action.SkillName) as Skill;
 				skill.Setup();
-				yield return new WaitForSeconds(1.0f);
+				yield return new WaitForSeconds(0.5f);
 
 				foreach (var pos in action.TargetPositions)
 				{
 					skill.Click(pos);
-					yield return new WaitForSeconds(1.0f);
+					yield return new WaitForSeconds(0.5f);
 				}
 
 				skill.Confirm();
 				board["overlays"][action.CharacterPos].GetComponent<Selectable>().SetOverlayMaterial(0);
-				yield return new WaitForSeconds(1.0f);
+				yield return new WaitForSeconds(0.7f);
 			}
 
 			stateMachine.SetReady();

@@ -38,6 +38,9 @@ namespace Medusa
 					sm.ShowExitEndTurn(false);
 					sm.DisplaySelectionOverlay(null);
 
+					// RESET ACTION POINTS
+					sm.PlayingPlayer.ActionPoints = 5;
+
 					if (OnChangingTurn != null)
 						OnChangingTurn(new TurnActions(sm.Actions));
 
