@@ -24,12 +24,15 @@ namespace Medusa
 		
 		public void Start()
 		{
-			Clear();
+			ActionPointCost = 1;
+
 			playerPosition = (Position) this.transform.position;
 			player = this.gameObject;
 			board = FindObjectOfType<GameMaster>().GetComponent<GameMaster>().CurrentBoard;
 			
 		}
+
+
 		public override void ShowUpSkill()
 		{
 			GameObject skillGUI = Instantiate(Resources.Load("Prefabs/Skill_Template")) as GameObject;
@@ -40,6 +43,7 @@ namespace Medusa
 			skillGUI.GetComponent<SkillToFire>().Skill = this;
 		}
 		
+
 		//show posible movements marking the cells and creating an array of posible movements
 		public override void Setup()
 		{
@@ -62,6 +66,7 @@ namespace Medusa
 			}
 		}
 		
+
 		//add pos to array
 		public override bool Click(Position pos)
 		{
@@ -86,6 +91,7 @@ namespace Medusa
 			return false;
 		}
 		
+
 		//move to the last pos of array
 		public override List<Position> Confirm()
 		{
@@ -99,6 +105,7 @@ namespace Medusa
 			return targetPositions;
 		}
 		
+
 		//deselect the cells and empty the array
 		public override void Clear()
 		{
@@ -121,6 +128,7 @@ namespace Medusa
 			target = null;
 		}
 		
+
 		public void SearchWay (LinkedList<Position> inRange,LinkedList<Position> posibleRange, Layer layer, Position startingPosition, int stepCount)
 		{
 			if (stepCount-- == 0)
