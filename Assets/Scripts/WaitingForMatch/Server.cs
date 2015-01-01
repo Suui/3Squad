@@ -12,7 +12,7 @@ namespace Medusa
 
 		private string playerID;
 		private string matchID;
-		private readonly string serverURL = "178.62.230.225:80/api/";
+		private const string SERVER_URL = "178.62.230.225:80/api/";
 
 
 		void Awake()
@@ -46,7 +46,7 @@ namespace Medusa
 			form.AddField("numberOfPlayers", 2);
 			form.AddField("setup", charactersJSON.ToString());
 
-			var request = new WWW(serverURL + "ticket", form);
+			var request = new WWW(SERVER_URL + "ticket", form);
 			StartCoroutine(WaitForUserID(request));
 		}
 
@@ -57,7 +57,7 @@ namespace Medusa
 
 			form.AddField("playerId", playerID);
 
-			var request = new WWW(serverURL + "match", form);
+			var request = new WWW(SERVER_URL + "match", form);
 			StartCoroutine(WaitForMatchID(request));
 		}
 
@@ -68,7 +68,7 @@ namespace Medusa
 
 			form.AddField("playerId", playerID);
 
-			var request = new WWW(serverURL + "cancel", form);
+			var request = new WWW(SERVER_URL + "cancel", form);
 			StartCoroutine(WaitForCancel(request));
 		}
 
@@ -81,7 +81,7 @@ namespace Medusa
 			form.AddField("playerId", playerID);
 			Debug.Log(playerID + "is waiting for its turn");
 
-			var request = new WWW(serverURL + "wait", form);
+			var request = new WWW(SERVER_URL + "wait", form);
 			StartCoroutine(WaitForWait(request));
 		}
 
@@ -100,7 +100,7 @@ namespace Medusa
 				Debug.Log("Form JSON ToString(): " + turnJSON.ToString());
 			}
 
-			var request = new WWW(serverURL + "submit", form);
+			var request = new WWW(SERVER_URL + "submit", form);
 			StartCoroutine(WaitForSubmit(request));
 		}
 
@@ -112,7 +112,7 @@ namespace Medusa
 			form.AddField("matchId", matchID);
 			form.AddField("playerId", playerID);
 
-			var request = new WWW(serverURL + "players", form);
+			var request = new WWW(SERVER_URL + "players", form);
 			StartCoroutine(WaitForPlayers(request));
 		}
 
@@ -255,7 +255,10 @@ namespace Medusa
 		private void PerformReceivedActions(JSONNode json)
 		{
 			if (json["turns"].AsArray.Count == 0)
+			{
+				GameObject.Find("GameMaster").GetComponent<GameMaster>().TurnManagement.ChangeTurn();
 				return;
+			}
 
 			JSONNode actionsJSON = JSON.Parse(json["turns"][0]);
 			Debug.Log("Actions JSON: " + actionsJSON.ToString());

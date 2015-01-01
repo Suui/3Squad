@@ -50,7 +50,9 @@ namespace Medusa
 		{
 			if (sm.SelectedToken.GetComponent<Skill>() == null) return;
 
-			if (sm.SelectedToken.GetComponent<PlayerComponent>().Player == sm.PlayingPlayer)
+			GameMaster gameMaster = sm.gameObject.GetComponent<GameMaster>();
+
+			if (sm.SelectedToken.GetComponent<PlayerComponent>().Player == sm.PlayingPlayer && sm.PlayingPlayer == gameMaster.TurnManagement.CurrentPlayer)
 			{
 				Skill[] skills = sm.SelectedToken.GetComponents<Skill>();
 

@@ -16,7 +16,7 @@ namespace Medusa
 
 
         void OnEnable()
-    {
+		{
 			ExitEndTurnState.OnChangingTurn += SubmitTurn;
 		}
 
@@ -74,8 +74,8 @@ namespace Medusa
         }
 
 
-        public void SubmitTurn(TurnActions turnActions)
-            {
+        public void SubmitTurn(TurnActions turnActions) 
+		{
 	        Server server = GameObject.Find("Server").GetComponent<Server>();
 	        server.RequestSubmit(turnActions.ActionJSON);
 
@@ -104,6 +104,7 @@ namespace Medusa
 
 		    turnManagement = new TurnManagement(players[0], players[1]);
 
+			// Current player is playerOne at first, this is set up by the constructor of turnManagement
 		    GameObject playerGO = new GameObject(turnManagement.CurrentPlayer.name) {tag = turnManagement.CurrentPlayer.name};
 
 		    transform.parent = playerGO.transform;
